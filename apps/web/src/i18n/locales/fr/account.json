@@ -1,0 +1,22 @@
+{
+  "profile": "Profil",
+  "name": "Nom",
+  "email": "E-mail",
+  "saveChanges": "Enregistrer",
+  "amazonTitle": "Amazon Seller Central",
+  "connected": "Connecté",
+  "amazonHint": "Votre jeton MWS pour la synchro auto. Gardez-le secret.",
+  "saveToken": "Enregistrer le jeton",
+  "password": "Mot de passe",
+  "newPassword": "Nouveau mot de passe",
+  "confirmPassword": "Confirmer le mot de passe",
+  "changePassword": "Changer le mot de passe",
+  "profileSaved": "Profil enregistré",
+  "profileFailed": "Échec de l'enregistrement",
+  "tokenUpdated": "Jeton Amazon mis à jour",
+  "tokenFailed": "Échec de mise à jour du jeton",
+  "passwordsMismatch": "Les mots de passe ne correspondent pas",
+  "passwordRequired": "Mot de passe requis",
+  "passwordChanged": "Mot de passe modifié",
+  "passwordFailed": "Échec du changement de mot de passe"
+}

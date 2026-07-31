@@ -1,0 +1,32 @@
+{
+  "title": "Fragen Sie mich alles zu Ihren VAT-Daten",
+  "subtitle": "Ich lese alle Ihre hochgeladenen Berichte und antworte verständlich.",
+  "lockTitle": "KI-Analyst ist Premium",
+  "lockBody": "Unbegrenzte Fragen, KI-Analyse aller hochgeladenen Zahlen und verständliche Erklärungen.",
+  "perk1": "Sofortantworten auf jede Frage",
+  "perk2": "Vollständige Aufschlüsselung über alle Uploads",
+  "perk3": "Risiko- und Chancen-Insights",
+  "seePlans": "Pläne ansehen",
+  "emptyPrompts": "Noch keine Fragen. Starten Sie mit einem Vorschlag oder tippen Sie unten.",
+  "thinking": "FiscorAI denkt nach",
+  "placeholder": "Was möchten Sie wissen?",
+  "shiftEnter": "Umschalt+Enter für neue Zeile",
+  "clear": "Leeren",
+  "disclaimer": "KI kann Fehler machen. Prüfen Sie kritische Zahlen immer mit Ihrem Steuerberater.",
+  "analyzeFailed": "Ihre Daten konnten nicht analysiert werden",
+  "copy": "Kopieren",
+  "retry": "Erneut",
+  "send": "Senden",
+  "stop": "Stopp",
+  "quotaLeft": "Noch {{left}} von {{limit}} Gratisfragen heute",
+  "quotaSpent": "Tageslimit erreicht",
+  "quotaTitle": "Das waren Ihre 3 Gratisfragen für heute",
+  "quotaBody": "Kostenlose Konten haben {{limit}} Fragen pro Tag. Upgraden Sie für unbegrenzte Antworten zu allen Ihren Berichten.",
+  "quotaPlaceholder": "Upgraden, um weiterzufragen",
+  "quotaResets": "Ihre Gratisfragen werden morgen zurückgesetzt",
+  "prompts": {
+    "vatByCountry": "Wie ist meine VAT-Belastung nach Land?",
+    "refundAnomalies": "Gibt es Auffälligkeiten bei Rückerstattungen?",
+    "ossVsRegular": "Wie viel ist OSS vs. reguläre Verkäufe?"
+  }
+}

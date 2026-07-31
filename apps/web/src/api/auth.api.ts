@@ -1,0 +1,30 @@
+import { http } from "./http";
+import type { AuthUser, GeneralResponse } from "@/types/api";
+
+export const authApi = {
+  login: (email: string, password: string) =>
+    http.post<GeneralResponse<AuthUser>>("/api/v1/auth/login", {
+      email,
+      password,
+      businessUser: false,
+      influencer: false,
+    }),
+
+  register: (body: {
+    email: string;
+    username: string;
+    password: string;
+    plan?: string;
+  }) => http.post<GeneralResponse<unknown>>("/api/v1/users", body),
+
+  changePassword: (email: string, password: string) =>
+    http.put("/api/v1/auth/change-password", { email, password }),
+
+  forgotPassword: (email: string) =>
+    http.post(`/api/v1/auth/forgot-password?email=${encodeURIComponent(email)}`),
+
+  resetPassword: (token: string, newPassword: string) =>
+    http.post(
+      `/api/v1/auth/reset-password?token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(newPassword)}`,
+    ),
+};

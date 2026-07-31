@@ -1,0 +1,22 @@
+{
+  "profile": "Perfil",
+  "name": "Nombre",
+  "email": "Correo",
+  "saveChanges": "Guardar cambios",
+  "amazonTitle": "Amazon Seller Central",
+  "connected": "Conectado",
+  "amazonHint": "Tu token MWS para auto-sync. Manténlo secreto.",
+  "saveToken": "Guardar token",
+  "password": "Contraseña",
+  "newPassword": "Nueva contraseña",
+  "confirmPassword": "Confirmar contraseña",
+  "changePassword": "Cambiar contraseña",
+  "profileSaved": "Perfil guardado",
+  "profileFailed": "Error al guardar perfil",
+  "tokenUpdated": "Token de Amazon actualizado",
+  "tokenFailed": "Error al actualizar token",
+  "passwordsMismatch": "Las contraseñas no coinciden",
+  "passwordRequired": "Contraseña obligatoria",
+  "passwordChanged": "Contraseña cambiada",
+  "passwordFailed": "Error al cambiar contraseña"
+}

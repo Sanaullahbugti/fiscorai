@@ -1,0 +1,334 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--text-on-brand);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: var(--text-body-sm);
+  box-shadow: 0 12px 28px rgba(28, 36, 30, 0.2);
+  z-index: 60;
+  max-width: 520px;
+  text-align: center;
+  animation: fadeUp 180ms ease-out;
+}
+
+.statusCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.statusLabel {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.planName {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, var(--text-kpi-sm));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
+}
+
+.statusLine {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.cancelBtn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--status-critical);
+  color: var(--status-critical);
+  border-radius: 12px;
+  padding: 11px 18px;
+  font-weight: 600;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.cancelBtn:hover {
+  background: var(--surface-critical-tint);
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.planCard {
+  background: var(--surface-card);
+  border: 1.5px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, var(--text-kpi-sm));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.limits {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+
+.planBtn {
+  margin-top: auto;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 11px;
+  font-weight: 600;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.planBtn:hover:not(:disabled) {
+  background: #162c24;
+}
+
+.planBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cardsAndInvoices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.cardsCard,
+.invoicesCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+}
+
+.addCardBtn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: var(--text-small);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 150ms ease-out;
+}
+
+.addCardBtn:hover {
+  background: var(--surface-app);
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardItem {
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardLabel {
+  font-weight: 600;
+  font-size: var(--text-body-sm);
+  flex: 1;
+}
+
+.defaultBadge {
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: var(--text-small);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cardActions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: var(--text-link);
+  font-size: var(--text-small);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.invoicesTable {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoicesTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-body-sm);
+}
+
+.invoicesTable tbody tr {
+  border-bottom: 1px solid var(--border-default);
+}
+
+.invDate {
+  padding: 10px 8px;
+  color: var(--text-secondary);
+}
+
+.invAmount {
+  padding: 10px 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.invStatus {
+  padding: 10px 8px;
+}
+
+.statusLabel {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: var(--text-small);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.invAction {
+  padding: 10px 8px;
+  text-align: right;
+}
+
+.invLink {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.invLink:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .toast {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0));
+    left: 16px;
+    right: 16px;
+    transform: none;
+    max-width: none;
+    width: auto;
+  }
+  .statusCard {
+    padding: 16px;
+    gap: 14px;
+  }
+  .cancelBtn {
+    margin-left: 0;
+    width: 100%;
+  }
+  .plansGrid {
+    grid-template-columns: 1fr;
+  }
+  .price {
+    white-space: normal;
+  }
+  .cardsAndInvoices {
+    grid-template-columns: 1fr;
+  }
+  .cardsCard,
+  .invoicesCard {
+    padding: 16px;
+  }
+  .cardItem {
+    flex-wrap: wrap;
+  }
+  .cardActions {
+    margin-left: 0;
+    width: 100%;
+  }
+  .invoicesTable {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .invoicesTable table {
+    min-width: 420px;
+  }
+}

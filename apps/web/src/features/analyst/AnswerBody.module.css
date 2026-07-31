@@ -1,0 +1,124 @@
+.body {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.body > :first-child { margin-top: 0; }
+.body > :last-child { margin-bottom: 0; }
+
+.body p {
+  margin: 0 0 10px;
+}
+
+/* The prompt bolds EUR amounts and country codes — make that carry real emphasis. */
+.body strong {
+  font-weight: 700;
+  color: var(--color-field-green-dark);
+}
+
+.body em { font-style: italic; }
+
+.body ul,
+.body ol {
+  margin: 0 0 10px;
+  padding-left: 18px;
+}
+
+.body li {
+  margin-bottom: 5px;
+}
+
+.body li::marker {
+  color: var(--brand-accent);
+}
+
+.body h1,
+.body h2,
+.body h3,
+.body h4 {
+  font-size: var(--text-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 14px 0 7px;
+  color: var(--text-primary);
+}
+
+.body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--surface-ochre-tint);
+  border: 1px solid var(--border-default);
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.body pre {
+  background: var(--surface-ochre-tint);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 12px;
+  overflow-x: auto;
+  margin: 0 0 10px;
+}
+
+.body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.body blockquote {
+  margin: 0 0 10px;
+  padding: 2px 0 2px 12px;
+  border-left: 3px solid var(--brand-accent);
+  color: var(--text-secondary);
+}
+
+.body a {
+  color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.body hr {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: 14px 0;
+}
+
+/* Wide tables scroll inside the bubble instead of stretching it. */
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 0 10px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+}
+
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+}
+
+.tableWrap th,
+.tableWrap td {
+  padding: 8px 11px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-default);
+  white-space: nowrap;
+}
+
+.tableWrap th {
+  background: var(--surface-ochre-tint);
+  font-weight: 700;
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-secondary);
+}
+
+.tableWrap tr:last-child td {
+  border-bottom: none;
+}

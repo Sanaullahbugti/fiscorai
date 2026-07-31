@@ -1,0 +1,58 @@
+{
+  "fillAll": "Veuillez remplir tous les champs",
+  "messageSent": "Message envoyé !",
+  "sendFailed": "Échec de l'envoi",
+  "getInTouch": "Nous contacter",
+  "name": "Nom",
+  "email": "E-mail",
+  "message": "Message",
+  "sendMessage": "Envoyer",
+  "asideBody": "Questions sur les régimes TVA, limites ou factures — écrivez-nous en anglais, allemand, espagnol, français ou italien.",
+  "asideFooter": " · Espagne · Outils de déclaration TVA pour vendeurs Amazon UE.",
+  "privacyTitle": "Politique de confidentialité",
+  "termsTitle": "Conditions d'utilisation",
+  "legalIntro": "FiscorAI est exploité par une société espagnole inscrite au registre du commerce de Madrid.",
+  "legalNote": "Ceci est une démonstration. Avant la production, faites revoir ce texte par un avocat.",
+  "privacy1": "Nous ne traitons que les données nécessaires : e-mail, n° de TVA et jeton MWS Amazon.",
+  "privacy2": "Les CSV sont traités côté serveur puis supprimés. Aucune donnée personnelle n'est vendue.",
+  "privacy3": "Factures et journaux conservés 7 ans selon le droit fiscal de l'UE.",
+  "privacy4": "Vous pouvez demander la suppression de votre compte et de vos données sous 30 jours.",
+  "terms1": "Le service est fourni « en l'état ». Des erreurs de calcul peuvent survenir. Vérifiez avec votre conseiller fiscal.",
+  "terms2": "Votre compte est sous votre responsabilité. Ne partagez pas vos identifiants ni le jeton MWS.",
+  "terms3": "Les échecs de paiement suspendent l'accès. Les remboursements suivent votre moyen de paiement.",
+  "terms4": "Nous pouvons suspendre ou résilier le service en cas de violation des présentes conditions ou de la loi.",
+  "faqs": [
+    {
+      "q": "Faut-il une carte pour commencer ?",
+      "a": "Non. Free n'exige pas de carte et reste gratuit — jusqu'à 100 transactions par document."
+    },
+    {
+      "q": "Qu'est-ce qu'une transaction ?",
+      "a": "Chaque ligne du rapport TVA Amazon : commandes, retours, remboursements, liquidations et mouvements de stock."
+    },
+    {
+      "q": "Comment marchent les limites mensuelles/trimestrielles ?",
+      "a": "Par document. Basic 2 000/mois ou 6 000/trimestre ; Standard 6 000/18 000 ; Pro illimité."
+    },
+    {
+      "q": "Que se passe-t-il en cas de dépassement ?",
+      "a": "Traitement partiel ; PDF et Excel portent une bannière ATTENTION. Passez à une offre supérieure et re-téléversez."
+    },
+    {
+      "q": "Quel fichier et où le trouver ?",
+      "a": "Amazon Seller Central → Rapports → Fulfilment by Amazon → Amazon VAT Transactions Report. CSV uniquement, max 100 Mo."
+    },
+    {
+      "q": "Combien de temps dure le traitement ?",
+      "a": "En général moins d'une minute. La ligne affiche Traitement jusqu'aux résultats."
+    },
+    {
+      "q": "Qu'obtenez-vous ?",
+      "a": "Vue en ligne (graphiques et tableaux), résumé PDF et Excel détaillé par régime et pays."
+    },
+    {
+      "q": "Re-téléverser la même période est-il sûr ?",
+      "a": "Oui. Un nouveau téléversement remplace les fichiers de cette période et actualise les graphiques."
+    }
+  ]
+}

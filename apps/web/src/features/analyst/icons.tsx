@@ -1,0 +1,101 @@
+type IconProps = { className?: string };
+
+const base = {
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.8,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  "aria-hidden": true,
+};
+
+export const SparkIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z" />
+    <path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" />
+  </svg>
+);
+
+export const SendIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M12 19V5" />
+    <path d="M5 12l7-7 7 7" />
+  </svg>
+);
+
+export const StopIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+export const CopyIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15V5a2 2 0 012-2h8" />
+  </svg>
+);
+
+export const CheckIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M20 6L9 17l-5-5" />
+  </svg>
+);
+
+export const RefreshIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M21 12a9 9 0 11-2.6-6.4" />
+    <path d="M21 3v6h-6" />
+  </svg>
+);
+
+export const LockIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <rect x="4" y="10" width="16" height="11" rx="2.5" />
+    <path d="M8 10V7a4 4 0 118 0v3" />
+  </svg>
+);
+
+export const BoltIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" />
+  </svg>
+);
+
+export const LayersIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M12 3l9 5-9 5-9-5 9-5z" />
+    <path d="M3 13l9 5 9-5" />
+  </svg>
+);
+
+export const ShieldIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M12 3l7 3v6c0 4.4-3 8-7 9-4-1-7-4.6-7-9V6l7-3z" />
+    <path d="M9.5 12.5l1.8 1.8 3.4-3.6" />
+  </svg>
+);
+
+export const ArrowRightIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M5 12h13" />
+    <path d="M12 5l7 7-7 7" />
+  </svg>
+);
+
+export const AlertIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7.5v5" />
+    <path d="M12 16.2h.01" />
+  </svg>
+);
+
+export const InfoIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 11v5" />
+    <path d="M12 7.8h.01" />
+  </svg>
+);

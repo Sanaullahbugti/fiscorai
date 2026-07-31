@@ -1,0 +1,58 @@
+{
+  "fillAll": "Rellena todos los campos",
+  "messageSent": "¡Mensaje enviado!",
+  "sendFailed": "Error al enviar",
+  "getInTouch": "Contacto",
+  "name": "Nombre",
+  "email": "Correo",
+  "message": "Mensaje",
+  "sendMessage": "Enviar mensaje",
+  "asideBody": "Preguntas sobre IVA, límites o facturas — escríbenos en inglés, alemán, español, francés o italiano.",
+  "asideFooter": " · España · Herramientas de IVA para vendedores Amazon UE.",
+  "privacyTitle": "Política de privacidad",
+  "termsTitle": "Términos del servicio",
+  "legalIntro": "FiscorAI es operado por una empresa española inscrita en el Registro Mercantil de Madrid.",
+  "legalNote": "Esto es una demostración. Antes de producción, revise el texto con un abogado.",
+  "privacy1": "Solo procesamos datos necesarios: correo, NIF-IVA y token MWS de Amazon.",
+  "privacy2": "Los CSV se procesan en el servidor y se eliminan tras el análisis. No vendemos datos personales.",
+  "privacy3": "Facturas y registros se conservan 7 años según la normativa fiscal de la UE.",
+  "privacy4": "Puedes pedir la eliminación de tu cuenta y datos. Cumpliremos en 30 días.",
+  "terms1": "El servicio se ofrece «tal cual». Pueden ocurrir errores de cálculo. Verifica con tu asesor fiscal.",
+  "terms2": "Tu cuenta es tu responsabilidad. No compartas credenciales ni el token MWS.",
+  "terms3": "Fallos de pago suspenden el acceso. Reembolsos según el método de pago.",
+  "terms4": "Podemos suspender o terminar el servicio si incumples estos términos o la ley.",
+  "faqs": [
+    {
+      "q": "¿Necesito tarjeta para empezar?",
+      "a": "No. Free no requiere tarjeta y sigue gratis — hasta 100 transacciones por documento."
+    },
+    {
+      "q": "¿Qué cuenta como transacción?",
+      "a": "Cada fila del informe IVA de Amazon: pedidos, devoluciones, reembolsos, liquidaciones y movimientos de inventario."
+    },
+    {
+      "q": "¿Cómo funcionan los límites mensuales/trimestrales?",
+      "a": "Por documento. Basic 2.000/mes o 6.000/trimestre; Standard 6.000/18.000; Pro ilimitado."
+    },
+    {
+      "q": "¿Qué pasa si me paso del límite?",
+      "a": "Se procesa parcialmente; PDF y Excel llevan aviso ATTENTION. Mejora el plan y vuelve a subir."
+    },
+    {
+      "q": "¿Qué archivo y dónde?",
+      "a": "Amazon Seller Central → Informes → Fulfilment by Amazon → Amazon VAT Transactions Report. Solo CSV, máx. 100 MB."
+    },
+    {
+      "q": "¿Cuánto tarda el procesamiento?",
+      "a": "Suele ser menos de un minuto. La fila muestra Procesando hasta que esté listo."
+    },
+    {
+      "q": "¿Qué obtengo?",
+      "a": "Vista online (gráficos y tablas), PDF para tu asesor y Excel detallado por régimen y país."
+    },
+    {
+      "q": "¿Es seguro volver a subir el mismo periodo?",
+      "a": "Sí. Un nuevo upload sustituye los archivos de ese periodo y actualiza los gráficos."
+    }
+  ]
+}

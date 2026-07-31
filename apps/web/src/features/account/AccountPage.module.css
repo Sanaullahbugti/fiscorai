@@ -1,0 +1,183 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--text-on-brand);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: var(--text-body-sm);
+  box-shadow: 0 12px 28px rgba(28, 36, 30, 0.2);
+  z-index: 60;
+  max-width: 520px;
+  text-align: center;
+  animation: fadeUp 180ms ease-out;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.cardHeadWithChip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chipStatus {
+  margin-left: auto;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: var(--text-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.hint {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: var(--tracking-label);
+}
+
+.fields input,
+.card input {
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: var(--text-body-sm);
+  background: var(--surface-card);
+  color: var(--text-primary);
+}
+
+.card input::placeholder {
+  color: var(--text-secondary);
+}
+
+.btnPrimary,
+.btnAccent {
+  align-self: flex-start;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 20px;
+  font-weight: 600;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  margin-top: 6px;
+}
+
+.btnPrimary {
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+}
+
+.btnPrimary:hover {
+  background: #162c24;
+}
+
+.btnAccent {
+  background: var(--brand-accent);
+  color: #241a08;
+}
+
+.btnAccent:hover {
+  background: var(--brand-accent-pressed);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .toast {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0));
+    left: 16px;
+    right: 16px;
+    transform: none;
+    max-width: none;
+    width: auto;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .card {
+    padding: 16px;
+  }
+  .btnPrimary,
+  .btnAccent {
+    align-self: stretch;
+    width: 100%;
+    text-align: center;
+  }
+  .chipStatus {
+    margin-left: 0;
+  }
+  .cardHeadWithChip {
+    flex-wrap: wrap;
+  }
+}

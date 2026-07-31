@@ -1,0 +1,32 @@
+{
+  "title": "Posez-moi n'importe quelle question sur vos données TVA",
+  "subtitle": "Je lis tous vos rapports téléversés et réponds clairement.",
+  "lockTitle": "L'analyste IA est premium",
+  "lockBody": "Questions illimitées, analyse IA de toutes vos données téléversées, et explications claires.",
+  "perk1": "Réponses instantanées à toute question",
+  "perk2": "Répartition complète de tous les imports",
+  "perk3": "Aperçus des risques et opportunités",
+  "seePlans": "Voir les offres",
+  "emptyPrompts": "Pas encore de questions. Commencez par une suggestion ou tapez ci-dessous.",
+  "thinking": "FiscorAI réfléchit",
+  "placeholder": "Que souhaitez-vous savoir ?",
+  "shiftEnter": "Maj+Entrée pour une nouvelle ligne",
+  "clear": "Effacer",
+  "disclaimer": "L'IA peut se tromper. Vérifiez toujours les chiffres critiques avec votre comptable.",
+  "analyzeFailed": "Impossible d'analyser vos données",
+  "copy": "Copier",
+  "retry": "Réessayer",
+  "send": "Envoyer",
+  "stop": "Arrêter",
+  "quotaLeft": "Il vous reste {{left}} question(s) gratuite(s) sur {{limit}} aujourdhui",
+  "quotaSpent": "Limite quotidienne atteinte",
+  "quotaTitle": "Voilà vos 3 questions gratuites du jour",
+  "quotaBody": "Les comptes gratuits ont droit à {{limit}} questions par jour. Passez à un forfait supérieur pour des réponses illimitées sur tous vos rapports.",
+  "quotaPlaceholder": "Améliorez votre forfait pour continuer",
+  "quotaResets": "Vos questions gratuites sont réinitialisées demain",
+  "prompts": {
+    "vatByCountry": "Quelle est mon exposition TVA par pays ?",
+    "refundAnomalies": "Y a-t-il des anomalies de remboursements ?",
+    "ossVsRegular": "Combien d'OSS vs ventes régulières ?"
+  }
+}

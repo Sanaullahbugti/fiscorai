@@ -1,0 +1,282 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--text-on-brand);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: var(--text-body-sm);
+  box-shadow: 0 12px 28px rgba(28, 36, 30, 0.2);
+  z-index: 60;
+  max-width: 520px;
+  text-align: center;
+  animation: fadeUp 180ms ease-out;
+}
+
+/* FAQ Page */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 840px;
+}
+
+.faqCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.faqBtn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 18px 20px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--text-primary);
+  transition: background 150ms ease-out;
+}
+
+.faqBtn:hover {
+  background: var(--surface-app);
+}
+
+.faqQ {
+  flex: 1;
+}
+
+.faqSign {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.faqAnswer {
+  padding: 0 20px 20px;
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+/* Contact Page */
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  align-items: start;
+  max-width: 980px;
+}
+
+.contactCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.contactFields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactFields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: var(--tracking-label);
+}
+
+.contactFields input,
+.contactCard textarea {
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: var(--text-body-sm);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.contactCard textarea {
+  resize: vertical;
+}
+
+.contactFields input::placeholder,
+.contactCard textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.btnSend {
+  align-self: flex-start;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-weight: 600;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+  margin-top: 6px;
+}
+
+.btnSend:hover {
+  background: #162c24;
+}
+
+.asideCard {
+  background: var(--surface-brand-tint);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.asideEmail {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.asideBody {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+.asideFooter {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* Legal Page */
+.legalCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 26px;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.legalIntro {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+.legalPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legalPoint {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+}
+
+.legalDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--brand-primary);
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.legalNote {
+  border-top: 1px solid var(--border-default);
+  padding-top: 14px;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .toast {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0));
+    left: 16px;
+    right: 16px;
+    transform: none;
+    max-width: none;
+    width: auto;
+  }
+  .faqBtn {
+    padding: 16px;
+  }
+  .faqAnswer {
+    padding: 0 16px 16px;
+  }
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+  .contactCard,
+  .asideCard,
+  .legalCard {
+    padding: 16px;
+  }
+  .btnSend {
+    align-self: stretch;
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "fillAll": "Please fill all fields",
+  "messageSent": "Message sent!",
+  "sendFailed": "Failed to send message",
+  "getInTouch": "Get in touch",
+  "name": "Name",
+  "email": "Email",
+  "message": "Message",
+  "sendMessage": "Send message",
+  "asideBody": "Questions about VAT schemes, limits or invoices — write to us in English, German, Spanish, French or Italian.",
+  "asideFooter": " · Spain · VAT reporting tooling for Amazon EU sellers.",
+  "privacyTitle": "Privacy Policy",
+  "termsTitle": "Terms of Service",
+  "legalIntro": "FiscorAI is operated by , a Spanish company registered in the Mercantile Registry of Madrid.",
+  "legalNote": "This is a demonstration. Before production, have counsel review and update this text for your jurisdiction.",
+  "privacy1": "We collect and process only data necessary to operate the service: your email, VAT number, and Amazon MWS token.",
+  "privacy2": "Your uploaded CSV files are processed server-side and deleted after analysis. No personal data is sold or shared.",
+  "privacy3": "Invoices and activity logs are retained for 7 years per EU tax law and accountancy regulations.",
+  "privacy4": "You may request deletion of your account and all personal data. We will comply within 30 days.",
+  "terms1": "The service is provided 'as-is' for non-compliance purposes. While we exercise reasonable care, calculation errors may occur. Always verify with your tax advisor.",
+  "terms2": "Your account remains your sole responsibility. Do not share login credentials or your Amazon MWS token.",
+  "terms3": "Payment failures will suspend access. Refunds follow your payment method's standard dispute process.",
+  "terms4": "We may suspend or terminate service if you breach these terms or violate applicable laws.",
+  "faqs": [
+    {
+      "q": "Do I need a credit card to start?",
+      "a": "No. The Free plan needs no card and stays free — it processes up to 100 transactions per document."
+    },
+    {
+      "q": "What counts as a transaction?",
+      "a": "Every row in the Amazon VAT Transactions Report: orders, returns, refunds, liquidations and inventory movements."
+    },
+    {
+      "q": "Monthly or quarterly limits — how do they work?",
+      "a": "Limits apply per document. Basic allows 2,000 per month or 6,000 per quarter; Standard 6,000 / 18,000; Pro is unlimited. You can upload several periods as long as each document is under the cap."
+    },
+    {
+      "q": "What happens if I go over the limit?",
+      "a": "The file is still processed, but only partially, and the PDF and Excel carry an ATTENTION banner. Upgrade and re-upload for a complete analysis."
+    },
+    {
+      "q": "Which file do I upload, and where do I find it?",
+      "a": "Amazon Seller Central → Reports → Fulfilment by Amazon → Amazon VAT Transactions Report. CSV only, max 100 MB."
+    },
+    {
+      "q": "How long does processing take?",
+      "a": "Usually under a minute. The file row shows Processing until the results are ready; the page refreshes itself."
+    },
+    {
+      "q": "What do I get out of it?",
+      "a": "The online view (charts and per-country tables), a PDF summary for your accountant, and a detailed Excel broken down by tax scheme and country."
+    },
+    {
+      "q": "Re-uploading the same period — is that safe?",
+      "a": "Yes. A new upload replaces the previous files for that period and the charts refresh from the new data."
+    }
+  ]
+}

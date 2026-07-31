@@ -1,0 +1,35 @@
+{
+  "brand": "FiscorAI",
+  "currentPlan": "Plan actual",
+  "nav": {
+    "graphics": "Panel",
+    "information": "Informes IVA",
+    "review": "Revisión",
+    "analyst": "Analista",
+    "account": "Cuenta",
+    "billing": "Planes y facturación",
+    "faq": "Ayuda",
+    "contact": "Soporte",
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "titles": {
+    "graphics": "Panel",
+    "information": "Informes IVA",
+    "review": "Revisión",
+    "analyst": "Analista",
+    "account": "Cuenta",
+    "billing": "Planes y facturación",
+    "faq": "Ayuda",
+    "contact": "Soporte",
+    "privacy": "Política de privacidad",
+    "terms": "Términos del servicio"
+  },
+  "tabs": {
+    "graphics": "Panel",
+    "information": "IVA",
+    "review": "Revisión",
+    "analyst": "Analista"
+  },
+  "primaryNav": "Principal"
+}

@@ -1,0 +1,40 @@
+{
+  "loading": "Loading…",
+  "language": "Language",
+  "chooseLanguage": "Choose language",
+  "close": "Close",
+  "more": "More",
+  "logOut": "Log out",
+  "monthly": "Monthly",
+  "quarterly": "Quarterly",
+  "apply": "Apply",
+  "change": "Change",
+  "period": "Period",
+  "type": "Type",
+  "year": "Year",
+  "reportingPeriod": "Reporting period",
+  "closePeriodControls": "Close period controls",
+  "sales": "Sales",
+  "refunds": "Refunds",
+  "net": "Net",
+  "vat": "VAT",
+  "premium": "Premium",
+  "categories": {
+    "UNION-OSS": "One-Stop Shop (OSS)",
+    "REGULAR": "Regular / domestic",
+    "VOEC": "VOEC (UK / CH / NO)",
+    "EMPTY": "Unclassified"
+  },
+  "plans": {
+    "Free": "Up to 100 transactions per document.",
+    "Basic": "2,000 / month or 6,000 / quarter.",
+    "Standard": "6,000 / month or 18,000 / quarter.",
+    "Pro": "Unlimited transactions."
+  },
+  "planLimitsShort": {
+    "Free": "Up to 100 tx / document",
+    "Basic": "2,000 / mo or 6,000 / qtr",
+    "Standard": "6,000 / mo or 18,000 / qtr",
+    "Pro": "Unlimited transactions"
+  }
+}

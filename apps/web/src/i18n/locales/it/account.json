@@ -1,0 +1,22 @@
+{
+  "profile": "Profilo",
+  "name": "Nome",
+  "email": "Email",
+  "saveChanges": "Salva modifiche",
+  "amazonTitle": "Amazon Seller Central",
+  "connected": "Connesso",
+  "amazonHint": "Il tuo token MWS per la sync automatica. Tienilo segreto.",
+  "saveToken": "Salva token",
+  "password": "Password",
+  "newPassword": "Nuova password",
+  "confirmPassword": "Conferma password",
+  "changePassword": "Cambia password",
+  "profileSaved": "Profilo salvato",
+  "profileFailed": "Salvataggio profilo non riuscito",
+  "tokenUpdated": "Token Amazon aggiornato",
+  "tokenFailed": "Aggiornamento token non riuscito",
+  "passwordsMismatch": "Le password non coincidono",
+  "passwordRequired": "Password obbligatoria",
+  "passwordChanged": "Password cambiata",
+  "passwordFailed": "Cambio password non riuscito"
+}

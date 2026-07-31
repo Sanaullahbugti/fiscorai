@@ -1,0 +1,40 @@
+{
+  "loading": "Cargando…",
+  "language": "Idioma",
+  "chooseLanguage": "Elegir idioma",
+  "close": "Cerrar",
+  "more": "Más",
+  "logOut": "Cerrar sesión",
+  "monthly": "Mensual",
+  "quarterly": "Trimestral",
+  "apply": "Aplicar",
+  "change": "Cambiar",
+  "period": "Periodo",
+  "type": "Tipo",
+  "year": "Año",
+  "reportingPeriod": "Periodo de declaración",
+  "closePeriodControls": "Cerrar controles de periodo",
+  "sales": "Ventas",
+  "refunds": "Reembolsos",
+  "net": "Neto",
+  "vat": "IVA",
+  "premium": "Premium",
+  "categories": {
+    "UNION-OSS": "Ventanilla única (OSS)",
+    "REGULAR": "Regular / nacional",
+    "VOEC": "VOEC (UK / CH / NO)",
+    "EMPTY": "Sin clasificar"
+  },
+  "plans": {
+    "Free": "Hasta 100 transacciones por documento.",
+    "Basic": "2.000 / mes o 6.000 / trimestre.",
+    "Standard": "6.000 / mes o 18.000 / trimestre.",
+    "Pro": "Transacciones ilimitadas."
+  },
+  "planLimitsShort": {
+    "Free": "Hasta 100 tx / documento",
+    "Basic": "2.000 / mes o 6.000 / trim.",
+    "Standard": "6.000 / mes o 18.000 / trim.",
+    "Pro": "Transacciones ilimitadas"
+  }
+}

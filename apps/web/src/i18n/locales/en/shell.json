@@ -1,0 +1,35 @@
+{
+  "brand": "FiscorAI",
+  "currentPlan": "Current plan",
+  "nav": {
+    "graphics": "Dashboard",
+    "information": "VAT reports",
+    "review": "Review",
+    "analyst": "Analyst",
+    "account": "Account",
+    "billing": "Plans & billing",
+    "faq": "Help",
+    "contact": "Support",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "titles": {
+    "graphics": "Dashboard",
+    "information": "VAT reports",
+    "review": "Review",
+    "analyst": "Analyst",
+    "account": "Account",
+    "billing": "Plans & billing",
+    "faq": "Help",
+    "contact": "Support",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "tabs": {
+    "graphics": "Dash",
+    "information": "VAT",
+    "review": "Review",
+    "analyst": "Analyst"
+  },
+  "primaryNav": "Primary"
+}

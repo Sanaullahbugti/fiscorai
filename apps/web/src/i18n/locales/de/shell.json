@@ -1,0 +1,35 @@
+{
+  "brand": "FiscorAI",
+  "currentPlan": "Aktueller Plan",
+  "nav": {
+    "graphics": "Dashboard",
+    "information": "MwSt-Berichte",
+    "review": "Prüfung",
+    "analyst": "Analyst",
+    "account": "Konto",
+    "billing": "Pläne & Abrechnung",
+    "faq": "Hilfe",
+    "contact": "Support",
+    "privacy": "Datenschutz",
+    "terms": "AGB"
+  },
+  "titles": {
+    "graphics": "Dashboard",
+    "information": "MwSt-Berichte",
+    "review": "Prüfung",
+    "analyst": "Analyst",
+    "account": "Konto",
+    "billing": "Pläne & Abrechnung",
+    "faq": "Hilfe",
+    "contact": "Support",
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen"
+  },
+  "tabs": {
+    "graphics": "Dash",
+    "information": "MwSt",
+    "review": "Prüfung",
+    "analyst": "Analyst"
+  },
+  "primaryNav": "Primär"
+}

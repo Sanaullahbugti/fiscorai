@@ -1,0 +1,16 @@
+{
+  "needsAttention": "Cosa richiede attenzione",
+  "checkSummary": "{{critical}} da correggere · {{warning}} da verificare · {{info}} note",
+  "chipFix": "Correggi",
+  "chipCheck": "Verifica",
+  "chipNote": "Nota",
+  "fileWhen": "Cosa dichiarare, e quando",
+  "totalVat": "IVA totale {{amount}}",
+  "vatToDeclare": "IVA da dichiarare",
+  "due": "Scadenza",
+  "noFilings": "Carica un periodo con vendite OSS per vedere le scadenze.",
+  "disclaimer": "Le scadenze seguono il calendario locale usuale. La tua registrazione può differire — conferma con il consulente.",
+  "aiTitle": "Vuoi spiegazioni su questi risultati, o fare una domanda tua?",
+  "aiSub": "Apri l'analista — legge le cifre di questo periodo e risponde in linguaggio chiaro.",
+  "openAnalyst": "Apri l'analista"
+}

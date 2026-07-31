@@ -1,0 +1,32 @@
+{
+  "title": "Pregúntame lo que quieras sobre tus datos de IVA",
+  "subtitle": "Leo todos tus informes subidos y respondo en lenguaje claro.",
+  "lockTitle": "El analista IA es premium",
+  "lockBody": "Preguntas ilimitadas, análisis con IA de todas tus cifras subidas y explicaciones claras.",
+  "perk1": "Respuestas instantáneas a cualquier pregunta",
+  "perk2": "Desglose completo de todas las subidas",
+  "perk3": "Ideas sobre riesgos y oportunidades",
+  "seePlans": "Ver planes",
+  "emptyPrompts": "Aún no hay preguntas. Empieza con una de estas o escribe abajo.",
+  "thinking": "FiscorAI está pensando",
+  "placeholder": "¿Qué te gustaría saber?",
+  "shiftEnter": "Mayús+Enter para nueva línea",
+  "clear": "Borrar",
+  "disclaimer": "La IA puede equivocarse. Revisa siempre las cifras críticas con tu contable.",
+  "analyzeFailed": "No se pudieron analizar tus datos",
+  "copy": "Copiar",
+  "retry": "Reintentar",
+  "send": "Enviar",
+  "stop": "Detener",
+  "quotaLeft": "Te quedan {{left}} de {{limit}} preguntas gratis hoy",
+  "quotaSpent": "Límite diario alcanzado",
+  "quotaTitle": "Esas son tus 3 preguntas gratis de hoy",
+  "quotaBody": "Las cuentas gratuitas tienen {{limit}} preguntas al día. Mejora tu plan para respuestas ilimitadas sobre todos tus informes.",
+  "quotaPlaceholder": "Mejora tu plan para seguir preguntando",
+  "quotaResets": "Tus preguntas gratis se reinician mañana",
+  "prompts": {
+    "vatByCountry": "¿Cuál es mi exposición al IVA por país?",
+    "refundAnomalies": "¿Hay anomalías en reembolsos?",
+    "ossVsRegular": "¿Cuánto es OSS frente a ventas regulares?"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "title": "No report for this period",
+  "bodyDefault": "Upload an Amazon VAT Transactions Report under VAT reports to populate this view.",
+  "bodyDashboard": "Upload an Amazon VAT Transactions Report under VAT reports to populate charts.",
+  "bodyReview": "Upload an Amazon VAT Transactions Report to see checks and filing deadlines.",
+  "bodyAnalyst": "The analyst needs at least one processed report. Upload under VAT reports and it will be ready in under a minute.",
+  "cta": "Go to upload"
+}

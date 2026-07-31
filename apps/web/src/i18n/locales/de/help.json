@@ -1,0 +1,58 @@
+{
+  "fillAll": "Bitte alle Felder ausfüllen",
+  "messageSent": "Nachricht gesendet!",
+  "sendFailed": "Senden fehlgeschlagen",
+  "getInTouch": "Kontakt",
+  "name": "Name",
+  "email": "E-Mail",
+  "message": "Nachricht",
+  "sendMessage": "Nachricht senden",
+  "asideBody": "Fragen zu MwSt-Schemata, Limits oder Rechnungen — schreiben Sie uns auf Englisch, Deutsch, Spanisch, Französisch oder Italienisch.",
+  "asideFooter": " · Spanien · MwSt-Reporting für Amazon-EU-Verkäufer.",
+  "privacyTitle": "Datenschutzerklärung",
+  "termsTitle": "Nutzungsbedingungen",
+  "legalIntro": "FiscorAI wird von einer spanischen Gesellschaft betrieben, eingetragen im Handelsregister Madrid.",
+  "legalNote": "Dies ist eine Demonstration. Vor Produktion sollte ein Anwalt den Text prüfen.",
+  "privacy1": "Wir verarbeiten nur notwendige Daten: E-Mail, USt-IdNr. und Amazon-MWS-Token.",
+  "privacy2": "Hochgeladene CSV-Dateien werden serverseitig verarbeitet und nach der Analyse gelöscht. Keine Weitergabe personenbezogener Daten.",
+  "privacy3": "Rechnungen und Aktivitätslogs werden 7 Jahre gemäß EU-Steuerrecht aufbewahrt.",
+  "privacy4": "Sie können die Löschung Ihres Kontos und aller Daten verlangen. Wir erfüllen dies innerhalb von 30 Tagen.",
+  "terms1": "Der Dienst wird „wie besehen“ bereitgestellt. Berechnungsfehler können vorkommen. Immer mit Steuerberater prüfen.",
+  "terms2": "Ihr Konto liegt in Ihrer Verantwortung. Zugangsdaten und MWS-Token nicht teilen.",
+  "terms3": "Zahlungsausfälle sperren den Zugang. Erstattungen folgen dem Streitverfahren Ihrer Zahlungsmethode.",
+  "terms4": "Wir können den Dienst sperren oder beenden bei Verstoß gegen diese Bedingungen oder geltendes Recht.",
+  "faqs": [
+    {
+      "q": "Brauche ich eine Kreditkarte zum Start?",
+      "a": "Nein. Der Free-Plan braucht keine Karte und bleibt kostenlos — bis 100 Transaktionen pro Dokument."
+    },
+    {
+      "q": "Was zählt als Transaktion?",
+      "a": "Jede Zeile im Amazon-MwSt-Transaktionsbericht: Bestellungen, Retouren, Erstattungen, Liquidationen und Lagerbewegungen."
+    },
+    {
+      "q": "Wie funktionieren monatliche/vierteljährliche Limits?",
+      "a": "Limits gelten pro Dokument. Basic 2.000/Monat oder 6.000/Quartal; Standard 6.000/18.000; Pro unbegrenzt."
+    },
+    {
+      "q": "Was passiert bei Überschreitung?",
+      "a": "Die Datei wird teilweise verarbeitet; PDF und Excel tragen einen ATTENTION-Hinweis. Upgraden und erneut hochladen."
+    },
+    {
+      "q": "Welche Datei und wo finde ich sie?",
+      "a": "Amazon Seller Central → Berichte → Fulfilment by Amazon → Amazon VAT Transactions Report. Nur CSV, max. 100 MB."
+    },
+    {
+      "q": "Wie lange dauert die Verarbeitung?",
+      "a": "Meist unter einer Minute. Die Zeile zeigt Verarbeitung, bis Ergebnisse bereit sind."
+    },
+    {
+      "q": "Was erhalte ich?",
+      "a": "Online-Ansicht (Diagramme und Tabellen), PDF-Zusammenfassung und detailliertes Excel nach Schema und Land."
+    },
+    {
+      "q": "Ist erneutes Hochladen sicher?",
+      "a": "Ja. Ein neuer Upload ersetzt die Dateien für diesen Zeitraum und aktualisiert die Diagramme."
+    }
+  ]
+}

@@ -1,0 +1,699 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-height: 440px;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex-wrap: wrap;
+}
+
+.headerMark {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-brand);
+  color: var(--brand-accent);
+  box-shadow: var(--shadow-card);
+}
+
+.headerMarkIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.headerText {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-section-title);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: var(--leading-tight);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+  margin: 3px 0 0;
+}
+
+.chip {
+  margin-left: auto;
+  background: var(--surface-ochre-tint);
+  color: #6a4a10;
+  border: 1px solid var(--brand-accent);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
+}
+
+/* Free-tier allowance counter, sits where the premium badge would be. */
+.meter {
+  margin-left: auto;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.meterEmpty {
+  background: var(--surface-warning-tint);
+  color: var(--status-warning);
+  border-color: var(--status-warning);
+}
+
+/* ---------- Premium lock ---------- */
+
+.lockCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 620px;
+}
+
+.lockMark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-ochre-tint);
+  color: var(--brand-accent);
+  border: 1px solid var(--brand-accent);
+  margin-bottom: 2px;
+}
+
+.lockMarkIcon {
+  width: 21px;
+  height: 21px;
+}
+
+.lockTitle {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.lockBody {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+  margin: 0;
+}
+
+.perks {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.perk {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  font-size: var(--text-body-sm);
+}
+
+.perkIcon {
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.perkIconSvg {
+  width: 15px;
+  height: 15px;
+}
+
+.upgradeBtn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--brand-accent);
+  color: #241a08;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 22px;
+  font-weight: 700;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.upgradeBtn:hover {
+  background: var(--brand-accent-pressed);
+}
+
+.btnIcon {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Loading ---------- */
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  padding: 28px 2px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 2px solid var(--border-default);
+  border-top-color: var(--brand-primary);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Chat shell ---------- */
+
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.chatBox {
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  background: var(--surface-card);
+  padding: 20px;
+  flex: 1;
+  min-height: 320px;
+  max-height: calc(100dvh - 330px);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.chatBox::-webkit-scrollbar { width: 10px; }
+.chatBox::-webkit-scrollbar-track { background: transparent; }
+.chatBox::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 999px;
+  border: 3px solid var(--surface-card);
+}
+.chatBox::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+/* ---------- Welcome / prompts ---------- */
+
+.welcome {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 13px;
+  padding: 12px 0;
+}
+
+.welcomeMark {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.welcomeMarkIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.welcomeText {
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+  max-width: 380px;
+  margin: 0;
+}
+
+.promptGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 680px;
+  margin-top: 2px;
+}
+
+.promptBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-app);
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: var(--leading-body);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, background 150ms ease-out;
+}
+
+.promptBtn:hover:not(:disabled) {
+  border-color: var(--brand-primary);
+  background: var(--surface-brand-tint);
+}
+
+.promptBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.promptLabel { min-width: 0; }
+
+.promptArrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: transform 150ms ease-out, color 150ms ease-out;
+}
+
+.promptBtn:hover .promptArrow {
+  color: var(--brand-primary);
+  transform: translateX(2px);
+}
+
+/* ---------- Message rows ---------- */
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeUp 200ms ease-out;
+}
+
+.rowUser { align-items: flex-end; }
+.rowBot { align-items: flex-start; }
+
+.userBubble {
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  border-radius: 14px 14px 4px 14px;
+  padding: 11px 15px;
+  max-width: min(520px, 84%);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+
+.userText { white-space: pre-wrap; }
+
+/* The answer sits on the page rather than in a bubble — long, formatted
+   responses read better without a box drawn around them. */
+.botBubble {
+  max-width: min(660px, 100%);
+  padding-left: 13px;
+  border-left: 2px solid var(--surface-brand-tint);
+}
+
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: var(--brand-primary);
+  border-radius: 1px;
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ---------- Answer toolbar ---------- */
+
+.actions {
+  display: flex;
+  gap: 4px;
+  padding-left: 13px;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.rowBot:hover .actions,
+.rowBot:focus-within .actions {
+  opacity: 1;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.actionBtn:hover {
+  background: var(--surface-brand-tint);
+  border-color: var(--border-default);
+  color: var(--brand-primary);
+}
+
+.actionIcon {
+  width: 13px;
+  height: 13px;
+}
+
+/* ---------- Thinking / error ---------- */
+
+.thinking {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-left: 13px;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.thinkingMark {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+  animation: thinkPulse 1.6s ease-in-out infinite;
+}
+
+.thinkingIcon {
+  width: 13px;
+  height: 13px;
+}
+
+@keyframes thinkPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+
+.thinkingLabel {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.thinkingDots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.thinkingDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--brand-accent);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.thinkingDot:nth-child(2) { animation-delay: 0.15s; }
+.thinkingDot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+.errorBubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  background: var(--surface-critical-tint);
+  border: 1px solid var(--status-critical);
+  color: var(--status-critical);
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  max-width: min(560px, 100%);
+}
+
+.errorIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Upgrade panel shown inline once the free allowance is spent. */
+.upsell {
+  margin-top: 4px;
+  background: var(--surface-ochre-tint);
+  border: 1px solid var(--brand-accent);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  animation: fadeUp 240ms ease-out;
+}
+
+/* ---------- Composer ---------- */
+
+.composer {
+  margin-top: 14px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 13px 15px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.composer:focus-within {
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-raised);
+}
+
+.composerLocked {
+  background: var(--surface-app);
+  border-color: var(--border-default);
+  box-shadow: none;
+}
+
+.composerLocked textarea {
+  cursor: not-allowed;
+}
+
+.composer textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  resize: none;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--text-primary);
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.composer textarea::placeholder { color: var(--text-secondary); }
+
+.composerFooter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.composerNote {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+}
+
+.textBtn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--text-label);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.textBtn:hover { color: var(--text-primary); }
+
+.sendBtn,
+.stopBtn {
+  margin-left: auto;
+  border: none;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  transition: background 150ms ease-out, transform 100ms ease-out;
+}
+
+.sendBtn:hover:not(:disabled),
+.stopBtn:hover {
+  background: var(--surface-brand-pressed);
+}
+
+.sendBtn:active:not(:disabled),
+.stopBtn:active { transform: scale(0.95); }
+
+.sendBtn:disabled {
+  background: var(--border-default);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.sendIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Disclaimer ---------- */
+
+.disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+  margin: 10px 0 0;
+}
+
+.disclaimerIcon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 860px) {
+  .page { min-height: calc(100dvh - 300px); }
+
+  .chip {
+    margin-left: 0;
+    order: -1;
+  }
+
+  .lockCard {
+    padding: 22px 18px;
+    max-width: none;
+    width: 100%;
+  }
+
+  .upgradeBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .chatBox {
+    min-height: calc(100dvh - 380px);
+    max-height: calc(100dvh - 320px);
+    padding: 14px;
+    gap: 15px;
+  }
+
+  .promptGrid { grid-template-columns: 1fr; }
+
+  .userBubble { max-width: 92%; }
+
+  /* No hover on touch — keep the answer tools permanently visible. */
+  .actions { opacity: 1; }
+
+  .composer { padding: 11px 13px 9px; }
+
+  .composerFooter {
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .spinner,
+  .caret,
+  .thinkingDot,
+  .promptArrow,
+  .chatBox {
+    animation: none;
+    transition: none;
+    scroll-behavior: auto;
+  }
+}

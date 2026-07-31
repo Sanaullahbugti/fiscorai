@@ -1,0 +1,16 @@
+{
+  "needsAttention": "Was Aufmerksamkeit braucht",
+  "checkSummary": "{{critical}} zu beheben · {{warning}} zu prüfen · {{info}} Hinweise",
+  "chipFix": "Beheben",
+  "chipCheck": "Prüfen",
+  "chipNote": "Hinweis",
+  "fileWhen": "Was einreichen, und wann",
+  "totalVat": "MwSt gesamt {{amount}}",
+  "vatToDeclare": "Zu meldende MwSt",
+  "due": "Fällig",
+  "noFilings": "Laden Sie einen Zeitraum mit OSS-Umsätzen hoch, um Fristen zu sehen.",
+  "disclaimer": "Fristen folgen dem üblichen lokalen Kalender. Ihre Registrierung kann abweichen — mit Berater bestätigen.",
+  "aiTitle": "Befunde erklären lassen oder eigene Frage stellen?",
+  "aiSub": "Öffnen Sie den Analysten — er liest die Zahlen dieses Zeitraums und antwortet verständlich.",
+  "openAnalyst": "Analyst öffnen"
+}

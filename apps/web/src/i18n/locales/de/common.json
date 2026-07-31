@@ -1,0 +1,40 @@
+{
+  "loading": "Laden…",
+  "language": "Sprache",
+  "chooseLanguage": "Sprache wählen",
+  "close": "Schließen",
+  "more": "Mehr",
+  "logOut": "Abmelden",
+  "monthly": "Monatlich",
+  "quarterly": "Vierteljährlich",
+  "apply": "Anwenden",
+  "change": "Ändern",
+  "period": "Zeitraum",
+  "type": "Typ",
+  "year": "Jahr",
+  "reportingPeriod": "Meldezeitraum",
+  "closePeriodControls": "Zeitraumsteuerung schließen",
+  "sales": "Umsatz",
+  "refunds": "Erstattungen",
+  "net": "Netto",
+  "vat": "MwSt",
+  "premium": "Premium",
+  "categories": {
+    "UNION-OSS": "One-Stop Shop (OSS)",
+    "REGULAR": "Regulär / inland",
+    "VOEC": "VOEC (UK / CH / NO)",
+    "EMPTY": "Nicht klassifiziert"
+  },
+  "plans": {
+    "Free": "Bis zu 100 Transaktionen pro Dokument.",
+    "Basic": "2.000 / Monat oder 6.000 / Quartal.",
+    "Standard": "6.000 / Monat oder 18.000 / Quartal.",
+    "Pro": "Unbegrenzte Transaktionen."
+  },
+  "planLimitsShort": {
+    "Free": "Bis 100 Tx / Dokument",
+    "Basic": "2.000 / Mo oder 6.000 / Qtr",
+    "Standard": "6.000 / Mo oder 18.000 / Qtr",
+    "Pro": "Unbegrenzte Transaktionen"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "title": "Ask me anything about your VAT data",
+  "subtitle": "I read all your uploaded reports and answer in plain language.",
+  "lockTitle": "AI Analyst is premium",
+  "lockBody": "Unlimited questions, AI-powered analysis of all your uploaded figures, and explanations in plain language.",
+  "perk1": "Instant answers to any question",
+  "perk2": "Full breakdown across all uploads",
+  "perk3": "Risk and opportunity insights",
+  "seePlans": "See plans",
+  "emptyPrompts": "No questions yet. Start with one of these, or type your own below.",
+  "thinking": "FiscorAI is thinking",
+  "placeholder": "What would you like to know?",
+  "shiftEnter": "Shift+Enter for new line",
+  "clear": "Clear",
+  "disclaimer": "AI may make mistakes. Always review critical figures with your accountant.",
+  "analyzeFailed": "Could not analyze your data",
+  "copy": "Copy",
+  "retry": "Retry",
+  "send": "Send",
+  "stop": "Stop",
+  "quotaLeft": "{{left}} of {{limit}} free questions left today",
+  "quotaSpent": "Daily free limit reached",
+  "quotaTitle": "Thats your 3 free questions for today",
+  "quotaBody": "Free accounts get {{limit}} questions a day. Upgrade for unlimited answers across every report you upload.",
+  "quotaPlaceholder": "Upgrade to keep asking",
+  "quotaResets": "Your free questions reset tomorrow",
+  "prompts": {
+    "vatByCountry": "What's my VAT exposure by country?",
+    "refundAnomalies": "Are there any refund anomalies?",
+    "ossVsRegular": "How much is OSS vs regular sales?"
+  }
+}

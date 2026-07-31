@@ -1,0 +1,35 @@
+{
+  "brand": "FiscorAI",
+  "currentPlan": "Offre actuelle",
+  "nav": {
+    "graphics": "Tableau de bord",
+    "information": "Rapports TVA",
+    "review": "Revue",
+    "analyst": "Analyste",
+    "account": "Compte",
+    "billing": "Offres et facturation",
+    "faq": "Aide",
+    "contact": "Support",
+    "privacy": "Confidentialité",
+    "terms": "Conditions"
+  },
+  "titles": {
+    "graphics": "Tableau de bord",
+    "information": "Rapports TVA",
+    "review": "Revue",
+    "analyst": "Analyste",
+    "account": "Compte",
+    "billing": "Offres et facturation",
+    "faq": "Aide",
+    "contact": "Support",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+  "tabs": {
+    "graphics": "Board",
+    "information": "TVA",
+    "review": "Revue",
+    "analyst": "Analyste"
+  },
+  "primaryNav": "Principal"
+}

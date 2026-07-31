@@ -1,0 +1,8 @@
+{
+  "title": "Nessun report per questo periodo",
+  "bodyDefault": "Carica un report delle transazioni IVA Amazon in Report IVA per popolare questa vista.",
+  "bodyDashboard": "Carica un report delle transazioni IVA Amazon in Report IVA per popolare i grafici.",
+  "bodyReview": "Carica un report delle transazioni IVA Amazon per vedere controlli e scadenze.",
+  "bodyAnalyst": "L'analista necessita di almeno un report elaborato. Caricalo in Report VAT — pronto in meno di un minuto.",
+  "cta": "Vai al caricamento"
+}

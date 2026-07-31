@@ -1,0 +1,16 @@
+{
+  "needsAttention": "What needs attention",
+  "checkSummary": "{{critical}} to fix · {{warning}} to check · {{info}} notes",
+  "chipFix": "Fix",
+  "chipCheck": "Check",
+  "chipNote": "Note",
+  "fileWhen": "What to file, and when",
+  "totalVat": "Total VAT {{amount}}",
+  "vatToDeclare": "VAT to declare",
+  "due": "Due",
+  "noFilings": "Upload a period with OSS sales to see filing deadlines.",
+  "disclaimer": "Deadlines are the usual local calendar for each country. Your own registration may set a different date — confirm with your adviser.",
+  "aiTitle": "Want these findings explained, or your own question answered?",
+  "aiSub": "Open the analyst — it reads this period's figures and answers in plain language.",
+  "openAnalyst": "Open the analyst"
+}

@@ -1,0 +1,16 @@
+{
+  "needsAttention": "Qué necesita atención",
+  "checkSummary": "{{critical}} por corregir · {{warning}} por revisar · {{info}} notas",
+  "chipFix": "Corregir",
+  "chipCheck": "Revisar",
+  "chipNote": "Nota",
+  "fileWhen": "Qué declarar, y cuándo",
+  "totalVat": "IVA total {{amount}}",
+  "vatToDeclare": "IVA a declarar",
+  "due": "Vence",
+  "noFilings": "Sube un periodo con ventas OSS para ver plazos.",
+  "disclaimer": "Los plazos siguen el calendario local habitual. Tu registro puede variar — confírmalo con tu asesor.",
+  "aiTitle": "¿Quieres que te expliquen estos hallazgos, o hacer tu propia pregunta?",
+  "aiSub": "Abre el analista — lee las cifras de este periodo y responde en lenguaje claro.",
+  "openAnalyst": "Abrir el analista"
+}
