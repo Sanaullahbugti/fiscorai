@@ -1,0 +1,74 @@
+# FiscorAI — Render Blueprint
+# Dashboard: New → Blueprint → connect sanaullah-fiscorai/fiscorai
+# Free Postgres is unavailable without billing; API uses SQLite on the web service disk
+# (ephemeral on free — data resets on redeploy). Add a paid Postgres later if needed.
+
+services:
+  - type: web
+    name: fiscorai-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeploy: true
+    buildCommand: >
+      corepack enable &&
+      corepack prepare pnpm@9.15.0 --activate &&
+      pnpm install --frozen-lockfile &&
+      pnpm --filter @fiscorai/tax-processor build &&
+      pnpm --filter @fiscorai/api exec prisma generate &&
+      pnpm --filter @fiscorai/api build
+    startCommand: >
+      mkdir -p storage &&
+      cd apps/api &&
+      npx prisma db push &&
+      node dist/server.js
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        value: file:./prod.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 2h
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: STORAGE_ROOT
+        value: ../../storage
+      - key: CORS_ORIGIN
+        fromService:
+          name: fiscorai-web
+          type: web
+          property: host
+          # Static sites use https:// — set full origin after first deploy if needed
+      - key: PAYMENT_SUCCESS_URL
+        value: https://fiscorai-web.onrender.com/thankyou
+      - key: PAYMENT_CANCEL_URL
+        value: https://fiscorai-web.onrender.com/payment-failed
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+
+  - type: web
+    name: fiscorai-web
+    runtime: static
+    branch: main
+    autoDeploy: true
+    buildCommand: >
+      corepack enable &&
+      corepack prepare pnpm@9.15.0 --activate &&
+      pnpm install --frozen-lockfile &&
+      pnpm --filter @fiscorai/web build
+    staticPublishPath: apps/web/dist
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: VITE_API_URL
+        fromService:
+          name: fiscorai-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
