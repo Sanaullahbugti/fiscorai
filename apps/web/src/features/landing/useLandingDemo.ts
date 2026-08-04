@@ -1,12 +1,37 @@
 import { useMemo, useState } from "react";
+import { PLANS } from "@/constants";
 import {
   COUNTRIES,
   ERROR_RATE_PCT,
   MONTHS,
-  PRO_PRICE,
   SALES,
   SHOW_CALCULATOR,
 } from "./landingDemoData";
+
+// Mirrors the real per-plan gating (data.service.ts transaction caps, and the
+// unlimited-analyst-questions rule for any active paid plan) so this section
+// can never quote a different product than checkout actually sells.
+const PLAN_FEATURES: Record<string, string[]> = {
+  Free: [
+    "Up to 100 transactions per document",
+    "Country VAT summary + charts",
+    "PDF and Excel export",
+    "All deterministic checks",
+    "3 analyst questions / day",
+  ],
+  Basic: [
+    "2,000 transactions / month or 6,000 / quarter",
+    "Everything in Free",
+    "Unlimited analyst questions",
+  ],
+  Standard: [
+    "6,000 transactions / month or 18,000 / quarter",
+    "Everything in Basic",
+  ],
+  Pro: ["Unlimited transactions", "Everything in Standard"],
+};
+
+const PLAN_TAGS: Record<string, string> = { Standard: "Most sellers" };
 
 function eur(n: number, dp?: number) {
   const digits = dp || 0;
@@ -143,12 +168,13 @@ export function useLandingDemo() {
       months.length > 8 ? (i % 2 === 0 ? m.split(" ")[0] : "") : m,
     );
 
-    const maxCountry = Math.max(...rows.map((r) => r.vatRaw));
+    const maxCountry = Math.max(...rows.map((r) => r.vatRaw), 1);
     const countryBars = rows.map((r) => ({
+      code: r.code,
       name: r.name,
       color: r.color,
       value: eur(r.vatRaw),
-      pct: ((r.vatRaw / maxCountry) * 100).toFixed(1) + "%",
+      heightPct: (r.vatRaw / maxCountry) * 100,
     }));
 
     const reportRows = rows.map((r) => ({
@@ -215,12 +241,13 @@ export function useLandingDemo() {
       },
     ];
 
+    const proPrice = PLANS.find((p) => p.code === "Pro")?.price ?? 0;
     const annual = calc * 12;
     const exposure = annual * (ERROR_RATE_PCT / 100);
     const calcOut = [
       { label: "VAT stated wrong / year", value: eur(exposure) },
       { label: "Penalties + interest at 20%", value: eur(exposure * 0.2) },
-      { label: "FiscorAI Pro / year", value: eur(PRO_PRICE * 12) },
+      { label: "FiscorAI Pro / year", value: eur(proPrice * 12) },
     ];
 
     const heroDonut = donut([
@@ -229,73 +256,32 @@ export function useLandingDemo() {
       { n: vatTotal * 0.11, label: "Domestic", color: "#8AB894" },
     ]);
 
-    const plans = [
-      {
-        name: "Free",
-        tag: "",
-        price: "€0",
-        per: "forever",
-        surface: "var(--surface-card)",
-        ink: "var(--text-primary)",
-        border: "var(--border-default)",
-        check: "var(--brand-primary)",
-        features: [
-          "Country VAT summary + charts",
-          "VAT detailed report",
-          "PDF and Excel export",
-          "All deterministic checks",
-          "3 analyst questions / month",
-        ],
-        cta: "Start free",
-        ctaBg: "var(--surface-card)",
-        ctaFg: "var(--text-primary)",
-        ctaBorder: "var(--border-strong)",
-      },
-      {
-        name: "Pro",
-        tag: "Most sellers",
-        price: "€" + PRO_PRICE,
-        per: "/ month",
-        surface: "var(--surface-brand)",
-        ink: "var(--text-on-brand)",
-        border: "var(--surface-brand)",
-        check: "#C8862B",
-        features: [
-          "Everything in Free",
-          "Transaction-level detail",
-          "Unlimited analyst questions",
-          "Filing calendar with deadlines",
-          "Real volumes, no sampling",
-        ],
-        cta: "Upgrade to Pro",
-        ctaBg: "var(--brand-accent)",
-        ctaFg: "#FFFFFF",
-        ctaBorder: "var(--brand-accent)",
-      },
-      {
-        name: "Business",
-        tag: "",
-        price: "€" + PRO_PRICE * 4,
-        per: "/ month",
-        surface: "var(--surface-card)",
-        ink: "var(--text-primary)",
-        border: "var(--border-default)",
-        check: "var(--brand-primary)",
-        features: [
-          "Everything in Pro",
-          "Multiple seller accounts",
-          "Accountant seats",
-          "Historical re-analysis",
-          "Priority support",
-        ],
-        cta: "Talk to us",
-        ctaBg: "var(--surface-card)",
-        ctaFg: "var(--text-primary)",
-        ctaBorder: "var(--border-strong)",
-      },
-    ];
+    // Driven by the same PLANS the billing page checks out against, so the
+    // pitch here can never drift from what a signup actually gets charged.
+    const plans = PLANS.map((p) => {
+      const isFeatured = p.code === "Standard";
+      return {
+        name: p.code,
+        tag: PLAN_TAGS[p.code] || "",
+        price: p.price === 0 ? "€0" : "€" + p.price.toFixed(2),
+        per: p.price === 0 ? "forever" : "/ month",
+        surface: isFeatured ? "var(--surface-brand)" : "var(--surface-card)",
+        ink: isFeatured ? "var(--text-on-brand)" : "var(--text-primary)",
+        border: isFeatured ? "var(--surface-brand)" : "var(--border-default)",
+        check: isFeatured ? "#C8862B" : "var(--brand-primary)",
+        features: PLAN_FEATURES[p.code] || [],
+        cta: p.price === 0 ? "Start free" : `Upgrade to ${p.code}`,
+        ctaBg: isFeatured ? "var(--brand-accent)" : "var(--surface-card)",
+        ctaFg: isFeatured ? "#FFFFFF" : "var(--text-primary)",
+        ctaBorder: isFeatured ? "var(--brand-accent)" : "var(--border-strong)",
+      };
+    });
 
     const faqs = [
+      {
+        q: "Where does the AI come in?",
+        a: "It's the main way you use FiscorAI. Ask in plain language and the analyst reads your aggregates and flags — never your raw rows — to answer, and hands you the PDF or Excel report the moment you ask for it. Every number it gives you is computed, not generated.",
+      },
       {
         q: "What file do I upload?",
         a: "Your Amazon VAT transactions report, or the standard transaction report. CSV or TXT, any date range.",
@@ -303,10 +289,6 @@ export function useLandingDemo() {
       {
         q: "Does it file for me?",
         a: "No. FiscorAI does the arithmetic and tells you what is due where and when. Filing stays with you or your accountant.",
-      },
-      {
-        q: "Where does the AI come in?",
-        a: "The analyst reads only your aggregates and flags — never your raw rows — and explains them in plain language. Every number on screen is computed, not generated.",
       },
       {
         q: "Is my data safe?",

@@ -1,0 +1,69 @@
+# FiscorAI — robots.txt
+#
+# Blog and marketing pages are meant to be found and cited — that's the whole
+# point of running a blog. The authenticated app (dashboard, reports, billing,
+# etc.) has nothing for a crawler to index anyway since it's behind login, but
+# is excluded explicitly rather than left ambiguous.
+#
+# AI crawlers are split into two families and treated the same way here
+# (allowed): "training" bots (GPTBot, ClaudeBot, Google-Extended, CCBot) build
+# models from crawled content, "search/retrieval" bots (OAI-SearchBot,
+# Claude-User, PerplexityBot) fetch pages live to answer a user's question and
+# cite the source. For a content-marketing blog whose goal is reach and
+# citation, blocking either category works against the point of publishing —
+# flip specific bots to Disallow below if that calculus changes later.
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /vat-reports
+Disallow: /review
+Disallow: /analyst
+Disallow: /account
+Disallow: /billing
+Disallow: /thankyou
+Disallow: /payment-failed
+Disallow: /support
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Google's AI training crawler (separate from Googlebot's search index)
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://fiscor.ai/sitemap.xml

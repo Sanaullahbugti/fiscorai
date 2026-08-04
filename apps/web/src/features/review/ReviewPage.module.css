@@ -5,6 +5,24 @@
   max-width: 1000px;
 }
 
+.truncBanner {
+  background: var(--surface-ochre-tint);
+  color: #6a4a10;
+  border: 1px solid var(--brand-accent);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+}
+
+.pulseVerdict {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: var(--leading-body);
+}
+
 .empty {
   background: var(--surface-card);
   border: 1px solid var(--border-default);

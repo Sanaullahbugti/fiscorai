@@ -16,7 +16,10 @@ export class PaymentsController {
 
   confirmSession = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const data = await paymentsService.confirmCheckoutSession(req.user!.id, req.body.sessionId);
+      const data = await paymentsService.confirmCheckoutSession(
+        req.user!.id,
+        typeof req.body.sessionId === "string" ? req.body.sessionId : undefined,
+      );
       res.json(ok(data));
     } catch (e) {
       next(e);
@@ -32,27 +35,9 @@ export class PaymentsController {
     }
   };
 
-  listCards = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  portal = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const cards = await paymentsService.listCards(req.user!.id);
-      res.json(ok(cards));
-    } catch (e) {
-      next(e);
-    }
-  };
-
-  createSetupIntent = async (req: AuthRequest, res: Response, next: NextFunction) => {
-    try {
-      const data = await paymentsService.createSetupIntent(req.user!.id);
-      res.json(ok(data));
-    } catch (e) {
-      next(e);
-    }
-  };
-
-  deleteCard = async (req: AuthRequest, res: Response, next: NextFunction) => {
-    try {
-      const data = await paymentsService.deleteCard(req.user!.id, String(req.params.id));
+      const data = await paymentsService.getPortalUrl(req.user!.id);
       res.json(ok(data));
     } catch (e) {
       next(e);
@@ -61,7 +46,7 @@ export class PaymentsController {
 
   webhook = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const signature = req.headers["stripe-signature"];
+      const signature = req.headers["x-signature"];
       const data = await paymentsService.handleWebhook(
         req.body as Buffer,
         typeof signature === "string" ? signature : undefined,

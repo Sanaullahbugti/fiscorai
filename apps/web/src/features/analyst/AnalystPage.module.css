@@ -1,59 +1,53 @@
 .page {
+  /* Fill the shell content column so the composer sits on the bottom of the
+     visible area (classic chat layout), not under a tall empty chat box. */
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   width: 100%;
-  min-height: 440px;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
 
-/* ---------- Header ---------- */
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  flex-wrap: wrap;
+/* Declared locally on purpose: CSS Modules rewrites animation names, so a
+   reference to the global tokens.css `fadeUp` resolves to a keyframe that does
+   not exist and the animation silently never runs. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
 }
 
-.headerMark {
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  border-radius: 11px;
+/* ---------- Page toolbar (portalled into the shell header) ---------- */
+
+.iconAction {
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
-  background: var(--surface-brand);
-  color: var(--brand-accent);
-  box-shadow: var(--shadow-card);
-}
-
-.headerMarkIcon {
-  width: 20px;
-  height: 20px;
-}
-
-.headerText {
-  min-width: 0;
-}
-
-.title {
-  font-family: var(--font-serif);
-  font-size: var(--text-section-title);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: var(--leading-tight);
-  margin: 0;
-}
-
-.subtitle {
-  font-size: var(--text-small);
+  border: 1px solid var(--border-default);
+  border-radius: 9px;
+  background: var(--surface-card);
   color: var(--text-secondary);
-  line-height: var(--leading-body);
-  margin: 3px 0 0;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, background 150ms ease-out, color 150ms ease-out,
+    transform 100ms ease-out;
+}
+
+.iconAction:hover {
+  border-color: var(--brand-primary);
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.iconAction:active { transform: scale(0.94); }
+
+.iconActionIcon {
+  width: 15px;
+  height: 15px;
 }
 
 .chip {
-  margin-left: auto;
   background: var(--surface-ochre-tint);
   color: #6a4a10;
   border: 1px solid var(--brand-accent);
@@ -66,9 +60,91 @@
   white-space: nowrap;
 }
 
-/* Free-tier allowance counter, sits where the premium badge would be. */
+.headerBtnIcon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------- Mode selector (inline in the bar) ---------- */
+
+.modeRow {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  max-width: 100%;
+}
+
+.modeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 220ms cubic-bezier(0.16, 1, 0.3, 1), color 180ms ease-out;
+}
+
+.modeBtn:hover:not(.modeActive) {
+  color: var(--text-primary);
+  background: var(--surface-brand-tint);
+}
+
+.modeActive {
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+}
+
+.modeIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.modeText { display: inline; }
+
+/* Scope pill, in the composer footer beside the input it affects. */
+.scopeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-app);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 190px;
+  overflow: hidden;
+  transition: border-color 150ms ease-out, background 150ms ease-out, color 150ms ease-out;
+}
+
+.scopeChip:hover {
+  border-color: var(--brand-primary);
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.scopeChipIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* Free-tier allowance counter. */
+
 .meter {
-  margin-left: auto;
   background: var(--surface-brand-tint);
   color: var(--brand-primary);
   border: 1px solid var(--border-default);
@@ -195,9 +271,13 @@
 .loading {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   font-size: var(--text-body-sm);
   color: var(--text-secondary);
+  /* Centered in the chatBox rather than pinned to the top, so it occupies the
+     same visual weight as the welcome state it resolves into — no jump. */
+  margin: auto 0;
   padding: 28px 2px;
 }
 
@@ -229,13 +309,47 @@
   background: var(--surface-card);
   padding: 20px;
   flex: 1;
-  min-height: 320px;
-  max-height: calc(100dvh - 330px);
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+/* Drop a CSV anywhere on the conversation, not just on the composer. */
+.chatBox {
+  position: relative;
+}
+
+.chatBoxDrop {
+  border-color: var(--brand-primary);
+  border-style: dashed;
+}
+
+.dropOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface-brand-tint) 92%, transparent);
+  color: var(--brand-primary);
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  text-align: center;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.dropOverlayIcon {
+  width: 26px;
+  height: 26px;
 }
 
 .chatBox::-webkit-scrollbar { width: 10px; }
@@ -274,12 +388,63 @@
   height: 22px;
 }
 
+.welcomeTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  max-width: 420px;
+}
+
 .welcomeText {
   font-size: var(--text-body-sm);
   color: var(--text-secondary);
   line-height: var(--leading-body);
-  max-width: 380px;
+  max-width: 420px;
   margin: 0;
+}
+
+.welcomeActions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.welcomePrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  border: none;
+  border-radius: 11px;
+  padding: 11px 18px;
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.welcomePrimary:hover { background: var(--surface-brand-pressed); }
+
+.welcomeSecondary {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 11px;
+  padding: 11px 18px;
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, background 150ms ease-out;
+}
+
+.welcomeSecondary:hover {
+  border-color: var(--brand-primary);
+  background: var(--surface-brand-tint);
 }
 
 .promptGrid {
@@ -387,13 +552,13 @@
   display: flex;
   gap: 4px;
   padding-left: 13px;
-  opacity: 0;
-  transition: opacity 150ms ease-out;
+  opacity: 1;
 }
 
-.rowBot:hover .actions,
-.rowBot:focus-within .actions {
-  opacity: 1;
+.rowUser .actions {
+  padding-left: 0;
+  padding-right: 13px;
+  justify-content: flex-end;
 }
 
 .actionBtn {
@@ -519,8 +684,18 @@
 
 /* ---------- Composer ---------- */
 
+/* Flex sibling under the scrolling chat box — always visible at the bottom of
+   the page column (not sticky; sticky left it below a tall empty chat box). */
+.composerDock {
+  flex-shrink: 0;
+  z-index: 6;
+  padding-top: 10px;
+  padding-bottom: 4px;
+  background: var(--surface-app);
+}
+
 .composer {
-  margin-top: 14px;
+  position: relative;
   background: var(--surface-card);
   border: 1px solid var(--border-strong);
   border-radius: 20px;
@@ -529,12 +704,42 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  transition:
+    border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .composer:focus-within {
   border-color: var(--brand-primary);
   box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+/* Hairline that draws itself across the composer as it takes focus. */
+.composer::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--brand-accent),
+    var(--brand-primary),
+    transparent
+  );
+  transform: scaleX(0);
+  opacity: 0;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease-out;
+}
+
+.composer:focus-within::after {
+  transform: scaleX(1);
+  opacity: 1;
 }
 
 .composerLocked {
@@ -569,6 +774,36 @@
   gap: 12px;
 }
 
+.attachBtn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.attachBtn:hover:not(:disabled) {
+  background: var(--surface-brand-tint);
+  border-color: var(--border-default);
+  color: var(--brand-primary);
+}
+
+.attachBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.attachIcon {
+  width: 16px;
+  height: 16px;
+}
+
 .composerNote {
   font-size: var(--text-label);
   color: var(--text-secondary);
@@ -601,21 +836,48 @@
   flex-shrink: 0;
   background: var(--surface-brand);
   color: var(--text-on-brand);
-  transition: background 150ms ease-out, transform 100ms ease-out;
+  transition:
+    background 180ms ease-out,
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 180ms ease-out;
+}
+
+/* Enabling the button is the cue that the message is ready — give it a lift. */
+.sendBtn:not(:disabled) {
+  box-shadow: 0 2px 10px rgba(30, 58, 47, 0.22);
+  animation: sendReady 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes sendReady {
+  0% { transform: scale(0.86); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
 .sendBtn:hover:not(:disabled),
 .stopBtn:hover {
   background: var(--surface-brand-pressed);
+  transform: translateY(-1px);
 }
 
 .sendBtn:active:not(:disabled),
-.stopBtn:active { transform: scale(0.95); }
+.stopBtn:active { transform: scale(0.93); }
 
 .sendBtn:disabled {
   background: var(--border-default);
   color: var(--text-secondary);
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+.stopBtn {
+  background: var(--status-critical);
+  animation: stopPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes stopPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 35, 24, 0.32); }
+  50% { box-shadow: 0 0 0 6px rgba(180, 35, 24, 0); }
 }
 
 .sendIcon {
@@ -632,7 +894,7 @@
   font-size: var(--text-label);
   color: var(--text-secondary);
   line-height: var(--leading-body);
-  margin: 10px 0 0;
+  margin: 8px 0 0;
 }
 
 .disclaimerIcon {
@@ -645,11 +907,48 @@
 /* ---------- Responsive ---------- */
 
 @media (max-width: 860px) {
-  .page { min-height: calc(100dvh - 300px); }
+  .composerDock {
+    padding-bottom: 2px;
+  }
 
-  .chip {
-    margin-left: 0;
-    order: -1;
+  /* The bar stays one row on phones — brand name and mode labels give way
+     before the controls do. */
+  .chip,
+  .meter {
+    max-width: 96px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .modeRow {
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .modeBtn {
+    flex: 1;
+    justify-content: center;
+    padding: 7px 8px;
+    min-width: 0;
+  }
+
+  .modeText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .scopeChip { max-width: 140px; }
+
+  .welcomeActions { width: 100%; }
+
+  .welcomePrimary,
+  .welcomeSecondary {
+    flex: 1;
+    justify-content: center;
+    min-width: 140px;
   }
 
   .lockCard {
@@ -664,8 +963,6 @@
   }
 
   .chatBox {
-    min-height: calc(100dvh - 380px);
-    max-height: calc(100dvh - 320px);
     padding: 14px;
     gap: 15px;
   }
@@ -690,10 +987,18 @@
   .spinner,
   .caret,
   .thinkingDot,
+  .thinkingMark,
   .promptArrow,
+  .sendBtn,
+  .stopBtn,
+  .composer,
+  .composer::after,
   .chatBox {
     animation: none;
     transition: none;
     scroll-behavior: auto;
   }
+
+  .composer:focus-within { transform: none; }
+  .composer::after { opacity: 1; transform: scaleX(1); }
 }

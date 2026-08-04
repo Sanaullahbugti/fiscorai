@@ -6,24 +6,32 @@
     "information": "MwSt-Berichte",
     "review": "Prüfung",
     "analyst": "Analyst",
+    "amazonConnection": "Amazon-Verbindung",
     "account": "Konto",
     "billing": "Pläne & Abrechnung",
     "faq": "Hilfe",
     "contact": "Support",
     "privacy": "Datenschutz",
-    "terms": "AGB"
+    "terms": "AGB",
+    "refund": "Erstattung",
+    "cookies": "Cookies"
   },
   "titles": {
     "graphics": "Dashboard",
     "information": "MwSt-Berichte",
     "review": "Prüfung",
     "analyst": "Analyst",
+    "amazonConnection": "Amazon-Verbindung",
     "account": "Konto",
     "billing": "Pläne & Abrechnung",
     "faq": "Hilfe",
     "contact": "Support",
     "privacy": "Datenschutzerklärung",
-    "terms": "Nutzungsbedingungen"
+    "terms": "Nutzungsbedingungen",
+    "thankyou": "Zahlung bestätigt",
+    "paymentFailed": "Zahlung nicht abgeschlossen",
+    "refund": "Erstattung & Kündigung",
+    "cookies": "Cookie-Richtlinie"
   },
   "tabs": {
     "graphics": "Dash",

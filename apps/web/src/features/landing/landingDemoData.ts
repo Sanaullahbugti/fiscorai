@@ -33,9 +33,8 @@ export const COUNTRIES: CountryDef[] = [
   { code: "ES", name: "Spain", share: 0.13, applied: 21, correct: 21, color: "#4E8F60" },
   { code: "NL", name: "Netherl.", share: 0.1, applied: 21, correct: 21, color: "#6AA377" },
   { code: "PL", name: "Poland", share: 0.08, applied: 8, correct: 23, color: "#C1432E" },
-  { code: "SE", name: "Sweden", share: 0.05, applied: 25, correct: 25, color: "#8AB894" },
+  { code: "SE", name: "Sweden", share: 0.05, applied: 25, correct: 25, color: "#3B6E8F" },
 ];
 
-export const PRO_PRICE = 49;
 export const ERROR_RATE_PCT = 1.9;
 export const SHOW_CALCULATOR = true;

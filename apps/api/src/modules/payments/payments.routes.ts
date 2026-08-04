@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middlewares/auth.js";
+import { checkoutLimiter } from "../../middlewares/rate-limit.js";
 import { validateBody } from "../../middlewares/validate.js";
 import { paymentsController } from "./payments.controller.js";
 import { checkoutSessionSchema, confirmSessionSchema } from "./payments.dto.js";
@@ -9,6 +10,7 @@ const router = Router();
 router.post(
   "/create-checkout-session",
   authMiddleware,
+  checkoutLimiter,
   validateBody(checkoutSessionSchema),
   paymentsController.createCheckoutSession,
 );
@@ -19,8 +21,6 @@ router.post(
   paymentsController.confirmSession,
 );
 router.get("/", authMiddleware, paymentsController.list);
-router.get("/cards", authMiddleware, paymentsController.listCards);
-router.post("/cards/setup-intent", authMiddleware, paymentsController.createSetupIntent);
-router.delete("/cards/:id", authMiddleware, paymentsController.deleteCard);
+router.get("/portal", authMiddleware, paymentsController.portal);
 
 export default router;

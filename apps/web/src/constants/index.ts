@@ -6,29 +6,37 @@ export const STORAGE_KEYS = {
   user: "fiscor.user",
   lang: "fiscor.lang",
   lastActive: "fiscor.lastActive",
+  analystMode: "fiscor.analystMode",
 } as const;
 
 export const ROUTES = {
   home: "/",
   signin: "/signin",
   signup: "/signup",
-  graphics: "/graphics",
-  information: "/information",
+  graphics: "/dashboard",
+  information: "/vat-reports",
   review: "/review",
   analyst: "/analyst",
   account: "/account",
+  amazonConnection: "/amazon-connection",
   billing: "/billing",
+  thankyou: "/thankyou",
+  paymentFailed: "/payment-failed",
   faq: "/faq",
-  contact: "/contact",
+  contact: "/support",
   privacy: "/privacy",
   terms: "/terms",
+  refund: "/refund",
+  cookies: "/cookies",
 } as const;
 
+// Kept in sync with apps/api/src/shared/plans.ts (API plan amounts) — priced
+// below the incumbent tool sellers already know, tier for tier.
 export const PLANS = [
   { code: "Free", price: 0 },
-  { code: "Basic", price: 19.9 },
-  { code: "Standard", price: 49.9 },
-  { code: "Pro", price: 99.9 },
+  { code: "Basic", price: 14.9 },
+  { code: "Standard", price: 39.9 },
+  { code: "Pro", price: 79.9 },
 ] as const;
 
 export const CATEGORY_COLORS: Record<string, string> = {

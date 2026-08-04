@@ -17,9 +17,9 @@ let refreshing: Promise<string | null> | null = null;
 async function refreshAccess(): Promise<string | null> {
   const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
   if (!refreshToken) return null;
-  const { data } = await axios.get(`${API_BASE_URL}/api/v1/auth/refresh`, {
-    params: { refreshToken },
-  });
+  // POST body, not a query string — a refresh token in the URL ends up in
+  // server access logs and any proxy in between.
+  const { data } = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, { refreshToken });
   const token = data?.data?.jwtToken as string | undefined;
   const nextRefresh = data?.data?.refreshToken as string | undefined;
   if (!token) return null;

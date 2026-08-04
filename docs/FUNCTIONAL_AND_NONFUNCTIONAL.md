@@ -11,7 +11,7 @@
 
 FiscorAI lets Amazon EU sellers:
 
-1. Create an account and pick a plan (Free forever or paid via Stripe).
+1. Create an account and pick a plan (Free forever or paid via Lemon Squeezy).
 2. Upload an Amazon **VAT Transactions Report** (CSV) for a month or quarter.
 3. Process it **locally** into country × tax-scheme breakdowns.
 4. View charts (Dashboard), tables & downloads (VAT reports), heuristic checks (Review).
@@ -30,14 +30,14 @@ Data stays on the machine under default config: **SQLite** for accounts/billing 
 │  Vite/React │   REST + stream     │  Prisma/SQLite   │                            │  tax-processor     │
 └─────────────┘                     │  Local storage   │                            └────────────────────┘
                                     └────────┬─────────┘
-                         Stripe ◄────────────┤
+                         Lemon  ◄────────────┤
                          Gemini ◄────────────┘
 ```
 
 | Package | Path | Role |
 |---------|------|------|
 | `@fiscorai/web` | `apps/web` | SPA UI |
-| `@fiscorai/api` | `apps/api` | HTTP API, auth, Stripe, Gemini, storage orchestration |
+| `@fiscorai/api` | `apps/api` | HTTP API, auth, Lemon Squeezy, Gemini, storage orchestration |
 | `@fiscorai/tax-processor` | `packages/tax-processor` | CSV → JSON + PDF + XLSX |
 
 **Entry points**
@@ -55,7 +55,7 @@ Data stays on the machine under default config: **SQLite** for accounts/billing 
 
 | ID | Function | Behaviour |
 |----|----------|-----------|
-| F-AUTH-01 | Register | `POST /api/v1/users` — email, username, password (≥6). Always creates **Free** plan + subscription row. Optional Stripe customer (best-effort). |
+| F-AUTH-01 | Register | `POST /api/v1/users` — email, username, password (≥6). Always creates **Free** plan + subscription row. |
 | F-AUTH-02 | Sign in | `POST /api/v1/auth/login` — email/password → access JWT + refresh + subscription snapshot. |
 | F-AUTH-03 | Business rejection | Emails starting `biz@` or `businessUser` flag → 403 + business-portal stub URL. |
 | F-AUTH-04 | Token refresh | `GET/POST /api/v1/auth/refresh` with refresh token → new pair. |
@@ -192,18 +192,22 @@ storage/{email-with-@-as-hyphen}/
 
 | ID | Function | Behaviour |
 |----|----------|-----------|
-| F-BILL-01 | Plan catalogue | Free €0, Basic €19.9, Standard €49.9, Pro €99.9 (`shared/plans.ts` + web `PLANS`). |
+| F-BILL-01 | Plan catalogue | Free €0, Basic €14.9, Standard €39.9, Pro €79.9 (`shared/plans.ts` + web `PLANS`). Live prices also set on Lemon Squeezy variants. |
 | F-BILL-02 | Current sub | `GET /api/v1/subscriptions/userSubscription` |
-| F-BILL-03 | Activate Free | `POST /subscriptions/activate` — Free only. Paid → must use Stripe. |
-| F-BILL-04 | Unsubscribe | `DELETE /subscriptions/unSubscribe` → Free / inactive. |
-| F-BILL-05 | Checkout | `POST /payments/create-checkout-session` — Stripe Checkout **one-time payment** (not recurring Subscriptions), EUR, invoice, future usage. |
-| F-BILL-06 | Confirm | Return URL `?checkout=success&session_id=` → `confirm-session` activates plan, `expiresAt` ≈ now+**30 days**. |
-| F-BILL-07 | Webhook | `POST /api/v1/webhook/` raw body + Stripe signature → `checkout.session.completed` activates. |
+| F-BILL-03 | Activate Free | `POST /subscriptions/activate` — Free only. Paid → Lemon Squeezy checkout. |
+| F-BILL-04 | Unsubscribe | `DELETE /subscriptions/unSubscribe` → Lemon cancel + local cancel-at-period-end; Free after `subscription_expired`. |
+| F-BILL-05 | Checkout | `POST /payments/create-checkout-session` — Lemon hosted checkout for the plan’s monthly subscription variant; `custom.user_id` for webhook mapping. |
+| F-BILL-06 | Confirm | Lemon `redirect_url` → `/thankyou`; client polls `confirm-session` + subscription until webhook activates. Cancel → `/payment-failed`. |
+| F-BILL-07 | Webhook | `POST /api/v1/webhook/` raw body + `X-Signature` HMAC → subscription lifecycle + payment events sync User/Subscription/Payment. |
 | F-BILL-08 | History | `GET /payments` — invoices/payments list in UI. |
-| F-BILL-09 | Cards | `GET /payments/cards`, `DELETE /payments/cards/:id`. SetupIntent exists on API but **web has no add-card UI**. |
-| F-BILL-10 | Missing Stripe | Ops return 503 if secret key unset. |
+| F-BILL-09 | Portal | `GET /payments/portal` — Lemon customer portal URL (cards / invoices). |
+| F-BILL-10 | Missing Lemon | Paid checkout returns 503 if API key / store / variant env unset. |
+| F-BILL-11 | Thank you | Protected `/thankyou` — confirm + poll until active paid plan; CTAs to billing & dashboard. |
+| F-BILL-12 | Payment failed | Protected `/payment-failed` — cancel/abandon messaging; retry via billing; support link. |
 
-**Route:** `/billing`
+**Routes:** `/billing`, `/thankyou`, `/payment-failed`
+
+**Env:** `LEMONSQUEEZY_*` (API key, store id, webhook secret, three variant ids); `PAYMENT_SUCCESS_URL` → `/thankyou`; `PAYMENT_CANCEL_URL` → `/payment-failed`.
 
 ---
 
@@ -211,11 +215,14 @@ storage/{email-with-@-as-hyphen}/
 
 | ID | Function | Behaviour |
 |----|----------|-----------|
-| F-HELP-01 | FAQ | Accordion FAQ (i18n) under `/faq`. |
-| F-HELP-02 | Contact | Form → `POST /api/v1/contact` persists to SQLite. **No email send.** |
-| F-HELP-03 | Privacy / Terms | Short bullet pages `/privacy`, `/terms` (public minimal chrome). |
-| F-LAND-01 | Landing | Marketing home `/` — demo charts, pricing, CTAs. **English-only** (not in i18n). |
-| F-SHELL-01 | Nav | Desktop sidebar; mobile tabs (Dash/VAT/Review/Analyst) + More sheet (Account, Billing, Help, Support, Privacy, Terms). |
+| F-HELP-01 | FAQ | Accordion FAQ (i18n) at `/faq` — **public** for guests; signed-in users keep AppShell. |
+| F-HELP-02 | Contact | Form → `POST /api/v1/contact` persists to SQLite. **No email send.** Auth required (`/support`). |
+| F-HELP-03 | Privacy / Terms | Expanded bullet pages `/privacy`, `/terms` (public minimal chrome). Soft-launch copy; counsel disclaimer. |
+| F-HELP-04 | Refund | Public `/refund` — monthly Lemon subscription; cancel at period end → Free; dispute/support process. |
+| F-HELP-05 | Cookies | Public `/cookies` — essential auth/lang/session storage; no marketing cookies / consent banner yet. |
+| F-HELP-06 | Signup legal | `/signup` requires acceptance of Terms + Privacy before register. |
+| F-LAND-01 | Landing | Marketing home `/` — demo charts, pricing, CTAs. **English-only** (not in i18n). Footer links: FAQ, Privacy, Terms, Refunds, Cookies. |
+| F-SHELL-01 | Nav | Desktop sidebar; mobile tabs (Dash/VAT/Review/Analyst) + More sheet (Account, Billing, Help, Support, Privacy, Terms, Refunds, Cookies). |
 | F-SHELL-02 | Language | EN/DE/ES/FR/IT via LanguagePicker ↔ `uiStore` ↔ i18next + localStorage. |
 | F-SHELL-03 | Plan box | Shows current plan + limit blurb in shell. |
 
@@ -244,13 +251,13 @@ storage/{email-with-@-as-hyphen}/
 2. Open VAT reports → select period → upload Amazon CSV.
 3. Processor runs → artifacts on disk.
 4. Dashboard / Review show charts & checks for that period.
-5. (Optional) Billing → pay → Stripe → confirm → premium.
+5. (Optional) Billing → Lemon checkout → `/thankyou` (webhook + poll) → premium.
 6. Analyst answers questions over **all** uploads (stream + quota rules).
 7. Download PDF/XLSX for accountant.
 
 ### 4.2 Paid upgrade path
 
-Choose paid plan → Checkout redirect → pay → success URL confirm and/or webhook → subscription active 30 days → Analyst unlimited + higher tax caps on next upload.
+Choose paid plan → Lemon checkout redirect → pay → `/thankyou` (confirm + poll) and/or webhook → subscription active until `renews_at` / cancel → Analyst unlimited + higher tax caps on next upload. Cancel/abandon → `/payment-failed`.
 
 ### 4.3 Multi-period path
 
@@ -296,9 +303,9 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 
 | ID | Requirement | Notes |
 |----|-------------|-------|
-| NF-REL-01 | Stripe missing | Degraded 503 on payment ops |
+| NF-REL-01 | Lemon missing | Degraded 503 on paid checkout |
 | NF-REL-02 | Gemini missing/quota | Analyst fallback text; no crash |
-| NF-REL-03 | Stripe customer on signup | Best-effort; register still succeeds |
+| NF-REL-03 | Lemon customer | Created on first checkout via Lemon, not at signup |
 | NF-REL-04 | Corrupt period skip | Analyst all-data loader skips bad periods |
 
 ### 5.5 Security & privacy
@@ -308,8 +315,8 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 | NF-SEC-01 | Password hashing | bcrypt cost 10 |
 | NF-SEC-02 | JWT access + refresh | Separate secrets; Bearer header |
 | NF-SEC-03 | CORS allowlist | Configurable |
-| NF-SEC-04 | Stripe webhook verify | When `STRIPE_WEBHOOK_SECRET` set |
-| NF-SEC-05 | Secrets not in client | Gemini/Stripe secret server-only |
+| NF-SEC-04 | Lemon webhook verify | When `LEMONSQUEEZY_WEBHOOK_SECRET` set (`X-Signature` HMAC) |
+| NF-SEC-05 | Secrets not in client | Gemini / Lemon API key server-only |
 | NF-SEC-06 | Upload type check | `.csv` extension enforced |
 | NF-SEC-07 | Change-password auth | **Gap:** unauthenticated endpoint |
 | NF-SEC-08 | User update ownership | **Gap:** `:id` not verified against JWT |
@@ -326,7 +333,7 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 | NF-UX-02 | Landing | EN only |
 | NF-UX-03 | Mobile shell | Bottom tabs + More sheet |
 | NF-UX-04 | Empty states | Consistent upload CTAs |
-| NF-UX-05 | Legal | Short demo copy — not counsel-reviewed policies |
+| NF-UX-05 | Legal | Soft-launch Privacy/Terms/Refund/Cookies — not counsel-reviewed |
 
 ### 5.7 Observability
 
@@ -354,7 +361,7 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 | NF-DOM-01 | Not filing software | Copy/disclaimers: verify with accountant |
 | NF-DOM-02 | EUR display | UI formats EUR |
 | NF-DOM-03 | Amazon report source | Seller Central → FBA → VAT Transactions Report |
-| NF-DOM-04 | Subscription model | **One-time 30-day activation**, not Stripe recurring Subscriptions |
+| NF-DOM-04 | Subscription model | **Lemon native monthly subscriptions**; local `expiresAt` mirrors `renews_at` / `ends_at` via webhooks |
 
 ---
 
@@ -362,9 +369,9 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 
 | Model | Purpose |
 |-------|---------|
-| User | Credentials, profile, plan, stripeCustomerId, amazonId |
-| Subscription | plan, price, active, expiresAt (1:1 user) |
-| Payment | Stripe session/invoice history |
+| User | Credentials, profile, plan, lemonCustomerId, amazonId |
+| Subscription | plan, price, active, canceled, lemonSubscriptionId, lemonPortalUrl, expiresAt (1:1 user) |
+| Payment | Lemon order/invoice history |
 | PasswordResetToken | Reset flow |
 | Contact | Support form messages |
 | AnalystUsage | Free-tier daily question counts |
@@ -375,12 +382,12 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 
 | System | Use | Required for core VAT? |
 |--------|-----|------------------------|
-| Stripe | Checkout, webhook, cards, invoices | No (Free path works) |
+| Lemon Squeezy | Checkout, webhooks, portal, invoices (MoR) | No (Free path works) |
 | Google Gemini | Analyst Q&A | No (fallback if unset) |
 | SendGrid / SMTP | — | **Not integrated** (contact/reset stub) |
 | Amazon MWS/SP-API | — | Token stored only |
 
-**Env (API):** `PORT`, `DATABASE_URL`, `JWT_*`, `STORAGE_ROOT`, `CORS_ORIGIN`, `STRIPE_*`, `PAYMENT_*_URL`, `GEMINI_API_KEY`, `GEMINI_MODEL`.
+**Env (API):** `PORT`, `DATABASE_URL`, `JWT_*`, `STORAGE_ROOT`, `CORS_ORIGIN`, `LEMONSQUEEZY_*`, `PAYMENT_*_URL`, `GEMINI_API_KEY`, `GEMINI_MODEL`.
 
 ---
 
@@ -389,11 +396,11 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 | Plan | Price | Monthly tx | Quarterly tx | Analyst |
 |------|-------|------------|--------------|---------|
 | Free | €0 | 100 | 100 | 3 questions / day |
-| Basic | €19.9 | 2 000 | 6 000 | Unlimited while active |
-| Standard | €49.9 | 6 000 | 18 000 | Unlimited while active |
-| Pro | €99.9 | Unlimited | Unlimited | Unlimited while active |
+| Basic | €14.9 | 2 000 | 6 000 | Unlimited while active |
+| Standard | €39.9 | 6 000 | 18 000 | Unlimited while active |
+| Pro | €79.9 | Unlimited | Unlimited | Unlimited while active |
 
-Paid “active” ≈ 30 days from Stripe activation unless renewed via another checkout.
+Paid “active” while Lemon subscription status is active (local `expiresAt` follows `renews_at` / `ends_at` from webhooks).
 
 ---
 
@@ -404,15 +411,15 @@ Paid “active” ≈ 30 days from Stripe activation unless renewed via another 
 | Password reset UX | No working forgot-password UI; no email delivery |
 | Contact | Persist only; no outbound mail |
 | Amazon sync | Token unused for auto-import |
-| Card add | SetupIntent API unused by web |
-| Recurring billing | No Stripe Subscriptions / renewals automation |
 | Register plan choice | Ignored; always Free |
 | Business portal | Hardcoded redirect stub |
 | Sample CSV | Not a real VAT report |
 | Landing i18n | English only |
-| Full legal | Demo bullets |
+| Full legal | Soft-launch bullets (not counsel-reviewed); company registry / Impressum details incomplete |
+| Cookie consent banner | Not shown (no marketing/analytics cookies yet) |
 | Influencer login flag | Accepted in DTO, unused |
 | Horizontal scale | Local SQLite/FS only |
+| Historical Stripe customers | Not migrated; re-checkout on Lemon |
 
 ---
 
@@ -428,20 +435,35 @@ Paid “active” ≈ 30 days from Stripe activation unless renewed via another 
 | `/review` | get-processed-json |
 | `/analyst` | `/analyst/quota`, `/analyst/stream` (and `/ask`) |
 | `/account` | profile, users/:id, update/amazon, change-password |
-| `/billing` | userSubscription, create-checkout-session, confirm-session, payments, cards |
+| `/billing` | userSubscription, create-checkout-session, payments, cards |
+| `/thankyou` | `POST /payments/confirm-session` |
+| `/payment-failed` | — |
 | `/faq` | — |
-| `/contact` | `POST /contact` |
-| `/privacy`, `/terms` | — |
+| `/support` | `POST /contact` |
+| `/privacy`, `/terms`, `/refund`, `/cookies` | — |
 
 ---
 
-## 11. Document control
+## 11. Production go-live checklist (payments & legal)
+
+| Item | Notes |
+|------|--------|
+| Lemon live keys | `LEMONSQUEEZY_API_KEY`, store id, three variant ids on API |
+| Webhook endpoint | `POST /api/v1/webhook/` with `LEMONSQUEEZY_WEBHOOK_SECRET`; subscription + payment events |
+| Return URLs | `PAYMENT_SUCCESS_URL` = `https://<prod>/thankyou`; `PAYMENT_CANCEL_URL` = `https://<prod>/payment-failed` |
+| CORS / web API | `CORS_ORIGIN` matches prod web origin; web `VITE_API_URL` points at prod API |
+| Legal review | Replace soft-launch Privacy/Terms/Refund/Cookies with counsel-approved copy and real company entity |
+| Email | Contact + password reset still need outbound mail for full production |
+
+---
+
+## 12. Document control
 
 | Field | Value |
 |-------|-------|
 | Derived from | Live monorepo inventory (web, api, tax-processor, e2e, CI) |
 | Intent | Functional + non-functional baseline for QA, onboarding, go-live |
-| Update when | Routes, env, Stripe/Gemini behaviour, or plan limits change |
+| Update when | Routes, env, Lemon/Gemini behaviour, or plan limits change |
 
 ---
 

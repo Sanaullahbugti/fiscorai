@@ -1,7 +1,16 @@
 {
+  "helpTitle": "Help center",
+  "helpSubtitle": "Answers to what sellers ask us most. Can't find it here? Support is one click away.",
+  "searchPlaceholder": "Search questions…",
+  "noResults": "No questions match that search.",
+  "contactTitle": "Contact support",
+  "contactSubtitle": "Tell us what's going on — a real person reads every message.",
   "fillAll": "Please fill all fields",
   "messageSent": "Message sent!",
   "sendFailed": "Failed to send message",
+  "sending": "Sending…",
+  "otherWays": "Other ways to reach us",
+  "responseTime": "Typical reply within one business day",
   "getInTouch": "Get in touch",
   "name": "Name",
   "email": "Email",
@@ -11,16 +20,43 @@
   "asideFooter": " · Spain · VAT reporting tooling for Amazon EU sellers.",
   "privacyTitle": "Privacy Policy",
   "termsTitle": "Terms of Service",
-  "legalIntro": "FiscorAI is operated by , a Spanish company registered in the Mercantile Registry of Madrid.",
-  "legalNote": "This is a demonstration. Before production, have counsel review and update this text for your jurisdiction.",
-  "privacy1": "We collect and process only data necessary to operate the service: your email, VAT number, and Amazon MWS token.",
-  "privacy2": "Your uploaded CSV files are processed server-side and deleted after analysis. No personal data is sold or shared.",
-  "privacy3": "Invoices and activity logs are retained for 7 years per EU tax law and accountancy regulations.",
-  "privacy4": "You may request deletion of your account and all personal data. We will comply within 30 days.",
-  "terms1": "The service is provided 'as-is' for non-compliance purposes. While we exercise reasonable care, calculation errors may occur. Always verify with your tax advisor.",
-  "terms2": "Your account remains your sole responsibility. Do not share login credentials or your Amazon MWS token.",
-  "terms3": "Payment failures will suspend access. Refunds follow your payment method's standard dispute process.",
-  "terms4": "We may suspend or terminate service if you breach these terms or violate applicable laws.",
+  "refundTitle": "Refund & cancellation",
+  "cookiesTitle": "Cookie Policy",
+  "legalIntro": "FiscorAI is operated by FiscorAI, a Spanish company building VAT reporting tooling for Amazon EU sellers.",
+  "legalNote": "This text is for soft launch and has not been reviewed by counsel. Before full production, have a lawyer update it for your jurisdiction and company details.",
+  "privacyPoints": [
+    "We collect account data needed to run the service: email, username, password hash, optional VAT number, and optional Amazon MWS token.",
+    "Uploaded Amazon VAT CSV files are processed server-side to produce reports. Processed outputs and activity needed for the product may be retained while your account is active.",
+    "Payment data is handled by Lemon Squeezy (Merchant of Record). We store Lemon customer and payment references (not full card numbers) to activate plans and show invoices.",
+    "The AI Analyst feature may send relevant VAT summary context to Google Gemini to answer your questions. Do not paste secrets into Analyst chats.",
+    "Invoices and billing records may be retained for up to 7 years where required for tax and accountancy rules.",
+    "You may request deletion of your account and personal data. Contact support@fiscor.ai; we aim to complete erasure within 30 days except where law requires retention.",
+    "We do not sell personal data. Processors today include Lemon Squeezy (payments) and Google (Gemini) under their respective terms."
+  ],
+  "termsPoints": [
+    "FiscorAI provides VAT analysis tooling for Amazon EU sellers. Output is informational and not tax, legal, or accounting advice. Always verify figures with your advisor.",
+    "Plans: Free (limited), Basic, Standard, and Pro. Paid access is a monthly Lemon Squeezy subscription that renews until you cancel.",
+    "You are responsible for your account credentials and any Amazon tokens you connect. Do not share login details.",
+    "You may cancel a paid plan from Billing; canceling keeps access until the end of the paid period, then moves you to Free. Unused time is generally not refunded automatically — see the Refund policy.",
+    "We may suspend or terminate accounts that abuse the service, reverse-engineer it, or violate applicable law.",
+    "The service is provided as-is. To the extent permitted by Spanish and EU law, liability for calculation errors or downtime is limited.",
+    "These terms are governed by the laws of Spain. Courts of Madrid have jurisdiction, without prejudice to mandatory consumer protections."
+  ],
+  "refundPoints": [
+    "Paid plans are activated via Lemon Squeezy Checkout as monthly subscriptions.",
+    "You can cancel anytime in Plans & billing. Canceling stops renewal; you keep paid features until the period ends, then move to Free. It does not automatically refund the current period.",
+    "If checkout fails or you abandon Lemon Checkout, you are not charged. Use Billing to try again.",
+    "If you were charged in error (duplicate payment, technical fault), contact support@fiscor.ai within 14 days with your account email and invoice details.",
+    "Chargebacks and card disputes follow your payment provider’s process. We may pause the account while a dispute is open.",
+    "Free plan usage has no payment and no refunds."
+  ],
+  "cookiesPoints": [
+    "We use essential storage required for the product to work: authentication tokens, language preference, session idle tracking, and similar app settings in browser storage.",
+    "These are strictly necessary for sign-in, security, and remembering your language. They are not used for advertising.",
+    "We do not currently set third-party marketing or analytics cookies. If that changes, we will update this policy and add a consent mechanism where required.",
+    "Lemon Squeezy Checkout may set its own cookies when you pay on Lemon’s hosted pages, under Lemon Squeezy’s cookie policy.",
+    "You can clear site data in your browser at any time; you will need to sign in again."
+  ],
   "faqs": [
     {
       "q": "Do I need a credit card to start?",
@@ -53,6 +89,22 @@
     {
       "q": "Re-uploading the same period — is that safe?",
       "a": "Yes. A new upload replaces the previous files for that period and the charts refresh from the new data."
+    },
+    {
+      "q": "What happens after I pay?",
+      "a": "Lemon Squeezy redirects you to a thank-you page while we activate your plan. Paid access renews monthly until you cancel. You can manage plans and invoices under Plans & billing."
+    },
+    {
+      "q": "My payment did not complete — was I charged?",
+      "a": "If you canceled or left Lemon Checkout, you should not be charged. Return to Plans & billing to try again. If money left your account by mistake, contact support with your email and receipt."
+    },
+    {
+      "q": "How do I cancel or get a refund?",
+      "a": "Cancel anytime in Plans & billing to stop renewal (you keep access until the period ends, then Free). Automatic refunds for unused days are not issued; see the Refund & cancellation policy or email support@fiscor.ai for billing errors."
+    },
+    {
+      "q": "Why don’t I see a partial-data / truncation warning?",
+      "a": "Older uploads may lack processing meta until you re-upload the same Amazon VAT CSV for that period. New uploads always store truncation and row-count details."
     }
   ]
 }

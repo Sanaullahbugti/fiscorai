@@ -1,16 +1,19 @@
+// Priced below the incumbent EU VAT-analyser tool sellers already know
+// (Free / EUR19.90 / EUR49.90 / EUR99.90) — FiscorAI competes on the same
+// tiers at a meaningfully lower price, not just on features.
 export const PLAN_PRICES: Record<string, number> = {
   Free: 0,
-  Basic: 19.9,
-  Standard: 49.9,
-  Pro: 99.9,
+  Basic: 14.9,
+  Standard: 39.9,
+  Pro: 79.9,
 };
 
-/** Stripe unit amounts in cents (EUR). */
+/** Plan amounts in cents (EUR) — display / Payment history; Lemon variants own live price. */
 export const PLAN_AMOUNT_CENTS: Record<string, number> = {
   Free: 0,
-  Basic: 1990,
-  Standard: 4990,
-  Pro: 9990,
+  Basic: 1490,
+  Standard: 3990,
+  Pro: 7990,
 };
 
 export const PAID_PLANS = ["Basic", "Standard", "Pro"] as const;

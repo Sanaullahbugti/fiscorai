@@ -4,10 +4,13 @@ import { ROUTES } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import { useShellPeriod } from "@/hooks/PeriodProvider";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import { usePeriodInsights } from "@/hooks/usePeriodInsights";
+import { useProcessedData } from "@/hooks/useProcessedData";
 import { LanguagePicker } from "@/components/LanguagePicker";
 import { PeriodBar } from "@/components/PeriodBar";
 import { MoreSheet } from "@/components/MoreSheet";
 import { TabIcon } from "@/components/TabIcon";
+import { HEADER_SLOT_ID } from "@/components/HeaderSlot";
 import { useUiStore } from "@/stores/uiStore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -27,6 +30,8 @@ function AppShellInner() {
   const location = useLocation();
   const period = useShellPeriod();
   const isMobile = useIsMobile();
+  const { hasData } = useProcessedData(period.payload);
+  const { attentionCount } = usePeriodInsights(period.payload, hasData);
   const lang = useUiStore((s) => s.lang);
   const setLang = useUiStore((s) => s.setLang);
   const [sheetPhase, setSheetPhase] = useState<"idle" | "enter" | "open" | "exit">("idle");
@@ -108,16 +113,22 @@ function AppShellInner() {
           Fiscor<span>AI</span>
         </div>
         <nav className={styles.nav}>
-          {NAV.map((n) => (
+          {NAV.map((n) => {
+              const reviewBadge =
+                n.key === "review" && attentionCount > 0 ? String(attentionCount) : null;
+              const badge =
+                reviewBadge ?? ("badge" in n && n.badge ? String(n.badge) : null);
+              return (
             <NavLink
               key={n.to}
               to={n.to}
               className={({ isActive }) => `${styles.navBtn} ${isActive ? styles.navActive : ""}`}
             >
               <span>{t(`nav.${n.key}`)}</span>
-              {"badge" in n && n.badge ? <span className={styles.badge}>{n.badge}</span> : null}
+              {badge ? <span className={styles.badge}>{badge}</span> : null}
             </NavLink>
-          ))}
+              );
+            })}
         </nav>
         <div className={styles.footer}>
           <div className={styles.planBox}>
@@ -151,6 +162,9 @@ function AppShellInner() {
           {showPeriod ? (
             <PeriodBar key={location.pathname} period={period} accentApply collapsible={isMobile} />
           ) : null}
+          {/* Pages with their own toolbar portal into this instead of adding a
+              second row below the header. Collapses to nothing when unused. */}
+          <div id={HEADER_SLOT_ID} className={styles.headerSlot} />
         </header>
 
         <div className={styles.content}>
@@ -161,6 +175,10 @@ function AppShellInner() {
           <nav className={styles.tabBar} aria-label={t("primaryNav")}>
             {MOBILE_TABS.map((tab) => {
               const active = location.pathname === tab.to;
+              const reviewBadge =
+                tab.key === "review" && attentionCount > 0 ? String(attentionCount) : null;
+              const badge =
+                reviewBadge ?? ("badge" in tab && tab.badge ? String(tab.badge) : null);
               return (
                 <NavLink
                   key={tab.to}
@@ -172,7 +190,7 @@ function AppShellInner() {
                     <TabIcon name={tab.icon} />
                   </span>
                   <span className={styles.tabLabel}>{t(`tabs.${tab.key}`)}</span>
-                  {"badge" in tab && tab.badge ? <span className={styles.tabBadge}>{tab.badge}</span> : null}
+                  {badge ? <span className={styles.tabBadge}>{badge}</span> : null}
                 </NavLink>
               );
             })}

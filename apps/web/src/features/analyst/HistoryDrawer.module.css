@@ -1,0 +1,200 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 36, 30, 0.32);
+  z-index: 40;
+  animation: scrimIn 160ms ease-out;
+}
+
+@keyframes scrimIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 88vw);
+  z-index: 41;
+  background: var(--surface-card);
+  border-left: 1px solid var(--border-default);
+  box-shadow: var(--shadow-raised);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 200ms ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: none; }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-section-title);
+  font-weight: 600;
+  margin: 0;
+}
+
+.close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.close:hover {
+  background: var(--surface-app);
+  color: var(--text-primary);
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.empty {
+  padding: 22px 16px;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-body);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 10px;
+  padding: 2px;
+  transition: background 150ms ease-out;
+}
+
+.item:hover {
+  background: var(--surface-app);
+}
+
+.itemActive {
+  background: var(--surface-brand-tint);
+}
+
+.openBtn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: none;
+  border: none;
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.itemTitle {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.itemMeta {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+}
+
+.itemActions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.item:hover .itemActions,
+.item:focus-within .itemActions {
+  opacity: 1;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.iconBtn:hover {
+  background: var(--surface-card);
+  color: var(--brand-primary);
+}
+
+.danger:hover {
+  color: var(--status-critical);
+}
+
+.itemIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.editRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 4px;
+}
+
+.editInput {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--brand-primary);
+  border-radius: 8px;
+  padding: 7px 9px;
+  font-size: var(--text-small);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--surface-app);
+  outline: none;
+}
+
+/* Touch devices have no hover, so the row controls must stay visible. */
+@media (max-width: 860px) {
+  .itemActions { opacity: 1; }
+}

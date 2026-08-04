@@ -6,24 +6,32 @@
     "information": "Informes IVA",
     "review": "Revisión",
     "analyst": "Analista",
+    "amazonConnection": "Conexión con Amazon",
     "account": "Cuenta",
     "billing": "Planes y facturación",
     "faq": "Ayuda",
     "contact": "Soporte",
     "privacy": "Privacidad",
-    "terms": "Términos"
+    "terms": "Términos",
+    "refund": "Reembolsos",
+    "cookies": "Cookies"
   },
   "titles": {
     "graphics": "Panel",
     "information": "Informes IVA",
     "review": "Revisión",
     "analyst": "Analista",
+    "amazonConnection": "Conexión con Amazon",
     "account": "Cuenta",
     "billing": "Planes y facturación",
     "faq": "Ayuda",
     "contact": "Soporte",
     "privacy": "Política de privacidad",
-    "terms": "Términos del servicio"
+    "terms": "Términos del servicio",
+    "thankyou": "Pago confirmado",
+    "paymentFailed": "Pago no completado",
+    "refund": "Reembolsos y cancelación",
+    "cookies": "Política de cookies"
   },
   "tabs": {
     "graphics": "Panel",

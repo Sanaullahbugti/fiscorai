@@ -214,7 +214,11 @@ export function MoreSheet({
                 }}
               >
                 <span>{t(`nav.${item.key}`)}</span>
-                {item.to === ROUTES.billing ? <span className={styles.moreHint}>{plan}</span> : null}
+                {item.to === ROUTES.billing ? (
+                  <span className={styles.moreHint}>{plan}</span>
+                ) : "badge" in item && item.badge ? (
+                  <span className={styles.moreHint}>{item.badge}</span>
+                ) : null}
               </button>
             ))}
           </div>

@@ -23,7 +23,7 @@ export function SignInPage() {
     setError("");
     try {
       await login(email, password);
-      navigate(ROUTES.graphics);
+      navigate(ROUTES.analyst);
     } catch (err: unknown) {
       setError(getApiErrorMessage(err, t("signInFailed")));
     } finally {

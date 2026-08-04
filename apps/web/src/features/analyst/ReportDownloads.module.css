@@ -1,0 +1,216 @@
+/* ---------- lookup in progress ---------- */
+
+.looking {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 13px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--surface-card);
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+  overflow: hidden;
+  animation: popIn 200ms ease-out;
+}
+
+.lookingIcon {
+  width: 13px;
+  height: 13px;
+  color: var(--brand-primary);
+  animation: sweep 1.6s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(2px) rotate(-12deg); }
+}
+
+/* Light sheen travelling across the pill while the lookup runs. */
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--brand-accent) 22%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+/* ---------- nothing found ---------- */
+
+.none {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 10px 13px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--surface-warning-tint);
+  color: var(--status-warning);
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
+  max-width: min(560px, 100%);
+  animation: popIn 220ms ease-out;
+}
+
+.noneIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ---------- result cards ---------- */
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  max-width: min(620px, 100%);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  border: 1px solid var(--border-default);
+  border-radius: 13px;
+  background: var(--surface-card);
+  opacity: 0;
+  animation: cardIn 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: border-color 160ms ease-out, transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.card:hover {
+  border-color: var(--brand-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.cardMark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.cardMarkIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cardTitle {
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardMeta {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+}
+
+.cardActions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border-default);
+  background: var(--surface-app);
+  border-radius: 9px;
+  padding: 7px 11px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 150ms ease-out, background 150ms ease-out, color 150ms ease-out,
+    transform 100ms ease-out;
+}
+
+.dl:hover:not(:disabled) {
+  border-color: var(--brand-primary);
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.dl:active:not(:disabled) { transform: scale(0.96); }
+
+.dl:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.dlIcon {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 860px) {
+  .card {
+    flex-wrap: wrap;
+  }
+
+  .cardActions {
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .dl {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .looking,
+  .none { animation: none; opacity: 1; }
+  .shimmer,
+  .lookingIcon { animation: none; }
+  .shimmer { display: none; }
+}

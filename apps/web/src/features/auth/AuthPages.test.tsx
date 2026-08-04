@@ -63,4 +63,21 @@ describe("AuthPages", () => {
     expect(screen.getByText(/Passwords do not match/i)).toBeTruthy();
     expect(register).not.toHaveBeenCalled();
   });
+
+  it("blocks sign-up when terms are not accepted", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <SignUpPage />
+      </MemoryRouter>,
+    );
+
+    await user.type(screen.getByLabelText(/^Email$/i), "new@fiscor.ai");
+    await user.type(screen.getByLabelText(/^Password$/i), "secret12");
+    await user.type(screen.getByLabelText(/Confirm password/i), "secret12");
+    await user.click(screen.getByRole("button", { name: /create account/i }));
+
+    expect(screen.getByText(/Please accept the Terms of Service and Privacy Policy/i)).toBeTruthy();
+    expect(register).not.toHaveBeenCalled();
+  });
 });

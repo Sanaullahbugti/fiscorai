@@ -23,8 +23,8 @@ const env = {
   JWT_REFRESH_EXPIRES_IN: "7d",
   STORAGE_ROOT: storageRoot,
   CORS_ORIGIN: "http://localhost:5173",
-  PAYMENT_SUCCESS_URL: "http://localhost:5173/billing?checkout=success",
-  PAYMENT_CANCEL_URL: "http://localhost:5173/billing?checkout=cancel",
+  PAYMENT_SUCCESS_URL: "http://localhost:5173/thankyou",
+  PAYMENT_CANCEL_URL: "http://localhost:5173/payment-failed",
 };
 
 execSync("pnpm exec prisma db push --skip-generate", {

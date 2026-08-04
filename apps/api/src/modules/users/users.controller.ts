@@ -24,8 +24,10 @@ export class UsersController {
 
   update = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const id = String(req.params.id);
-      const data = await usersService.update(id, req.body);
+      // The path param is ignored on purpose — the id to update always comes
+      // from the verified JWT, never from the client, or any caller could
+      // edit another user's profile by passing a different id in the URL.
+      const data = await usersService.update(req.user!.id, req.body);
       res.json(ok(data));
     } catch (e) {
       next(e);

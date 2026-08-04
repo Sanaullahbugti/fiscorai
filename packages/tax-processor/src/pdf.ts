@@ -48,7 +48,7 @@ export type PdfOptions = {
   noticeLanguages?: Array<"en" | "es" | "de" | "fr" | "it">;
 };
 
-const SCHEME_TITLES: Record<string, string> = {
+export const SCHEME_TITLES: Record<string, string> = {
   "UNION-OSS": "Union OSS",
   REGULAR: "Regular",
   VOEC: "VOEC",
@@ -90,7 +90,7 @@ function int(n: number): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function rateLabel(raw: string | number): string {
+export function rateLabel(raw: string | number): string {
   const s = String(raw ?? "").trim();
   if (!s || s.toUpperCase() === "ALL") return "Unrated";
   const dash = s.lastIndexOf("-");

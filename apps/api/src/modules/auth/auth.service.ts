@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { AppError } from "../../shared/errors.js";
 import { signAccess, signRefresh, verifyRefresh } from "../../shared/jwt.js";
@@ -36,14 +37,6 @@ export class AuthService {
       expiresAt: null,
     });
 
-    // Best-effort Stripe customer; checkout will create one if this fails.
-    try {
-      const { paymentsService } = await import("../payments/payments.service.js");
-      await paymentsService.ensureCustomer(user.id);
-    } catch (err) {
-      console.warn("[auth] Stripe customer create skipped:", (err as Error).message);
-    }
-
     return { id: user.id, email: user.email };
   }
 
@@ -66,7 +59,7 @@ export class AuthService {
       userId: user.id,
       jwtToken: signAccess(payload),
       refreshToken: signRefresh(payload),
-      userStripeId: user.userStripeId,
+      lemonCustomerId: user.lemonCustomerId,
       businessUser: false,
       userSubscription: {
         plan: sub?.plan || user.plan,
@@ -88,24 +81,33 @@ export class AuthService {
     }
   }
 
-  async changePassword(email: string, newPassword: string) {
-    const user = await users.findByEmail(email);
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await users.findById(userId);
     if (!user) throw new AppError("User not found", 404);
+    const matches = await bcrypt.compare(currentPassword, user.password);
+    if (!matches) throw new AppError("Current password is incorrect", 401);
     const hash = await bcrypt.hash(newPassword, 10);
     await users.update(user.id, { password: hash });
   }
 
   async forgotPassword(email: string) {
     const user = await users.findByEmail(email);
+    // Same response whether or not the account exists, so this can't be used
+    // to test which emails are registered.
     if (!user) return { sent: true };
-    const token = Buffer.from(`${user.id}:${Date.now()}`).toString("base64url");
+    const token = randomBytes(32).toString("hex");
     await passwordResetTokenRepository.create({
       userId: user.id,
       token,
       expiresAt: new Date(Date.now() + 3600_000),
     });
-    console.log(`[dev] password reset token for ${email}: ${token}`);
-    return { sent: true, token };
+    // Never returned to the caller or logged in production — this token is a
+    // full account-takeover credential until it expires or is used. With no
+    // email provider wired up yet, dev/test flows read it from this log line.
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[dev] password reset token for ${email}: ${token}`);
+    }
+    return { sent: true };
   }
 
   async resetPassword(token: string, newPassword: string) {

@@ -99,6 +99,8 @@ export function buildPeriodSummary(
     month?: string | number;
     quarter?: string;
   },
+  /** Overview prompts stay compact at 12; the detail tool asks for all of them. */
+  maxCountries = 12,
 ): PeriodSummary {
   let sales = 0;
   let refunds = 0;
@@ -139,7 +141,7 @@ export function buildPeriodSummary(
     });
   }
 
-  const topCountries = [...byCountry].sort((a, b) => b.vat - a.vat).slice(0, 12);
+  const topCountries = [...byCountry].sort((a, b) => b.vat - a.vat).slice(0, maxCountries);
 
   return {
     period: { ...period, label: periodLabel(period) },
@@ -230,5 +232,37 @@ export function buildAllDataSummary(
       countryCount: countryMap.size,
     },
     byPeriod,
+  };
+}
+
+/** What actually goes in front of the model, every turn. */
+export type PromptPayload = {
+  scope: AllDataSummary["scope"];
+  periodCount: number;
+  overall: AllDataSummary["overall"];
+  byPeriod: Array<{ period: PeriodSummary["period"]; totals: PeriodSummary["totals"] }>;
+};
+
+/**
+ * Strips the per-period country/category breakdown out of the system-prompt
+ * payload, keeping only each period's headline totals plus the full `overall`
+ * rollup. This is the biggest single lever on Analyst token cost: byPeriod
+ * used to carry up to 12 countries' worth of figures for every uploaded
+ * period, resent on every single turn of every conversation, even though
+ * `getPeriodDetail` and `getInsightsSummary` already fetch that same detail
+ * on demand when a question actually needs it. A seller with a year of
+ * monthly uploads was paying for ~12 periods x 12 countries of data on every
+ * message whether or not the question touched more than one number.
+ *
+ * The `overall` block is left untouched — it's one object, not one per
+ * period, so it doesn't multiply with upload history the way byPeriod does,
+ * and most questions ("how much VAT do I owe") are answerable from it alone.
+ */
+export function compactForPrompt(summary: AllDataSummary): PromptPayload {
+  return {
+    scope: summary.scope,
+    periodCount: summary.periodCount,
+    overall: summary.overall,
+    byPeriod: summary.byPeriod.map((p) => ({ period: p.period, totals: p.totals })),
   };
 }

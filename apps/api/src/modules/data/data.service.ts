@@ -2,6 +2,9 @@ import { processVatReport, type PlanCode } from "@fiscorai/tax-processor";
 import { AppError } from "../../shared/errors.js";
 import { planToCode } from "../../shared/plans.js";
 import { userRepository } from "../users/users.repository.js";
+import { subscriptionRepository } from "../subscriptions/subscriptions.repository.js";
+import { buildAllDataSummary } from "../analyst/analyst.summary.js";
+import { buildInsights, type ProcessMeta } from "./insights.js";
 import { storageRepository, type PeriodInput } from "./storage.repository.js";
 
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -12,6 +15,24 @@ function periodLabel(input: PeriodInput): string {
     return `${input.year}-${MONTHS[m] || "JAN"}`;
   }
   return `${input.quarter}-${input.year}`;
+}
+
+function mapCountries(rawCountries: Array<{ country: string; transactionCategories: Array<Record<string, unknown>> }>) {
+  return rawCountries.map((c) => ({
+    country: c.country,
+    transactionCategories: (c.transactionCategories || []).map((cat) => {
+      const category = String(cat.category || "");
+      const transactions: Record<string, unknown> = {};
+      for (const key of ["ALL", "VAT", "TRANSACTION"] as const) {
+        if (Array.isArray(cat[key])) transactions[key] = cat[key];
+        else if (cat.transactions && typeof cat.transactions === "object") {
+          const t = cat.transactions as Record<string, unknown>;
+          if (Array.isArray(t[key])) transactions[key] = t[key];
+        }
+      }
+      return { category, transactions };
+    }),
+  }));
 }
 
 export class DataService {
@@ -61,32 +82,22 @@ export class DataService {
     const raw = await storageRepository.readJson(email, input);
     if (!raw?.countries) throw new AppError("No data present", 404);
 
-    return raw.countries.map((c: { country: string; transactionCategories: Array<Record<string, unknown>> }) => ({
-      country: c.country,
-      transactionCategories: (c.transactionCategories || []).map((cat) => {
-        const category = String(cat.category || "");
-        const transactions: Record<string, unknown> = {};
-        for (const key of ["ALL", "VAT", "TRANSACTION"] as const) {
-          if (Array.isArray(cat[key])) transactions[key] = cat[key];
-          else if (cat.transactions && typeof cat.transactions === "object") {
-            const t = cat.transactions as Record<string, unknown>;
-            if (Array.isArray(t[key])) transactions[key] = t[key];
-          }
-        }
-        return { category, transactions };
-      }),
-    }));
+    const countries = mapCountries(raw.countries);
+    const meta = (raw.meta as ProcessMeta | undefined) ?? null;
+    return { countries, meta };
   }
 
   /** Load processed JSON for every uploaded period (skips missing/corrupt). */
   async getAllProcessedPeriods(email: string) {
     const periods = await storageRepository.listProcessedPeriods(email);
-    const loaded: Array<{ period: PeriodInput; countries: Awaited<ReturnType<DataService["getProcessedJson"]>> }> =
-      [];
+    const loaded: Array<{
+      period: PeriodInput;
+      countries: Awaited<ReturnType<DataService["getProcessedJson"]>>["countries"];
+    }> = [];
 
     for (const period of periods) {
       try {
-        const countries = await this.getProcessedJson(email, period);
+        const { countries } = await this.getProcessedJson(email, period);
         if (countries.length) loaded.push({ period, countries });
       } catch {
         /* skip empty/corrupt period */
@@ -94,6 +105,27 @@ export class DataService {
     }
 
     return loaded;
+  }
+
+  async overview(email: string) {
+    const loaded = await this.getAllProcessedPeriods(email);
+    if (!loaded.length) return null;
+    return buildAllDataSummary(loaded);
+  }
+
+  async insights(email: string, userId: string, input: PeriodInput) {
+    const { countries, meta } = await this.getProcessedJson(email, input);
+    const overview = await this.overview(email);
+    const sub = await subscriptionRepository.findByUserId(userId);
+    const now = new Date();
+    const planActive = !!sub?.active && (!sub.expiresAt || sub.expiresAt > now);
+    return buildInsights({
+      period: input,
+      countries,
+      meta,
+      overview,
+      planActive,
+    });
   }
 
   async downloadFile(email: string, input: PeriodInput & { fileExtension?: string }) {

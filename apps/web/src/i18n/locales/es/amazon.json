@@ -1,0 +1,17 @@
+{
+  "badge": "Próximamente",
+  "title": "Conecta tu cuenta de Amazon Seller Central",
+  "intro": "La sincronización directa y automática con Seller Central todavía no está disponible.",
+  "introBody": "Por ahora, sube tu informe de transacciones de IVA de Amazon manualmente desde VAT reports — el resto de FiscorAI ya funciona con ese archivo. La sincronización automática es lo siguiente.",
+  "previewLabel": "amazon_seller_id",
+  "previewPlaceholder": "amzn1.mws....",
+  "previewButton": "Conectar Seller Central",
+  "previewOverlay": "Aún no disponible",
+  "comingTitle": "Lo que viene",
+  "comingItem1": "Importación automática de informes mediante la Selling Partner API de Amazon — sin más exportaciones manuales de CSV.",
+  "comingItem2": "Seguimiento de la ubicación del inventario, para que las alertas de nexo se actualicen en cuanto se mueva tu stock.",
+  "comingItem3": "Reconexión con un clic si tu autorización llega a caducar.",
+  "manualCta": "Subir un informe manualmente en su lugar",
+  "notify": "¿Quieres saber en cuanto esté disponible?",
+  "notifyCta": "Escríbenos"
+}

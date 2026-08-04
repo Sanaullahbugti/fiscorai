@@ -15,15 +15,48 @@ model User {
   contact      String?
   alias        String?
   amazonId     String?
-  plan         String   @default("Free")
-  userStripeId String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  plan            String   @default("Free")
+  lemonCustomerId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  subscription Subscription?
-  payments     Payment[]
-  resetTokens  PasswordResetToken[]
-  analystUsage AnalystUsage[]
+  subscription  Subscription?
+  payments      Payment[]
+  resetTokens   PasswordResetToken[]
+  analystUsage  AnalystUsage[]
+  conversations AnalystConversation[]
+}
+
+/// A saved Analyst chat. Scoped to its owner — every read is filtered by userId.
+model AnalystConversation {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Derived from the first user message; renameable.
+  title  String
+  /// "vat-data" | "ecommerce-strategy"
+  mode   String @default("vat-data")
+
+  messages  AnalystMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+}
+
+model AnalystMessage {
+  id             String              @id @default(uuid())
+  conversationId String
+  conversation   AnalystConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  /// "user" | "assistant"
+  role           String
+  content        String
+  /// Serialised AnalystResponseMetadata for assistant turns. Never raw CSV.
+  metadataJson   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, createdAt])
 }
 
 /// One row per user per UTC day, counting AI Analyst questions against the
@@ -44,15 +77,21 @@ model AnalystUsage {
 }
 
 model Subscription {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan      String
-  price     Float    @default(0)
-  active    Boolean  @default(false)
-  expiresAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                String
+  price               Float    @default(0)
+  active              Boolean  @default(false)
+  /// Cancel-at-period-end: seller keeps access until expiresAt / Lemon ends_at.
+  /// Lemon Squeezy owns renewals; webhooks keep this row in sync.
+  canceled            Boolean  @default(false)
+  lemonSubscriptionId String?  @unique
+  /// Signed Lemon customer-portal URL from the last subscription webhook (may expire).
+  lemonPortalUrl      String?
+  expiresAt           DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Payment {
@@ -63,7 +102,8 @@ model Payment {
   currency         String   @default("eur")
   status           String
   plan             String?
-  stripeSessionId  String?  @unique
+  /// Lemon order id or subscription-invoice id — idempotency key for webhooks.
+  lemonOrderId     String?  @unique
   invoiceId        String?
   invoiceHostedURL String?
   createdAt        DateTime @default(now())

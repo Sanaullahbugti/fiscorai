@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { authApi, usersApi } from "@/api";
 import { queryKeys } from "@/api/queryKeys";
 import { Toast } from "@/components/Toast";
+import { ROUTES } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/useToast";
+import { getApiErrorMessage } from "@/lib/api-error";
 import styles from "./AccountPage.module.css";
 
 export function AccountPage() {
@@ -15,7 +18,7 @@ export function AccountPage() {
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [amazon, setAmazon] = useState("");
+  const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [newPw2, setNewPw2] = useState("");
 
@@ -35,7 +38,6 @@ export function AccountPage() {
     const p = profileQuery.data;
     if (!p) return;
     setName(p.alias || p.username || "");
-    setAmazon(p.amazonId || "");
   }, [profileQuery.data]);
 
   const saveProfile = useMutation({
@@ -50,27 +52,24 @@ export function AccountPage() {
     onError: () => flash(t("profileFailed")),
   });
 
-  const saveAmazon = useMutation({
-    mutationFn: () => usersApi.updateAmazon(amazon),
-    onSuccess: async () => {
-      flash(t("tokenUpdated"));
-      await queryClient.invalidateQueries({ queryKey: queryKeys.profile() });
-    },
-    onError: () => flash(t("tokenFailed")),
-  });
-
   const savePassword = useMutation({
     mutationFn: async () => {
+      if (!currentPw) throw new Error("CURRENT_REQUIRED");
       if (newPw !== newPw2) throw new Error("MISMATCH");
       if (!newPw) throw new Error("REQUIRED");
-      await authApi.changePassword(user?.email || user?.username || "", newPw);
+      await authApi.changePassword(currentPw, newPw);
     },
     onSuccess: () => {
+      setCurrentPw("");
       setNewPw("");
       setNewPw2("");
       flash(t("passwordChanged"));
     },
     onError: (e: unknown) => {
+      if (e instanceof Error && e.message === "CURRENT_REQUIRED") {
+        flash(t("currentPasswordRequired"));
+        return;
+      }
       if (e instanceof Error && e.message === "MISMATCH") {
         flash(t("passwordsMismatch"));
         return;
@@ -79,7 +78,7 @@ export function AccountPage() {
         flash(t("passwordRequired"));
         return;
       }
-      flash(t("passwordFailed"));
+      flash(getApiErrorMessage(e, t("passwordFailed")));
     },
   });
 
@@ -106,24 +105,34 @@ export function AccountPage() {
         </div>
 
         <div className={styles.rightCol}>
-          <div className={styles.card}>
+          <Link to={ROUTES.amazonConnection} className={styles.card} style={{ textDecoration: "none" }}>
             <div className={styles.cardHeadWithChip}>
               <div className={styles.cardTitle}>{t("amazonTitle")}</div>
-              <span className={styles.chipStatus}>{t("connected")}</span>
+              <span className={styles.chipStatus}>{t("comingSoon")}</span>
             </div>
-            <div className={styles.hint}>{t("amazonHint")}</div>
-            <input type="text" value={amazon} onChange={(e) => setAmazon(e.target.value)} placeholder="amzn1.mws...." />
-            <button className={styles.btnAccent} onClick={() => saveAmazon.mutate()}>
-              {t("saveToken")}
-            </button>
-          </div>
+            <div className={styles.hint}>{t("amazonMovedHint")}</div>
+          </Link>
 
           <div className={styles.card}>
             <div className={styles.cardTitle}>{t("password")}</div>
             <div className={styles.fields}>
               <label>
+                <span className={styles.label}>{t("currentPassword")}</span>
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={currentPw}
+                  onChange={(e) => setCurrentPw(e.target.value)}
+                />
+              </label>
+              <label>
                 <span className={styles.label}>{t("newPassword")}</span>
-                <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={newPw}
+                  onChange={(e) => setNewPw(e.target.value)}
+                />
               </label>
               <label>
                 <span className={styles.label}>{t("confirmPassword")}</span>

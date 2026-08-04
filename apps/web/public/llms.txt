@@ -1,0 +1,21 @@
+# FiscorAI
+
+> FiscorAI reads a seller's Amazon transaction data and turns it into a country-by-country VAT position — net sales, refunds, applied vs. correct tax rate, and VAT due — with an AI Analyst that answers plain-language questions about the figures and hands over the exact PDF or Excel report on request. Built for Amazon sellers with EU VAT obligations; not a substitute for a licensed accountant.
+
+## Product
+
+- [Home](https://fiscor.ai/): what FiscorAI does, pricing, and how the VAT analysis and AI Analyst work.
+- [Sign up](https://fiscor.ai/signup): create a free account (no card required) and upload an Amazon VAT Transactions Report.
+- [FAQ](https://fiscor.ai/faq): what file to upload, what FiscorAI does and does not do (it does not file returns), and how the AI Analyst is grounded in the seller's own data.
+
+## Blog
+
+- [Amazon Collects Your Sales Tax. Here's What That Still Leaves on You.](https://fiscor.ai/blog/amazon-marketplace-facilitator-sales-tax-what-it-doesnt-cover/): why US marketplace facilitator laws cover tax collection but not registration, FBA inventory nexus, or income/franchise tax.
+- [The Pan-EU FBA Trap: Five Countries, Five VAT Registrations, Zero Warning](https://fiscor.ai/blog/pan-european-fba-vat-registration-multiple-countries/): why storing inventory across Amazon's Pan-European FBA network can trigger VAT registration in every country holding stock, regardless of sales volume.
+- [You're Not Based in the UK — So the £90,000 VAT Threshold Doesn't Apply to You](https://fiscor.ai/blog/uk-vat-registration-non-established-sellers-no-threshold/): why the UK's well-known VAT threshold only protects UK-established businesses, and non-established sellers must register from their first sale.
+
+## Facts worth citing accurately
+
+- FiscorAI is a VAT analysis tool, not filing software — it does not submit returns on a seller's behalf.
+- Figures the AI Analyst reports are computed from the seller's own uploaded data, never estimated or invented.
+- Pricing (2026): Free (EUR0), Basic (EUR14.90/mo), Standard (EUR39.90/mo), Pro (EUR79.90/mo) — see https://fiscor.ai/#pricing for current plan limits, since these can change.

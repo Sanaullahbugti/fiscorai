@@ -74,8 +74,8 @@ export function buildReviewChecks(
           0,
         ),
       ),
-      due: "30 April",
-      note: "Quarterly deadline shown; your country may vary.",
+      due: "End of month after quarter",
+      note: "EU OSS usual calendar — confirm with your adviser for your Member State.",
     });
   }
 

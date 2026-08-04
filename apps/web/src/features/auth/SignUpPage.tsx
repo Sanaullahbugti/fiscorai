@@ -15,6 +15,7 @@ export function SignUpPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +23,10 @@ export function SignUpPage() {
     e.preventDefault();
     if (password !== confirm) {
       setError(t("passwordsMismatch"));
+      return;
+    }
+    if (!acceptedTerms) {
+      setError(t("mustAcceptTerms"));
       return;
     }
     setLoading(true);
@@ -70,6 +75,25 @@ export function SignUpPage() {
           <label>
             <span>{t("confirmPassword")}</span>
             <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" required />
+          </label>
+          <label className={styles.termsCheck}>
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              aria-label={t("acceptTermsAria")}
+            />
+            <span>
+              {t("acceptTermsPrefix")}{" "}
+              <Link to={ROUTES.terms} target="_blank" rel="noopener noreferrer">
+                {t("termsLink")}
+              </Link>{" "}
+              {t("acceptTermsAnd")}{" "}
+              <Link to={ROUTES.privacy} target="_blank" rel="noopener noreferrer">
+                {t("privacyLink")}
+              </Link>
+              .
+            </span>
           </label>
           <button disabled={loading} type="submit">
             {loading ? t("creating") : t("createAccountCta")}

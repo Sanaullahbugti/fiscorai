@@ -1,0 +1,17 @@
+{
+  "badge": "Coming soon",
+  "title": "Connect your Amazon Seller Central account",
+  "intro": "Direct, automatic sync with Seller Central isn't live yet.",
+  "introBody": "For now, upload your Amazon VAT Transactions Report manually from VAT reports — everything else in FiscorAI already works from that file. Automatic syncing is next.",
+  "previewLabel": "amazon_seller_id",
+  "previewPlaceholder": "amzn1.mws....",
+  "previewButton": "Connect Seller Central",
+  "previewOverlay": "Not available yet",
+  "comingTitle": "What's coming",
+  "comingItem1": "Automatic report import via Amazon's Selling Partner API — no more manual CSV exports.",
+  "comingItem2": "Inventory location tracking, so nexus flags update the moment your stock moves.",
+  "comingItem3": "One-click reconnect if your authorization ever expires.",
+  "manualCta": "Upload a report manually instead",
+  "notify": "Want to know the moment this ships?",
+  "notifyCta": "Email us"
+}

@@ -13,6 +13,7 @@ import enHelp from "./locales/en/help.json";
 import enReview from "./locales/en/review.json";
 import enAnalyst from "./locales/en/analyst.json";
 import enDashboard from "./locales/en/dashboard.json";
+import enAmazon from "./locales/en/amazon.json";
 
 import deCommon from "./locales/de/common.json";
 import deShell from "./locales/de/shell.json";
@@ -25,6 +26,7 @@ import deHelp from "./locales/de/help.json";
 import deReview from "./locales/de/review.json";
 import deAnalyst from "./locales/de/analyst.json";
 import deDashboard from "./locales/de/dashboard.json";
+import deAmazon from "./locales/de/amazon.json";
 
 import esCommon from "./locales/es/common.json";
 import esShell from "./locales/es/shell.json";
@@ -37,6 +39,7 @@ import esHelp from "./locales/es/help.json";
 import esReview from "./locales/es/review.json";
 import esAnalyst from "./locales/es/analyst.json";
 import esDashboard from "./locales/es/dashboard.json";
+import esAmazon from "./locales/es/amazon.json";
 
 import frCommon from "./locales/fr/common.json";
 import frShell from "./locales/fr/shell.json";
@@ -49,6 +52,7 @@ import frHelp from "./locales/fr/help.json";
 import frReview from "./locales/fr/review.json";
 import frAnalyst from "./locales/fr/analyst.json";
 import frDashboard from "./locales/fr/dashboard.json";
+import frAmazon from "./locales/fr/amazon.json";
 
 import itCommon from "./locales/it/common.json";
 import itShell from "./locales/it/shell.json";
@@ -61,6 +65,7 @@ import itHelp from "./locales/it/help.json";
 import itReview from "./locales/it/review.json";
 import itAnalyst from "./locales/it/analyst.json";
 import itDashboard from "./locales/it/dashboard.json";
+import itAmazon from "./locales/it/amazon.json";
 
 const namespaces = [
   "common",
@@ -74,6 +79,7 @@ const namespaces = [
   "review",
   "analyst",
   "dashboard",
+  "amazon",
 ] as const;
 
 function pack(
@@ -88,16 +94,17 @@ function pack(
   review: object,
   analyst: object,
   dashboard: object,
+  amazon: object,
 ) {
-  return { common, shell, empty, auth, reports, billing, account, help, review, analyst, dashboard };
+  return { common, shell, empty, auth, reports, billing, account, help, review, analyst, dashboard, amazon };
 }
 
 const resources = {
-  en: pack(enCommon, enShell, enEmpty, enAuth, enReports, enBilling, enAccount, enHelp, enReview, enAnalyst, enDashboard),
-  de: pack(deCommon, deShell, deEmpty, deAuth, deReports, deBilling, deAccount, deHelp, deReview, deAnalyst, deDashboard),
-  es: pack(esCommon, esShell, esEmpty, esAuth, esReports, esBilling, esAccount, esHelp, esReview, esAnalyst, esDashboard),
-  fr: pack(frCommon, frShell, frEmpty, frAuth, frReports, frBilling, frAccount, frHelp, frReview, frAnalyst, frDashboard),
-  it: pack(itCommon, itShell, itEmpty, itAuth, itReports, itBilling, itAccount, itHelp, itReview, itAnalyst, itDashboard),
+  en: pack(enCommon, enShell, enEmpty, enAuth, enReports, enBilling, enAccount, enHelp, enReview, enAnalyst, enDashboard, enAmazon),
+  de: pack(deCommon, deShell, deEmpty, deAuth, deReports, deBilling, deAccount, deHelp, deReview, deAnalyst, deDashboard, deAmazon),
+  es: pack(esCommon, esShell, esEmpty, esAuth, esReports, esBilling, esAccount, esHelp, esReview, esAnalyst, esDashboard, esAmazon),
+  fr: pack(frCommon, frShell, frEmpty, frAuth, frReports, frBilling, frAccount, frHelp, frReview, frAnalyst, frDashboard, frAmazon),
+  it: pack(itCommon, itShell, itEmpty, itAuth, itReports, itBilling, itAccount, itHelp, itReview, itAnalyst, itDashboard, itAmazon),
 };
 
 function readInitialLang(): string {

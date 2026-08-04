@@ -37,6 +37,24 @@ export class DataController {
     }
   };
 
+  overview = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const data = await dataService.overview(req.user!.email);
+      res.json(ok(data));
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  insights = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      const data = await dataService.insights(req.user!.email, req.user!.id, periodFrom(req.body));
+      res.json(ok(data));
+    } catch (e) {
+      next(e);
+    }
+  };
+
   getProcessedJson = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const data = await dataService.getProcessedJson(req.user!.email, periodFrom(req.body));

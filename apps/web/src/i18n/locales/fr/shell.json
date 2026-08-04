@@ -6,24 +6,32 @@
     "information": "Rapports TVA",
     "review": "Revue",
     "analyst": "Analyste",
+    "amazonConnection": "Connexion Amazon",
     "account": "Compte",
     "billing": "Offres et facturation",
     "faq": "Aide",
     "contact": "Support",
     "privacy": "Confidentialité",
-    "terms": "Conditions"
+    "terms": "Conditions",
+    "refund": "Remboursements",
+    "cookies": "Cookies"
   },
   "titles": {
     "graphics": "Tableau de bord",
     "information": "Rapports TVA",
     "review": "Revue",
     "analyst": "Analyste",
+    "amazonConnection": "Connexion Amazon",
     "account": "Compte",
     "billing": "Offres et facturation",
     "faq": "Aide",
     "contact": "Support",
     "privacy": "Politique de confidentialité",
-    "terms": "Conditions d'utilisation"
+    "terms": "Conditions d'utilisation",
+    "thankyou": "Paiement confirmé",
+    "paymentFailed": "Paiement non effectué",
+    "refund": "Remboursement & résiliation",
+    "cookies": "Politique de cookies"
   },
   "tabs": {
     "graphics": "Board",

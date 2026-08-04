@@ -35,7 +35,7 @@ export class UserRepository {
       amazonId?: string;
       plan?: string;
       password?: string;
-      userStripeId?: string;
+      lemonCustomerId?: string;
     },
   ) {
     return prisma.user.update({ where: { id }, data });

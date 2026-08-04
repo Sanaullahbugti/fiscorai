@@ -1,6 +1,9 @@
 import { Router } from "express";
 import multer from "multer";
 import { authMiddleware } from "../../middlewares/auth.js";
+import { uploadLimiter } from "../../middlewares/rate-limit.js";
+import { validateBody } from "../../middlewares/validate.js";
+import { periodSchema } from "./data.dto.js";
 import { dataController } from "./data.controller.js";
 
 const upload = multer({
@@ -10,9 +13,36 @@ const upload = multer({
 
 const router = Router();
 
-router.post("/upload-csv", authMiddleware, upload.single("file"), dataController.uploadCsv);
+// validateBody runs after multer so it sees the parsed multipart text fields,
+// not the raw stream — rejects a hostile month/quarter/year before it ever
+// reaches the filesystem layer.
+router.post(
+  "/upload-csv",
+  authMiddleware,
+  uploadLimiter,
+  upload.single("file"),
+  validateBody(periodSchema),
+  dataController.uploadCsv,
+);
 router.get("/user-files", authMiddleware, dataController.userFiles);
-router.post("/get-processed-json", authMiddleware, dataController.getProcessedJson);
-router.post("/download-file", authMiddleware, dataController.downloadFile);
+router.get("/overview", authMiddleware, dataController.overview);
+router.post(
+  "/insights",
+  authMiddleware,
+  validateBody(periodSchema),
+  dataController.insights,
+);
+router.post(
+  "/get-processed-json",
+  authMiddleware,
+  validateBody(periodSchema),
+  dataController.getProcessedJson,
+);
+router.post(
+  "/download-file",
+  authMiddleware,
+  validateBody(periodSchema),
+  dataController.downloadFile,
+);
 
 export default router;

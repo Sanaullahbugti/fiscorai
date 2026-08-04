@@ -6,14 +6,14 @@ export type CreatePaymentInput = {
   currency: string;
   status: string;
   plan?: string | null;
-  stripeSessionId?: string | null;
+  lemonOrderId?: string | null;
   invoiceId?: string | null;
   invoiceHostedURL?: string | null;
 };
 
 export class PaymentsRepository {
-  findByStripeSessionId(stripeSessionId: string) {
-    return prisma.payment.findUnique({ where: { stripeSessionId } });
+  findByLemonOrderId(lemonOrderId: string) {
+    return prisma.payment.findUnique({ where: { lemonOrderId } });
   }
 
   create(data: CreatePaymentInput) {

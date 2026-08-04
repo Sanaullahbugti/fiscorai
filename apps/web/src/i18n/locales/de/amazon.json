@@ -1,0 +1,17 @@
+{
+  "badge": "Demnächst verfügbar",
+  "title": "Verbinde dein Amazon Seller Central-Konto",
+  "intro": "Die direkte, automatische Synchronisierung mit Seller Central ist noch nicht verfügbar.",
+  "introBody": "Lade deinen Amazon-USt-Transaktionsbericht vorerst manuell unter VAT reports hoch — alles andere in FiscorAI funktioniert bereits mit dieser Datei. Die automatische Synchronisierung folgt als Nächstes.",
+  "previewLabel": "amazon_seller_id",
+  "previewPlaceholder": "amzn1.mws....",
+  "previewButton": "Seller Central verbinden",
+  "previewOverlay": "Noch nicht verfügbar",
+  "comingTitle": "Was als Nächstes kommt",
+  "comingItem1": "Automatischer Berichtsimport über Amazons Selling Partner API — keine manuellen CSV-Exporte mehr.",
+  "comingItem2": "Verfolgung des Lagerstandorts, damit Nexus-Hinweise sich aktualisieren, sobald sich dein Lagerbestand bewegt.",
+  "comingItem3": "Erneute Verbindung mit einem Klick, falls deine Autorisierung abläuft.",
+  "manualCta": "Stattdessen Bericht manuell hochladen",
+  "notify": "Möchtest du erfahren, sobald das verfügbar ist?",
+  "notifyCta": "E-Mail senden"
+}

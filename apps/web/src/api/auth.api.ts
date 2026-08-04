@@ -17,14 +17,11 @@ export const authApi = {
     plan?: string;
   }) => http.post<GeneralResponse<unknown>>("/api/v1/users", body),
 
-  changePassword: (email: string, password: string) =>
-    http.put("/api/v1/auth/change-password", { email, password }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    http.put("/api/v1/auth/change-password", { currentPassword, newPassword }),
 
-  forgotPassword: (email: string) =>
-    http.post(`/api/v1/auth/forgot-password?email=${encodeURIComponent(email)}`),
+  forgotPassword: (email: string) => http.post("/api/v1/auth/forgot-password", { email }),
 
   resetPassword: (token: string, newPassword: string) =>
-    http.post(
-      `/api/v1/auth/reset-password?token=${encodeURIComponent(token)}&newPassword=${encodeURIComponent(newPassword)}`,
-    ),
+    http.post("/api/v1/auth/reset-password", { token, newPassword }),
 };

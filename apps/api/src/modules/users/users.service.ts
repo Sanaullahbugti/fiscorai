@@ -39,7 +39,7 @@ export class UsersService {
     alias: string | null;
     amazonId: string | null;
     plan: string;
-    userStripeId: string | null;
+    lemonCustomerId: string | null;
   }) {
     return {
       id: user.id,
@@ -49,7 +49,7 @@ export class UsersService {
       alias: user.alias,
       amazonId: user.amazonId,
       plan: user.plan,
-      userStripeId: user.userStripeId,
+      lemonCustomerId: user.lemonCustomerId,
       businessUser: false,
     };
   }

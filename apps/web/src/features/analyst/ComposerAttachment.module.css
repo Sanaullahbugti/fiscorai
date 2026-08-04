@@ -1,0 +1,164 @@
+/* Local copy — a CSS Module cannot reference the global tokens.css keyframe. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px;
+  background: var(--surface-brand-tint);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  animation: fadeUp 160ms ease-out;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fileIcon {
+  width: 15px;
+  height: 15px;
+  color: var(--brand-primary);
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.remove {
+  background: none;
+  border: none;
+  padding: 3px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.remove:hover:not(:disabled) {
+  background: var(--surface-card);
+  color: var(--status-critical);
+}
+
+.remove:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.removeIcon {
+  width: 13px;
+  height: 13px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.select {
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--surface-card);
+  color: var(--text-primary);
+  padding: 6px 8px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  max-width: 130px;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 1px;
+}
+
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit {
+  margin-left: auto;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: var(--text-label);
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease-out;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--surface-brand-pressed);
+}
+
+.submit:disabled {
+  background: var(--border-default);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.progress {
+  position: relative;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--surface-brand-tint);
+  transition: width 180ms ease-out;
+}
+
+.progressLabel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 860px) {
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .submit {
+    margin-left: 0;
+    grid-column: 1 / -1;
+    padding: 9px 14px;
+  }
+
+  .select { max-width: none; }
+}

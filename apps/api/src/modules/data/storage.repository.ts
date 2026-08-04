@@ -1,6 +1,7 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { env } from "../../config/env.js";
+import { AppError } from "../../shared/errors.js";
 
 export type PeriodInput = {
   fileType: "monthly" | "quarterly";
@@ -32,13 +33,31 @@ function periodSortKey(p: PeriodInput): number {
   return y * 100 + q * 3;
 }
 
+/**
+ * Every caller of periodPath ends up here, so this is the one place that has
+ * to reject a hostile month/quarter/year — e.g. month:"../../other-user" —
+ * before it reaches path.join and walks outside the caller's own folder.
+ */
 function periodFolder(input: PeriodInput): string {
-  if (input.fileType === "monthly") {
-    if (input.month == null) throw new Error("Month required");
-    return path.join("monthly", `${input.month}-${input.year}`);
+  const year = Number(input.year);
+  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+    throw new AppError("Invalid period year", 400);
   }
-  if (!input.quarter) throw new Error("Quarter required");
-  return path.join("quarterly", `${input.quarter}-${input.year}`);
+  if (input.fileType === "monthly") {
+    const month = Number(input.month);
+    if (!Number.isInteger(month) || month < 1 || month > 12) {
+      throw new AppError("Invalid period month", 400);
+    }
+    return path.join("monthly", `${month}-${year}`);
+  }
+  if (input.fileType !== "quarterly") {
+    throw new AppError("Invalid period type", 400);
+  }
+  const quarter = String(input.quarter || "").toUpperCase();
+  if (!/^Q[1-4]$/.test(quarter)) {
+    throw new AppError("Invalid period quarter", 400);
+  }
+  return path.join("quarterly", `${quarter}-${year}`);
 }
 
 export class LocalFsStorageRepository {
@@ -131,6 +150,22 @@ export class LocalFsStorageRepository {
     }
 
     return periods.sort((a, b) => periodSortKey(b) - periodSortKey(a));
+  }
+
+  /**
+   * Which generated formats actually exist for a period. Used by the Analyst tool
+   * so it can offer a download only when the file is really on disk, rather than
+   * promising one the user would then fail to fetch.
+   */
+  async listPeriodFormats(email: string, input: PeriodInput): Promise<string[]> {
+    try {
+      const entries = await readdir(this.periodPath(email, input));
+      return ["pdf", "xlsx"].filter((ext) =>
+        entries.some((f) => f.toLowerCase().endsWith(`.${ext}`)),
+      );
+    } catch {
+      return [];
+    }
   }
 
   private async walk(abs: string, rel: string, out: { monthly: string[]; quarterly: string[] }) {

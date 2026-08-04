@@ -6,24 +6,32 @@
     "information": "VAT reports",
     "review": "Review",
     "analyst": "Analyst",
+    "amazonConnection": "Amazon connection",
     "account": "Account",
     "billing": "Plans & billing",
     "faq": "Help",
     "contact": "Support",
     "privacy": "Privacy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "refund": "Refunds",
+    "cookies": "Cookies"
   },
   "titles": {
     "graphics": "Dashboard",
     "information": "VAT reports",
     "review": "Review",
     "analyst": "Analyst",
+    "amazonConnection": "Amazon connection",
     "account": "Account",
     "billing": "Plans & billing",
+    "thankyou": "Payment confirmed",
+    "paymentFailed": "Payment not completed",
     "faq": "Help",
     "contact": "Support",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Service"
+    "terms": "Terms of Service",
+    "refund": "Refund & cancellation",
+    "cookies": "Cookie Policy"
   },
   "tabs": {
     "graphics": "Dash",

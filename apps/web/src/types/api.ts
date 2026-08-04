@@ -22,6 +22,56 @@ export type Country = {
   transactionCategories: Category[];
 };
 
+export type ProcessMeta = {
+  totalRows: number;
+  processedRows: number;
+  truncated: boolean;
+  planLimit: number | null;
+  periodLabel: string;
+};
+
+export type ProcessedPayload = {
+  countries: Country[];
+  meta: ProcessMeta | null;
+};
+
+export type InsightAlert = {
+  sev: "info" | "warning" | "critical";
+  code: string;
+  title: string;
+  detail: string;
+};
+
+export type PeriodInsights = {
+  period: {
+    fileType: string;
+    year: string | number;
+    month?: string | number;
+    quarter?: string;
+    label: string;
+  };
+  totals: { sales: number; refunds: number; vat: number; net: number };
+  pulse: {
+    priorLabel: string | null;
+    salesDeltaPct: number | null;
+    refundsDeltaPct: number | null;
+    vatDeltaPct: number | null;
+    verdict: string;
+  };
+  byRate: Array<{ rate: string; total: number; base: number; vat: number }>;
+  schemeMix: Array<{ scheme: string; sales: number; vat: number; salesSharePct: number }>;
+  watchlist: Array<{
+    country: string;
+    sales: number;
+    refunds: number;
+    vat: number;
+    refundRatePct: number | null;
+  }>;
+  alerts: InsightAlert[];
+  meta: ProcessMeta | null;
+  filingHints: Array<{ scheme: string; amount: number; due: string; note: string }>;
+};
+
 export type GeneralResponse<T> = {
   message: string;
   statusCode: number;
@@ -53,7 +103,7 @@ export type UserProfile = {
   alias?: string | null;
   amazonId?: string | null;
   plan: string;
-  userStripeId?: string | null;
+  lemonCustomerId?: string | null;
   businessUser?: boolean;
 };
 
@@ -64,24 +114,55 @@ export type PaymentRecord = {
   currency: string;
   status: string;
   plan?: string | null;
-  stripeSessionId?: string | null;
+  lemonOrderId?: string | null;
   invoiceId?: string | null;
   invoiceHostedURL?: string | null;
   createdAt: string;
 };
 
-export type SavedCard = {
-  id: string;
-  brand: string;
-  last4: string;
-  expMonth?: number;
-  expYear?: number;
-  isDefault?: boolean;
+export type CountryRollup = {
+  country: string;
+  sales: number;
+  refunds: number;
+  vat: number;
+  refundRatePct: number | null;
+};
+
+export type PeriodSummary = {
+  period: {
+    fileType: string;
+    year: string | number;
+    month?: string | number;
+    quarter?: string;
+    label: string;
+  };
+  totals: { sales: number; refunds: number; vat: number; net: number };
+  byCategory: Record<string, number>;
+  topCountries: CountryRollup[];
+  countryCount: number;
+};
+
+/** Business rollup across every uploaded period — powers the dashboard trend and country table. */
+export type DashboardOverview = {
+  scope: "all_uploaded_periods";
+  periodCount: number;
+  overall: {
+    sales: number;
+    refunds: number;
+    vat: number;
+    net: number;
+    byCategory: Record<string, number>;
+    topCountries: CountryRollup[];
+    countryCount: number;
+  };
+  byPeriod: PeriodSummary[];
 };
 
 export type SubscriptionInfo = {
   plan: string;
   price: number;
   active: boolean;
+  /** True once the seller has canceled — still `active` until expiresAt, then auto-drops to Free. */
+  canceled?: boolean;
   expiresAt?: string | null;
 };

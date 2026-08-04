@@ -15,7 +15,7 @@ export function createApp() {
   const app = express();
   app.use(cors({ origin: env.CORS_ORIGIN.split(","), credentials: true }));
 
-  // Stripe webhooks require the raw body for signature verification.
+  // Lemon Squeezy webhooks require the raw body for HMAC signature verification.
   app.use("/api/v1/webhook", express.raw({ type: "application/json" }), webhookRoutes);
 
   app.use(express.json({ limit: "2mb" }));

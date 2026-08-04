@@ -1,42 +1,78 @@
 {
+  "helpTitle": "Centre d'aide",
+  "helpSubtitle": "Réponses aux questions les plus fréquentes. Pas trouvé ? Le support est à un clic.",
+  "searchPlaceholder": "Rechercher des questions…",
+  "noResults": "Aucune question ne correspond à cette recherche.",
+  "contactTitle": "Contacter le support",
+  "contactSubtitle": "Expliquez votre situation — nous lisons chaque message.",
   "fillAll": "Veuillez remplir tous les champs",
   "messageSent": "Message envoyé !",
   "sendFailed": "Échec de l'envoi",
+  "sending": "Envoi…",
+  "otherWays": "Autres moyens de nous joindre",
+  "responseTime": "Réponse typique sous un jour ouvrable",
   "getInTouch": "Nous contacter",
   "name": "Nom",
   "email": "E-mail",
   "message": "Message",
-  "sendMessage": "Envoyer",
-  "asideBody": "Questions sur les régimes TVA, limites ou factures — écrivez-nous en anglais, allemand, espagnol, français ou italien.",
-  "asideFooter": " · Espagne · Outils de déclaration TVA pour vendeurs Amazon UE.",
+  "sendMessage": "Envoyer le message",
+  "asideBody": "Questions sur les régimes de TVA, plafonds ou factures — en anglais, allemand, espagnol, français ou italien.",
+  "asideFooter": " · Espagne · Outils de reporting TVA pour vendeurs Amazon UE.",
   "privacyTitle": "Politique de confidentialité",
   "termsTitle": "Conditions d'utilisation",
-  "legalIntro": "FiscorAI est exploité par une société espagnole inscrite au registre du commerce de Madrid.",
-  "legalNote": "Ceci est une démonstration. Avant la production, faites revoir ce texte par un avocat.",
-  "privacy1": "Nous ne traitons que les données nécessaires : e-mail, n° de TVA et jeton MWS Amazon.",
-  "privacy2": "Les CSV sont traités côté serveur puis supprimés. Aucune donnée personnelle n'est vendue.",
-  "privacy3": "Factures et journaux conservés 7 ans selon le droit fiscal de l'UE.",
-  "privacy4": "Vous pouvez demander la suppression de votre compte et de vos données sous 30 jours.",
-  "terms1": "Le service est fourni « en l'état ». Des erreurs de calcul peuvent survenir. Vérifiez avec votre conseiller fiscal.",
-  "terms2": "Votre compte est sous votre responsabilité. Ne partagez pas vos identifiants ni le jeton MWS.",
-  "terms3": "Les échecs de paiement suspendent l'accès. Les remboursements suivent votre moyen de paiement.",
-  "terms4": "Nous pouvons suspendre ou résilier le service en cas de violation des présentes conditions ou de la loi.",
+  "refundTitle": "Remboursement & résiliation",
+  "cookiesTitle": "Politique de cookies",
+  "legalIntro": "FiscorAI est exploité par FiscorAI, une société espagnole d'outils de reporting TVA pour vendeurs Amazon UE.",
+  "legalNote": "Ce texte est destiné au soft launch et n'a pas été revu par un avocat. Avant la production complète, faites-le mettre à jour pour votre juridiction.",
+  "privacyPoints": [
+    "Nous collectons les données de compte nécessaires : e-mail, nom d'utilisateur, hash du mot de passe, n° de TVA optionnel et jeton MWS Amazon optionnel.",
+    "Les CSV TVA Amazon sont traités côté serveur. Les résultats peuvent être conservés tant que le compte est actif.",
+    "Les paiements sont gérés par Lemon Squeezy. Nous stockons des références client/paiement (pas les numéros de carte complets).",
+    "L'Analyste IA peut envoyer un résumé TVA pertinent à Google Gemini. N'y collez pas de secrets.",
+    "Factures et enregistrements de facturation peuvent être conservés jusqu'à 7 ans si la loi l'exige.",
+    "Vous pouvez demander la suppression du compte et des données : support@fiscor.ai — objectif mensuel jusqu'à annulation sauf conservation légale.",
+    "Nous ne vendons pas de données personnelles. Sous-traitants : Lemon Squeezy et Google (Gemini)."
+  ],
+  "termsPoints": [
+    "FiscorAI fournit une analyse TVA pour vendeurs Amazon UE. Les sorties sont informatives, pas un conseil fiscal, juridique ou comptable.",
+    "Offres : Free (limitée), Basic, Standard et Pro. L'accès payant est un paiement unique Lemon Squeezy d'environ mensuel jusqu'à annulation après activation.",
+    "Vous êtes responsable de vos identifiants et jetons Amazon connectés.",
+    "Résilier dans Offres & facturation passe à Free. Le temps non utilisé n'est en général pas remboursé automatiquement — voir la politique de remboursement.",
+    "Nous pouvons suspendre les comptes en cas d'abus, de rétro-ingénierie ou d'illégalité.",
+    "Le service est fourni « en l'état ». La responsabilité est limitée selon le droit espagnol et de l'UE.",
+    "Droit espagnol applicable ; tribunaux de Madrid, sans préjudice des protections consommateurs impératives."
+  ],
+  "refundPoints": [
+    "Les offres payantes s'activent via Lemon Checkout en paiement unique. Accès ~mensuel jusqu'à annulation après activation réussie.",
+    "Résiliez à tout moment dans Offres & facturation → Free. Pas de remboursement automatique de la période en cours.",
+    "Si vous quittez le checkout Lemon Squeezy, vous n'êtes pas débité. Réessayez depuis Facturation.",
+    "En cas de débit erroné, contactez support@fiscor.ai sous 14 jours avec e-mail et facture.",
+    "Les litiges carte suivent la procédure de votre prestataire. Le compte peut être suspendu pendant ce temps.",
+    "L'offre Free n'implique aucun paiement ni remboursement."
+  ],
+  "cookiesPoints": [
+    "Nous utilisons un stockage essentiel : jetons d'auth, langue, inactivité de session et réglages de l'app.",
+    "Ils sont nécessaires à la connexion, à la sécurité et à la langue — pas à la publicité.",
+    "Pas de cookies marketing ou analytiques tiers pour l'instant. Nous mettrons à jour cette politique si cela change.",
+    "Lemon Checkout peut déposer ses propres cookies sur les pages Lemon Squeezy.",
+    "Vous pouvez effacer les données du site dans le navigateur ; une nouvelle connexion sera nécessaire."
+  ],
   "faqs": [
     {
       "q": "Faut-il une carte pour commencer ?",
-      "a": "Non. Free n'exige pas de carte et reste gratuit — jusqu'à 100 transactions par document."
+      "a": "Non. L'offre Free n'exige pas de carte et reste gratuite — jusqu'à 100 transactions par document."
     },
     {
       "q": "Qu'est-ce qu'une transaction ?",
-      "a": "Chaque ligne du rapport TVA Amazon : commandes, retours, remboursements, liquidations et mouvements de stock."
+      "a": "Chaque ligne du Amazon VAT Transactions Report : commandes, retours, remboursements, liquidations et mouvements de stock."
     },
     {
-      "q": "Comment marchent les limites mensuelles/trimestrielles ?",
-      "a": "Par document. Basic 2 000/mois ou 6 000/trimestre ; Standard 6 000/18 000 ; Pro illimité."
+      "q": "Plafonds mensuels ou trimestriels — comment ça marche ?",
+      "a": "Les plafonds s'appliquent par document. Basic 2 000/mois ou 6 000/trimestre ; Standard 6 000 / 18 000 ; Pro illimité."
     },
     {
       "q": "Que se passe-t-il en cas de dépassement ?",
-      "a": "Traitement partiel ; PDF et Excel portent une bannière ATTENTION. Passez à une offre supérieure et re-téléversez."
+      "a": "Le fichier est traité partiellement ; PDF et Excel affichent ATTENTION. Passez à une offre supérieure et réimportez."
     },
     {
       "q": "Quel fichier et où le trouver ?",
@@ -44,15 +80,31 @@
     },
     {
       "q": "Combien de temps dure le traitement ?",
-      "a": "En général moins d'une minute. La ligne affiche Traitement jusqu'aux résultats."
+      "a": "Généralement moins d'une minute. Le statut affiche Processing jusqu'aux résultats."
     },
     {
-      "q": "Qu'obtenez-vous ?",
-      "a": "Vue en ligne (graphiques et tableaux), résumé PDF et Excel détaillé par régime et pays."
+      "q": "Que reçois-je ?",
+      "a": "Vue en ligne, résumé PDF et Excel détaillé par régime fiscal et pays."
     },
     {
-      "q": "Re-téléverser la même période est-il sûr ?",
-      "a": "Oui. Un nouveau téléversement remplace les fichiers de cette période et actualise les graphiques."
+      "q": "Réimporter la même période — est-ce sûr ?",
+      "a": "Oui. Un nouvel import remplace les fichiers précédents pour cette période."
+    },
+    {
+      "q": "Que se passe-t-il après le paiement ?",
+      "a": "Lemon Squeezy vous redirige vers la page de remerciement ; l'offre s'active. Accès payant ~mensuel jusqu'à annulation. Gestion dans Offres & facturation."
+    },
+    {
+      "q": "Paiement non terminé — ai-je été débité ?",
+      "a": "Si vous avez annulé le checkout, vous ne devriez pas être débité. Réessayez depuis Facturation ou contactez le support."
+    },
+    {
+      "q": "Comment résilier ou obtenir un remboursement ?",
+      "a": "Résiliez dans Offres & facturation pour passer à Free. Pas de remboursement journalier automatique — voir la politique ou support@fiscor.ai."
+    },
+    {
+      "q": "Pourquoi je ne vois pas d’alerte de données partielles / tronquées ?",
+      "a": "Les anciens imports peuvent manquer de méta jusqu’à ce que vous réimportiez le même CSV TVA Amazon pour cette période. Les nouveaux imports enregistrent toujours troncature et nombre de lignes."
     }
   ]
 }

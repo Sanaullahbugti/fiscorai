@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { ok } from "../../shared/response.js";
 import { authService } from "./auth.service.js";
+import type { AuthRequest } from "../../middlewares/auth.js";
 
 export class AuthController {
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +17,7 @@ export class AuthController {
 
   refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = String(req.query.refreshToken || req.body.refreshToken || "");
+      const token = String(req.body.refreshToken || "");
       const data = authService.refresh(token);
       res.json(ok(data));
     } catch (e) {
@@ -24,9 +25,9 @@ export class AuthController {
     }
   };
 
-  changePassword = async (req: Request, res: Response, next: NextFunction) => {
+  changePassword = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      await authService.changePassword(req.body.email, req.body.password || req.body.newPassword);
+      await authService.changePassword(req.user!.id, req.body.currentPassword, req.body.newPassword);
       res.json(ok("Password changed successfully"));
     } catch (e) {
       next(e);
@@ -35,7 +36,7 @@ export class AuthController {
 
   forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await authService.forgotPassword(String(req.query.email || req.body.email));
+      const data = await authService.forgotPassword(req.body.email);
       res.json(ok(data));
     } catch (e) {
       next(e);
@@ -44,10 +45,9 @@ export class AuthController {
 
   resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await authService.resetPassword(
-        String(req.query.token || req.body.token),
-        String(req.query.newPassword || req.body.newPassword),
-      );
+      // Body only — the reset token is a bearer credential and previously
+      // could travel as a query string, landing in access logs.
+      await authService.resetPassword(req.body.token, req.body.newPassword);
       res.json(ok("Password reset successfully"));
     } catch (e) {
       next(e);

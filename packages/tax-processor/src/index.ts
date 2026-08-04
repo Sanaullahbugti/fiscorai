@@ -22,7 +22,9 @@ export async function processVatReport(
 ): Promise<ProcessArtifacts> {
   const report = processCsv(csvText, options);
   const apiCountries = toApiCountries(report);
-  const json = { countries: report.countries };
+  // Persist meta with countries so dashboards can show truncation / row counts
+  // without re-running the processor.
+  const json = { countries: report.countries, meta: report.meta };
   const [pdf, xlsx] = await Promise.all([
     buildPdf(report, options.pdf),
     buildXlsx(report),
