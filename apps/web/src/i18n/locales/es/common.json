@@ -26,15 +26,15 @@
     "EMPTY": "Sin clasificar"
   },
   "plans": {
-    "Free": "Hasta 100 transacciones por documento.",
-    "Basic": "2.000 / mes o 6.000 / trimestre.",
-    "Standard": "6.000 / mes o 18.000 / trimestre.",
+    "Free": "Hasta 50 transacciones por documento.",
+    "Basic": "1.500 / mes o 4.500 / trimestre.",
+    "Standard": "4.500 / mes o 13.500 / trimestre.",
     "Pro": "Transacciones ilimitadas."
   },
   "planLimitsShort": {
-    "Free": "Hasta 100 tx / documento",
-    "Basic": "2.000 / mes o 6.000 / trim.",
-    "Standard": "6.000 / mes o 18.000 / trim.",
+    "Free": "Hasta 50 tx / documento",
+    "Basic": "1.500 / mes o 4.500 / trim.",
+    "Standard": "4.500 / mes o 13.500 / trim.",
     "Pro": "Transacciones ilimitadas"
   }
 }

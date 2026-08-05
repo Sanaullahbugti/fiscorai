@@ -43,9 +43,9 @@ export const PLAN_LIMITS: Record<
   PlanCode,
   { monthly: number | null; quarterly: number | null }
 > = {
-  "0": { monthly: 100, quarterly: 100 },
-  "1": { monthly: 2000, quarterly: 6000 },
-  "2": { monthly: 6000, quarterly: 18000 },
+  "0": { monthly: 50, quarterly: 50 },
+  "1": { monthly: 1500, quarterly: 4500 },
+  "2": { monthly: 4500, quarterly: 13500 },
   "3": { monthly: null, quarterly: null },
 };
 

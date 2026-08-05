@@ -26,15 +26,15 @@
     "EMPTY": "Nicht klassifiziert"
   },
   "plans": {
-    "Free": "Bis zu 100 Transaktionen pro Dokument.",
-    "Basic": "2.000 / Monat oder 6.000 / Quartal.",
-    "Standard": "6.000 / Monat oder 18.000 / Quartal.",
+    "Free": "Bis zu 50 Transaktionen pro Dokument.",
+    "Basic": "1.500 / Monat oder 4.500 / Quartal.",
+    "Standard": "4.500 / Monat oder 13.500 / Quartal.",
     "Pro": "Unbegrenzte Transaktionen."
   },
   "planLimitsShort": {
-    "Free": "Bis 100 Tx / Dokument",
-    "Basic": "2.000 / Mo oder 6.000 / Qtr",
-    "Standard": "6.000 / Mo oder 18.000 / Qtr",
+    "Free": "Bis 50 Tx / Dokument",
+    "Basic": "1.500 / Mo oder 4.500 / Qtr",
+    "Standard": "4.500 / Mo oder 13.500 / Qtr",
     "Pro": "Unbegrenzte Transaktionen"
   }
 }

@@ -54,9 +54,9 @@ describe("processCsv", () => {
       periodLabel: "2026-JAN",
     });
     expect(report.meta.totalRows).toBe(105);
-    expect(report.meta.processedRows).toBe(100);
+    expect(report.meta.processedRows).toBe(50);
     expect(report.meta.truncated).toBe(true);
-    expect(report.meta.planLimit).toBe(100);
+    expect(report.meta.planLimit).toBe(50);
   });
 
   it("does not truncate unlimited plan", () => {

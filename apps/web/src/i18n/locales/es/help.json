@@ -60,7 +60,7 @@
   "faqs": [
     {
       "q": "¿Necesito tarjeta para empezar?",
-      "a": "No. El plan Free no requiere tarjeta y sigue gratis — hasta 100 transacciones por documento."
+      "a": "No. El plan Free no requiere tarjeta y sigue gratis — hasta 50 transacciones por documento."
     },
     {
       "q": "¿Qué cuenta como transacción?",
@@ -68,7 +68,7 @@
     },
     {
       "q": "Límites mensuales o trimestrales — ¿cómo funcionan?",
-      "a": "Los límites son por documento. Basic 2.000/mes o 6.000/trimestre; Standard 6.000 / 18.000; Pro ilimitado."
+      "a": "Los límites son por documento. Basic 1.500/mes o 4.500/trimestre; Standard 4.500 / 13.500; Pro ilimitado."
     },
     {
       "q": "¿Qué pasa si me paso del límite?",

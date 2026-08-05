@@ -60,7 +60,7 @@
   "faqs": [
     {
       "q": "Do I need a credit card to start?",
-      "a": "No. The Free plan needs no card and stays free — it processes up to 100 transactions per document."
+      "a": "No. The Free plan needs no card and stays free — it processes up to 50 transactions per document."
     },
     {
       "q": "What counts as a transaction?",
@@ -68,7 +68,7 @@
     },
     {
       "q": "Monthly or quarterly limits — how do they work?",
-      "a": "Limits apply per document. Basic allows 2,000 per month or 6,000 per quarter; Standard 6,000 / 18,000; Pro is unlimited. You can upload several periods as long as each document is under the cap."
+      "a": "Limits apply per document. Basic allows 1,500 per month or 4,500 per quarter; Standard 4,500 / 13,500; Pro is unlimited. You can upload several periods as long as each document is under the cap."
     },
     {
       "q": "What happens if I go over the limit?",

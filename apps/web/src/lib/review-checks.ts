@@ -46,7 +46,7 @@ export function buildReviewChecks(
   if (!opts.planActive) {
     checks.push({
       sev: "critical",
-      title: "Free plan caps this analysis at 100 transactions",
+      title: "Free plan caps this analysis at 50 transactions",
       detail: "Figures here may be partial. Upgrade under Plans & billing and re-upload the same period for a complete set.",
     });
   }

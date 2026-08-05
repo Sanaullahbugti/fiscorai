@@ -134,7 +134,7 @@ storage/{email-with-@-as-hyphen}/
 | F-TAX-01 | Parse CSV | Amazon VAT Transactions Report via `csv-parse`. |
 | F-TAX-02 | Scheme map | UNION-OSS, VOEC (`*VOEC*`), REGULAR, EMPTY/NO COUNTRY, else raw scheme. |
 | F-TAX-03 | Aggregate | Per country × category: ALL totals, TRANSACTION (SALE/REFUND), VAT by rate. RETURN → REFUND. |
-| F-TAX-04 | Plan caps | Free 100/100; Basic 2k/6k; Standard 6k/18k; Pro unlimited (monthly/quarterly). Excess rows truncated; meta + PDF/XLSX attention banner. |
+| F-TAX-04 | Plan caps | Free 50/50; Basic 1.5k/4.5k; Standard 4.5k/13.5k; Pro unlimited (monthly/quarterly). Excess rows truncated; meta + PDF/XLSX attention banner. |
 | F-TAX-05 | JSON out | `{ countries: [{ country, transactionCategories }] }` |
 | F-TAX-06 | PDF out | Multi-section summary + VAT appendix + plan notices. |
 | F-TAX-07 | XLSX out | SUMMARY, DETAIL_VAT, DETAIL_TRANSACTION, per category-country sheets. |
@@ -395,10 +395,10 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 
 | Plan | Price | Monthly tx | Quarterly tx | Analyst |
 |------|-------|------------|--------------|---------|
-| Free | €0 | 100 | 100 | 3 questions / day |
-| Basic | €14.9 | 2 000 | 6 000 | Unlimited while active |
-| Standard | €39.9 | 6 000 | 18 000 | Unlimited while active |
-| Pro | €79.9 | Unlimited | Unlimited | Unlimited while active |
+| Free | €0 | 50 | 50 | 3 questions / day |
+| Basic | €14.99 | 1 500 | 4 500 | Unlimited while active |
+| Standard | €39.99 | 4 500 | 13 500 | Unlimited while active |
+| Pro | €79.99 | Unlimited | Unlimited | Unlimited while active |
 
 Paid “active” while Lemon subscription status is active (local `expiresAt` follows `renews_at` / `ends_at` from webhooks).
 

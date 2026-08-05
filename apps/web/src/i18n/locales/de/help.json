@@ -60,7 +60,7 @@
   "faqs": [
     {
       "q": "Brauche ich eine Kreditkarte zum Start?",
-      "a": "Nein. Der Free-Plan braucht keine Karte und bleibt kostenlos — bis zu 100 Transaktionen pro Dokument."
+      "a": "Nein. Der Free-Plan braucht keine Karte und bleibt kostenlos — bis zu 50 Transaktionen pro Dokument."
     },
     {
       "q": "Was zählt als Transaktion?",
@@ -68,7 +68,7 @@
     },
     {
       "q": "Monats- oder Quartalslimits — wie funktionieren sie?",
-      "a": "Limits gelten pro Dokument. Basic 2.000/Monat oder 6.000/Quartal; Standard 6.000 / 18.000; Pro unbegrenzt."
+      "a": "Limits gelten pro Dokument. Basic 1.500/Monat oder 4.500/Quartal; Standard 4.500 / 13.500; Pro unbegrenzt."
     },
     {
       "q": "Was passiert bei Überschreitung?",

@@ -26,15 +26,15 @@
     "EMPTY": "Unclassified"
   },
   "plans": {
-    "Free": "Up to 100 transactions per document.",
-    "Basic": "2,000 / month or 6,000 / quarter.",
-    "Standard": "6,000 / month or 18,000 / quarter.",
+    "Free": "Up to 50 transactions per document.",
+    "Basic": "1,500 / month or 4,500 / quarter.",
+    "Standard": "4,500 / month or 13,500 / quarter.",
     "Pro": "Unlimited transactions."
   },
   "planLimitsShort": {
-    "Free": "Up to 100 tx / document",
-    "Basic": "2,000 / mo or 6,000 / qtr",
-    "Standard": "6,000 / mo or 18,000 / qtr",
+    "Free": "Up to 50 tx / document",
+    "Basic": "1,500 / mo or 4,500 / qtr",
+    "Standard": "4,500 / mo or 13,500 / qtr",
     "Pro": "Unlimited transactions"
   }
 }

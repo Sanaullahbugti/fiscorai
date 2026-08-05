@@ -60,7 +60,7 @@
   "faqs": [
     {
       "q": "Faut-il une carte pour commencer ?",
-      "a": "Non. L'offre Free n'exige pas de carte et reste gratuite — jusqu'à 100 transactions par document."
+      "a": "Non. L'offre Free n'exige pas de carte et reste gratuite — jusqu'à 50 transactions par document."
     },
     {
       "q": "Qu'est-ce qu'une transaction ?",
@@ -68,7 +68,7 @@
     },
     {
       "q": "Plafonds mensuels ou trimestriels — comment ça marche ?",
-      "a": "Les plafonds s'appliquent par document. Basic 2 000/mois ou 6 000/trimestre ; Standard 6 000 / 18 000 ; Pro illimité."
+      "a": "Les plafonds s'appliquent par document. Basic 1 500/mois ou 4 500/trimestre ; Standard 4 500 / 13 500 ; Pro illimité."
     },
     {
       "q": "Que se passe-t-il en cas de dépassement ?",

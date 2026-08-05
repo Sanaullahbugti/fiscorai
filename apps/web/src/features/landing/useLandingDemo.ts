@@ -13,19 +13,19 @@ import {
 // can never quote a different product than checkout actually sells.
 const PLAN_FEATURES: Record<string, string[]> = {
   Free: [
-    "Up to 100 transactions per document",
+    "Up to 50 transactions per document",
     "Country VAT summary + charts",
     "PDF and Excel export",
     "All deterministic checks",
     "3 analyst questions / day",
   ],
   Basic: [
-    "2,000 transactions / month or 6,000 / quarter",
+    "1,500 transactions / month or 4,500 / quarter",
     "Everything in Free",
     "Unlimited analyst questions",
   ],
   Standard: [
-    "6,000 transactions / month or 18,000 / quarter",
+    "4,500 transactions / month or 13,500 / quarter",
     "Everything in Basic",
   ],
   Pro: ["Unlimited transactions", "Everything in Standard"],
