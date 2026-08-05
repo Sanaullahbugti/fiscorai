@@ -34,9 +34,9 @@ export const ROUTES = {
 // below the incumbent tool sellers already know, tier for tier.
 export const PLANS = [
   { code: "Free", price: 0 },
-  { code: "Basic", price: 14.9 },
-  { code: "Standard", price: 39.9 },
-  { code: "Pro", price: 79.9 },
+  { code: "Basic", price: 14.99 },
+  { code: "Standard", price: 39.99 },
+  { code: "Pro", price: 79.99 },
 ] as const;
 
 export const CATEGORY_COLORS: Record<string, string> = {

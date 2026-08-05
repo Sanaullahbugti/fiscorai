@@ -3,17 +3,17 @@
 // tiers at a meaningfully lower price, not just on features.
 export const PLAN_PRICES: Record<string, number> = {
   Free: 0,
-  Basic: 14.9,
-  Standard: 39.9,
-  Pro: 79.9,
+  Basic: 14.99,
+  Standard: 39.99,
+  Pro: 79.99,
 };
 
 /** Plan amounts in cents (EUR) — display / Payment history; Lemon variants own live price. */
 export const PLAN_AMOUNT_CENTS: Record<string, number> = {
   Free: 0,
-  Basic: 1490,
-  Standard: 3990,
-  Pro: 7990,
+  Basic: 1499,
+  Standard: 3999,
+  Pro: 7999,
 };
 
 export const PAID_PLANS = ["Basic", "Standard", "Pro"] as const;
