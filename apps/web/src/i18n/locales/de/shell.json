@@ -1,43 +1,43 @@
 {
   "brand": "FiscorAI",
-  "currentPlan": "Aktueller Plan",
+  "currentPlan": "Aktuelles Paket",
   "nav": {
     "graphics": "Dashboard",
-    "information": "MwSt-Berichte",
+    "information": "VAT-Berichte",
     "review": "Prüfung",
     "analyst": "Analyst",
     "amazonConnection": "Amazon-Verbindung",
     "account": "Konto",
-    "billing": "Pläne & Abrechnung",
+    "billing": "Tarife & Abrechnung",
     "faq": "Hilfe",
     "contact": "Support",
     "privacy": "Datenschutz",
     "terms": "AGB",
-    "refund": "Erstattung",
+    "refund": "Rückerstattungen",
     "cookies": "Cookies"
   },
   "titles": {
     "graphics": "Dashboard",
-    "information": "MwSt-Berichte",
+    "information": "VAT-Berichte",
     "review": "Prüfung",
     "analyst": "Analyst",
     "amazonConnection": "Amazon-Verbindung",
     "account": "Konto",
-    "billing": "Pläne & Abrechnung",
+    "billing": "Tarife & Abrechnung",
+    "thankyou": "Zahlung bestätigt",
+    "paymentFailed": "Zahlung nicht abgeschlossen",
     "faq": "Hilfe",
     "contact": "Support",
     "privacy": "Datenschutzerklärung",
     "terms": "Nutzungsbedingungen",
-    "thankyou": "Zahlung bestätigt",
-    "paymentFailed": "Zahlung nicht abgeschlossen",
-    "refund": "Erstattung & Kündigung",
+    "refund": "Rückerstattung & Stornierung",
     "cookies": "Cookie-Richtlinie"
   },
   "tabs": {
     "graphics": "Dash",
-    "information": "MwSt",
+    "information": "VAT",
     "review": "Prüfung",
     "analyst": "Analyst"
   },
-  "primaryNav": "Primär"
+  "primaryNav": "Hauptnavigation"
 }

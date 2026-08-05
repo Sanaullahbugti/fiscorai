@@ -1,8 +1,8 @@
 {
   "title": "Nessun report per questo periodo",
-  "bodyDefault": "Carica un report delle transazioni IVA Amazon in Report IVA per popolare questa vista.",
-  "bodyDashboard": "Carica un report delle transazioni IVA Amazon in Report IVA per popolare i grafici.",
-  "bodyReview": "Carica un report delle transazioni IVA Amazon per vedere controlli e scadenze.",
-  "bodyAnalyst": "L'analista necessita di almeno un report elaborato. Caricalo in Report VAT — pronto in meno di un minuto.",
+  "bodyDefault": "Carichi un Report delle transazioni IVA di Amazon nella sezione Report IVA per popolare questa visualizzazione.",
+  "bodyDashboard": "Carichi un Report delle transazioni IVA di Amazon nella sezione Report IVA per popolare i grafici.",
+  "bodyReview": "Carichi un Report delle transazioni IVA di Amazon per visualizzare i controlli e le scadenze di dichiarazione.",
+  "bodyAnalyst": "L'analista richiede almeno un report elaborato. Lo carichi nella sezione Report IVA e sarà pronto in meno di un minuto.",
   "cta": "Vai al caricamento"
 }

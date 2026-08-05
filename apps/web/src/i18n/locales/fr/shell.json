@@ -1,14 +1,14 @@
 {
   "brand": "FiscorAI",
-  "currentPlan": "Offre actuelle",
+  "currentPlan": "Forfait actuel",
   "nav": {
     "graphics": "Tableau de bord",
     "information": "Rapports TVA",
-    "review": "Revue",
+    "review": "Révision",
     "analyst": "Analyste",
     "amazonConnection": "Connexion Amazon",
     "account": "Compte",
-    "billing": "Offres et facturation",
+    "billing": "Forfaits et facturation",
     "faq": "Aide",
     "contact": "Support",
     "privacy": "Confidentialité",
@@ -19,24 +19,24 @@
   "titles": {
     "graphics": "Tableau de bord",
     "information": "Rapports TVA",
-    "review": "Revue",
+    "review": "Révision",
     "analyst": "Analyste",
     "amazonConnection": "Connexion Amazon",
     "account": "Compte",
-    "billing": "Offres et facturation",
+    "billing": "Forfaits et facturation",
+    "thankyou": "Paiement confirmé",
+    "paymentFailed": "Paiement non finalisé",
     "faq": "Aide",
     "contact": "Support",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation",
-    "thankyou": "Paiement confirmé",
-    "paymentFailed": "Paiement non effectué",
-    "refund": "Remboursement & résiliation",
-    "cookies": "Politique de cookies"
+    "refund": "Remboursement et annulation",
+    "cookies": "Politique relative aux cookies"
   },
   "tabs": {
-    "graphics": "Board",
+    "graphics": "Aperçu",
     "information": "TVA",
-    "review": "Revue",
+    "review": "Révision",
     "analyst": "Analyste"
   },
   "primaryNav": "Principal"

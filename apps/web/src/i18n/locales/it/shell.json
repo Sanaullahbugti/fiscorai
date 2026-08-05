@@ -24,14 +24,14 @@
     "amazonConnection": "Connessione Amazon",
     "account": "Account",
     "billing": "Piani e fatturazione",
+    "thankyou": "Pagamento confermato",
+    "paymentFailed": "Pagamento non completato",
     "faq": "Aiuto",
     "contact": "Supporto",
     "privacy": "Informativa sulla privacy",
     "terms": "Termini di servizio",
-    "thankyou": "Pagamento confermato",
-    "paymentFailed": "Pagamento non completato",
     "refund": "Rimborsi e cancellazione",
-    "cookies": "Politica sui cookie"
+    "cookies": "Informativa sui cookie"
   },
   "tabs": {
     "graphics": "Dash",

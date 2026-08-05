@@ -1,110 +1,110 @@
 {
   "helpTitle": "Centro de ayuda",
-  "helpSubtitle": "Respuestas a lo que más preguntan los vendedores. ¿No lo encuentras? El soporte está a un clic.",
+  "helpSubtitle": "Respuestas a las preguntas más frecuentes de los vendedores. ¿No encuentras lo que buscas? El servicio de asistencia está a un clic.",
   "searchPlaceholder": "Buscar preguntas…",
-  "noResults": "Ninguna pregunta coincide con esa búsqueda.",
-  "contactTitle": "Contactar soporte",
-  "contactSubtitle": "Cuéntanos qué ocurre — leemos cada mensaje.",
-  "fillAll": "Rellena todos los campos",
+  "noResults": "Ninguna pregunta coincide con la búsqueda.",
+  "contactTitle": "Contactar con soporte",
+  "contactSubtitle": "Cuéntanos qué ocurre; una persona real lee cada mensaje.",
+  "fillAll": "Por favor, completa todos los campos",
   "messageSent": "¡Mensaje enviado!",
   "sendFailed": "No se pudo enviar el mensaje",
   "sending": "Enviando…",
-  "otherWays": "Otras formas de contactarnos",
-  "responseTime": "Respuesta habitual en un día laborable",
-  "getInTouch": "Ponerse en contacto",
+  "otherWays": "Otras formas de contactar con nosotros",
+  "responseTime": "Tiempo de respuesta habitual: un día laborable",
+  "getInTouch": "P ponerse en contacto",
   "name": "Nombre",
-  "email": "Correo",
+  "email": "Correo electrónico",
   "message": "Mensaje",
   "sendMessage": "Enviar mensaje",
-  "asideBody": "Preguntas sobre esquemas de IVA, límites o facturas — en inglés, alemán, español, francés o italiano.",
-  "asideFooter": " · España · Herramientas de IVA para vendedores Amazon UE.",
-  "privacyTitle": "Política de privacidad",
-  "termsTitle": "Términos del servicio",
-  "refundTitle": "Reembolsos y cancelación",
-  "cookiesTitle": "Política de cookies",
-  "legalIntro": "FiscorAI es operado por FiscorAI, una empresa española de herramientas de IVA para vendedores Amazon UE.",
-  "legalNote": "Este texto es para el soft launch y no ha sido revisado por abogados. Antes de producción completa, actualízalo con asesoría legal.",
+  "asideBody": "Si tienes preguntas sobre regímenes de VAT, límites o facturas, escríbenos en inglés, alemán, español, francés o italiano.",
+  "asideFooter": " · España · Herramientas de informes de VAT para vendedores de Amazon en la UE.",
+  "privacyTitle": "Política de Privacidad",
+  "termsTitle": "Términos de Servicio",
+  "refundTitle": "Reembolsos y cancelaciones",
+  "cookiesTitle": "Política de Cookies",
+  "legalIntro": "FiscorAI está operado por FiscorAI, una empresa española que desarrolla herramientas de informes de VAT para vendedores de Amazon en la UE.",
+  "legalNote": "Este texto es para el lanzamiento preliminar y no ha sido revisado por un asesor legal. Antes del lanzamiento en producción, un abogado debe adaptarlo a tu jurisdicción y a los datos de tu empresa.",
   "privacyPoints": [
-    "Recopilamos datos de cuenta necesarios: correo, nombre de usuario, hash de contraseña, NIF-IVA opcional y token MWS de Amazon opcional.",
-    "Los CSV de IVA de Amazon se procesan en el servidor. Los resultados pueden conservarse mientras la cuenta esté activa.",
-    "Los pagos los gestiona Lemon Squeezy. Guardamos referencias de cliente y pago (no números completos de tarjeta).",
-    "El Analista IA puede enviar contexto de resumen de IVA a Google Gemini. No pegues secretos en el chat.",
-    "Facturas y registros de facturación pueden conservarse hasta 7 años si la normativa lo exige.",
-    "Puedes pedir la eliminación de cuenta y datos personales en support@fiscor.ai; objetivo mensual hasta que canceles salvo retención legal.",
-    "No vendemos datos personales. Encargados: Lemon Squeezy y Google (Gemini)."
+    "Recopilamos los datos de la cuenta necesarios para el funcionamiento del servicio: correo electrónico, nombre de usuario, hash de contraseña, número de VAT opcional y token de Amazon MWS opcional.",
+    "Los archivos CSV de VAT de Amazon subidos se procesan en el servidor para generar informes. Los resultados procesados y la actividad necesaria para el producto pueden conservarse mientras su cuenta esté activa.",
+    "Los datos de pago son gestionados por Lemon Squeezy (Merchant of Record). Almacenamos las referencias de cliente y pago de Lemon (no los números de tarjeta completos) para activar los planes y mostrar las facturas.",
+    "La función del analista de IA puede enviar contexto relevante de resumen de VAT a Google Gemini para responder a sus preguntas. No introduzca información confidencial en los chats del analista.",
+    "Las facturas y los registros de facturación podrán conservarse hasta un máximo de 7 años cuando así lo exijan la normativa fiscal y contable.",
+    "Puede solicitar la supresión de su cuenta y de sus datos personales. Póngase en contacto con support@fiscor.ai; nuestro objetivo es completar la eliminación en un plazo de 30 días, salvo en los casos en que la ley exija su conservación.",
+    "No vendemos datos personales. Actualmente, nuestros encargados del tratamiento incluyen a Lemon Squeezy (pagos) y Google (Gemini) en virtud de sus respectivas condiciones."
   ],
   "termsPoints": [
-    "FiscorAI ofrece análisis de IVA para vendedores Amazon UE. La salida es informativa, no asesoramiento fiscal, legal ni contable.",
-    "Planes: Free (limitado), Basic, Standard y Pro. El acceso de pago es un pago único de Lemon Squeezy por unos mensual hasta que canceles desde la activación.",
-    "Eres responsable de tus credenciales y tokens de Amazon conectados.",
-    "Cancelar en Planes y facturación pasa a Free. El tiempo no usado no se reembolsa automáticamente — ver política de reembolsos.",
-    "Podemos suspender cuentas por abuso, ingeniería inversa o ilegalidad.",
-    "El servicio se ofrece «tal cual». La responsabilidad se limita según la ley española y de la UE.",
-    "Se rige por la ley española; tribunales de Madrid, sin perjuicio de protecciones de consumo obligatorias."
+    "FiscorAI proporciona herramientas de análisis de VAT para vendedores de Amazon en la UE. Los resultados son informativos y no constituyen asesoramiento fiscal, legal o contable. Verifique siempre las cifras con su asesor.",
+    "Planes: Free (limitado), Basic, Standard y Pro. El acceso de pago es una suscripción mensual de Lemon Squeezy que se renueva automáticamente hasta que la cancele.",
+    "Usted es responsable de las credenciales de su cuenta y de cualquier token de Amazon que conecte. No comparta los datos de acceso.",
+    "Puede cancelar un plan de pago desde Facturación; al cancelarlo, mantendrá el acceso hasta el final del periodo pagado y, a continuación, pasará al plan Free. Por lo general, el tiempo no utilizado no se reembolsa automáticamente; consulte la política de reembolsos.",
+    "Podemos suspender o cancelar cuentas que hagan un uso indebido del servicio, realicen ingeniería inversa o infrinjan la legislación aplicable.",
+    "El servicio se presta «tal cual». En la medida en que lo permita la legislación española y de la UE, la responsabilidad por errores de cálculo o interrupciones del servicio es limitada.",
+    "Estas condiciones se rigen por las leyes de España. Los tribunales de Madrid serán los competentes, sin perjuicio de las protecciones imperativas de los consumidores."
   ],
   "refundPoints": [
-    "Los planes de pago se activan con Lemon Checkout como pago único. Acceso ~mensual hasta que canceles desde la activación.",
-    "Cancela cuando quieras en Planes y facturación → Free. No hay reembolso automático del periodo en curso.",
-    "Si abandonas el checkout de Lemon Squeezy, no se te cobra. Vuelve a intentarlo desde Facturación.",
-    "Si hubo un cobro erróneo, escribe a support@fiscor.ai en 14 días con correo y factura.",
-    "Las disputas de tarjeta siguen el proceso de tu proveedor. Podemos pausar la cuenta mientras dure.",
-    "El plan Free no implica pago ni reembolsos."
+    "Los planes de pago se activan a través de Lemon Squeezy Checkout como suscripciones mensuales.",
+    "Puede cancelar en cualquier momento en Planes y facturación. La cancelación detiene la renovación; conservará las funciones de pago hasta que finalice el periodo y, a continuación, pasará al plan Free. Esto no reembolsa automáticamente el periodo actual.",
+    "Si el proceso de pago falla o abandona Lemon Checkout, no se le realizará ningún cargo. Utilice Facturación para intentarlo de nuevo.",
+    "Si se le ha cobrado por error (pago duplicado, fallo técnico), póngase en contacto con support@fiscor.ai en un plazo de 14 días indicando el correo electrónico de su cuenta y los datos de la factura.",
+    "Las devoluciones de cargos y disputas de tarjetas siguen el proceso de su proveedor de pagos. Es posible que suspendamos la cuenta mientras la disputa esté abierta.",
+    "El uso del plan Free no conlleva pagos ni reembolsos."
   ],
   "cookiesPoints": [
-    "Usamos almacenamiento esencial: tokens de autenticación, idioma, inactividad de sesión y ajustes de la app.",
-    "Son necesarios para iniciar sesión, seguridad e idioma — no para publicidad.",
-    "Hoy no usamos cookies de marketing o analítica de terceros. Si cambia, actualizaremos esta política.",
-    "Lemon Checkout puede fijar sus propias cookies en páginas de Lemon Squeezy.",
-    "Puedes borrar los datos del sitio en el navegador; tendrás que volver a iniciar sesión."
+    "Utilizamos el almacenamiento esencial necesario para el funcionamiento del producto: tokens de autenticación, preferencia de idioma, seguimiento de inactividad de sesión y ajustes similares de la aplicación en el almacenamiento del navegador.",
+    "Son estrictamente necesarios para el inicio de sesión, la seguridad y el mantenimiento de su idioma. No se utilizan con fines publicitarios.",
+    "Actualmente no utilizamos cookies de marketing o análisis de terceros. Si esto cambia, actualizaremos esta política y añadiremos un mecanismo de consentimiento cuando sea necesario.",
+    "Lemon Squeezy Checkout puede establecer sus propias cookies cuando realiza pagos en las páginas alojadas de Lemon, de conformidad con la política de cookies de Lemon Squeezy.",
+    "Puede borrar los datos del sitio en su navegador en cualquier momento; deberá volver a iniciar sesión."
   ],
   "faqs": [
     {
-      "q": "¿Necesito tarjeta para empezar?",
-      "a": "No. El plan Free no requiere tarjeta y sigue gratis — hasta 50 transacciones por documento."
+      "q": "¿Necesito una tarjeta de crédito para empezar?",
+      "a": "No. El plan Free no requiere tarjeta y sigue siendo gratuito; procesa hasta 50 transacciones por documento."
     },
     {
-      "q": "¿Qué cuenta como transacción?",
-      "a": "Cada fila del Amazon VAT Transactions Report: pedidos, devoluciones, reembolsos, liquidaciones y movimientos de inventario."
+      "q": "¿Qué se cuenta como transacción?",
+      "a": "Cada fila del informe de transacciones del IVA de Amazon: pedidos, devoluciones, reembolsos, liquidaciones y movimientos de inventario."
     },
     {
-      "q": "Límites mensuales o trimestrales — ¿cómo funcionan?",
-      "a": "Los límites son por documento. Basic 1.500/mes o 4.500/trimestre; Standard 4.500 / 13.500; Pro ilimitado."
+      "q": "Límites mensuales o trimestrales: ¿cómo funcionan?",
+      "a": "Los límites se aplican por documento. Basic permite 1500 al mes o 4500 al trimestre; Standard 4500 / 13 500; Pro es ilimitado. Puede subir varios periodos siempre que cada documento esté por debajo del límite."
     },
     {
-      "q": "¿Qué pasa si me paso del límite?",
-      "a": "El archivo se procesa parcialmente; PDF y Excel muestran ATTENTION. Mejora el plan y vuelve a subir."
+      "q": "¿Qué ocurre si supero el límite?",
+      "a": "El archivo se sigue procesando, pero solo parcialmente, y el PDF y Excel incluirán una advertencia. Actualice su plan y vuelva a subirlo para obtener un análisis completo."
     },
     {
-      "q": "¿Qué archivo subo y dónde lo encuentro?",
-      "a": "Amazon Seller Central → Informes → Fulfilment by Amazon → Amazon VAT Transactions Report. Solo CSV, máx. 100 MB."
+      "q": "¿Qué archivo debo subir y dónde lo encuentro?",
+      "a": "Amazon Seller Central → Informes → Logística de Amazon → Informe de transacciones del IVA de Amazon. Solo CSV, máx. 100 MB."
     },
     {
-      "q": "¿Cuánto tarda el proceso?",
-      "a": "Suele ser menos de un minuto. El estado muestra Processing hasta que estén listos los resultados."
+      "q": "¿Cuánto tarda el procesamiento?",
+      "a": "Normalmente menos de un minuto. La fila del archivo muestra Procesando hasta que los resultados están listos; la página se actualiza automáticamente."
     },
     {
-      "q": "¿Qué obtengo?",
-      "a": "Vista online, resumen PDF y Excel detallado por esquema fiscal y país."
+      "q": "¿Qué obtengo a cambio?",
+      "a": "La vista en línea (gráficos y tablas por país), un resumen en PDF para su asesor fiscal y un Excel detallado desglosado por régimen fiscal y país."
     },
     {
-      "q": "¿Es seguro volver a subir el mismo periodo?",
-      "a": "Sí. Una nueva subida reemplaza los archivos anteriores de ese periodo."
+      "q": "Volver a subir el mismo periodo: ¿es seguro?",
+      "a": "Sí. Una nueva subida reemplaza los archivos anteriores de ese periodo y los gráficos se actualizan con los nuevos datos."
     },
     {
       "q": "¿Qué pasa después de pagar?",
-      "a": "Lemon Squeezy te lleva a la página de agradecimiento y activamos el plan. Acceso de pago ~mensual hasta que canceles. Gestiona en Planes y facturación."
+      "a": "Lemon Squeezy le redirige a una página de agradecimiento mientras activamos su plan. El acceso de pago se renueva mensualmente hasta que lo cancele. Puede gestionar los planes y las facturas en Planes y facturación."
     },
     {
-      "q": "El pago no se completó — ¿me cobraron?",
-      "a": "Si cancelaste el checkout, no deberías haber sido cobrado. Reintenta en Facturación o contacta soporte."
+      "q": "Mi pago no se ha completado: ¿se me ha cobrado?",
+      "a": "If you canceled or left Lemon Checkout, you should not be charged. Return to Plans & billing to try again. If money left your account by mistake, contact support with your email and receipt."
     },
     {
-      "q": "¿Cómo cancelo o pido un reembolso?",
-      "a": "Cancela en Planes y facturación para pasar a Free. No hay reembolsos diarios automáticos — ver política de reembolsos o support@fiscor.ai."
+      "q": "¿Cómo puedo cancelar o solicitar un reembolso?",
+      "a": "Cancele en cualquier momento en Planes y facturación para detener la renovación (conservará el acceso hasta que finalice el periodo, y luego pasará a Free). No se emiten reembolsos automáticos por los días no utilizados; consulte la política de reembolso y cancelación o escriba a support@fiscor.ai para errores de facturación."
     },
     {
-      "q": "¿Por qué no veo el aviso de datos parciales o truncados?",
-      "a": "Las subidas antiguas pueden carecer de meta de proceso hasta que vuelvas a subir el mismo CSV de IVA de Amazon para ese periodo. Las subidas nuevas siempre guardan truncado y recuentos."
+      "q": "¿Por qué no veo una advertencia de datos parciales o truncamiento?",
+      "a": "Es posible que las cargas anteriores carezcan de metadatos de procesamiento hasta que vuelva a cargar el mismo CSV de IVA de Amazon para ese periodo. Las nuevas cargas siempre almacenan los detalles de truncamiento y recuento de filas."
     }
   ]
 }

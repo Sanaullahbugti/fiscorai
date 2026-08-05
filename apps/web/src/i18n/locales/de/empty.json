@@ -1,8 +1,8 @@
 {
   "title": "Kein Bericht für diesen Zeitraum",
-  "bodyDefault": "Laden Sie einen Amazon-MwSt-Transaktionsbericht unter MwSt-Berichte hoch, um diese Ansicht zu füllen.",
-  "bodyDashboard": "Laden Sie einen Amazon-MwSt-Transaktionsbericht unter MwSt-Berichte hoch, um Diagramme zu füllen.",
-  "bodyReview": "Laden Sie einen Amazon-MwSt-Transaktionsbericht hoch, um Prüfungen und Fristen zu sehen.",
-  "bodyAnalyst": "Der Analyst braucht mindestens einen verarbeiteten Bericht. Laden Sie ihn unter VAT-Berichte hoch — fertig in unter einer Minute.",
+  "bodyDefault": "Laden Sie unter den VAT-Berichten einen Amazon VAT Transactions Report hoch, um diese Ansicht zu füllen.",
+  "bodyDashboard": "Laden Sie unter den VAT-Berichten einen Amazon VAT Transactions Report hoch, um Diagramme anzuzeigen.",
+  "bodyReview": "Laden Sie einen Amazon VAT Transactions Report hoch, um Prüfungen und Meldefristen zu sehen.",
+  "bodyAnalyst": "Der Analyst benötigt mindestens einen verarbeiteten Bericht. Laden Sie ihn unter den VAT-Berichten hoch, und er ist in unter einer Minute bereit.",
   "cta": "Zum Upload"
 }

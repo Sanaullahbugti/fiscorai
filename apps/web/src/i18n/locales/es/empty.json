@@ -1,8 +1,8 @@
 {
-  "title": "Sin informe para este periodo",
-  "bodyDefault": "Sube un informe de transacciones IVA de Amazon en Informes IVA para rellenar esta vista.",
-  "bodyDashboard": "Sube un informe de transacciones IVA de Amazon en Informes IVA para rellenar los gráficos.",
-  "bodyReview": "Sube un informe de transacciones IVA de Amazon para ver comprobaciones y plazos.",
-  "bodyAnalyst": "El analista necesita al menos un informe procesado. Súbelo en Informes VAT y estará listo en menos de un minuto.",
+  "title": "No hay informes para este periodo",
+  "bodyDefault": "Sube un informe de transacciones de IVA de Amazon en la sección de informes de IVA para rellenar esta vista.",
+  "bodyDashboard": "Sube un informe de transacciones de IVA de Amazon en la sección de informes de IVA para mostrar los gráficos.",
+  "bodyReview": "Sube un informe de transacciones de IVA de Amazon para ver las comprobaciones y los plazos de presentación.",
+  "bodyAnalyst": "El analista necesita al menos un informe procesado. Súbelo en informes de IVA y estará listo en menos de un minuto.",
   "cta": "Ir a subir"
 }

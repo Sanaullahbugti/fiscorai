@@ -1,16 +1,16 @@
 {
-  "needsAttention": "Ce qui demande attention",
+  "needsAttention": "Points d'attention",
   "checkSummary": "{{critical}} à corriger · {{warning}} à vérifier · {{info}} notes",
   "chipFix": "Corriger",
   "chipCheck": "Vérifier",
   "chipNote": "Note",
-  "fileWhen": "Quoi déclarer, et quand",
+  "fileWhen": "Quoi déclarer et quand",
   "totalVat": "TVA totale {{amount}}",
   "vatToDeclare": "TVA à déclarer",
   "due": "Échéance",
-  "noFilings": "Téléversez une période avec des ventes OSS pour voir les échéances.",
-  "disclaimer": "Les échéances suivent le calendrier local habituel. Votre immatriculation peut différer — confirmez avec votre conseiller.",
-  "aiTitle": "Voulez-vous une explication de ces constats, ou poser votre question ?",
-  "aiSub": "Ouvrez l'analyste — il lit les chiffres de cette période et répond clairement.",
+  "noFilings": "Importez une période avec des ventes OSS pour afficher les échéances.",
+  "disclaimer": "Les échéances correspondent au calendrier légal habituel de chaque pays. Votre date d'immatriculation spécifique peut différer — confirmez-la auprès de votre conseil.",
+  "aiTitle": "Besoin d'explications sur ces résultats ou d'une réponse sur mesure ?",
+  "aiSub": "Ouvrez l'analyste : il analyse les chiffres de cette période et vous répond clairement.",
   "openAnalyst": "Ouvrir l'analyste"
 }

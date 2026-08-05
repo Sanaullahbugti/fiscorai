@@ -1,16 +1,16 @@
 {
-  "needsAttention": "Was Aufmerksamkeit braucht",
+  "needsAttention": "Handlungsbedarf",
   "checkSummary": "{{critical}} zu beheben · {{warning}} zu prüfen · {{info}} Hinweise",
   "chipFix": "Beheben",
   "chipCheck": "Prüfen",
   "chipNote": "Hinweis",
-  "fileWhen": "Was einreichen, und wann",
-  "totalVat": "MwSt gesamt {{amount}}",
-  "vatToDeclare": "Zu meldende MwSt",
+  "fileWhen": "Was und wann zu melden ist",
+  "totalVat": "Gesamte MwSt. {{amount}}",
+  "vatToDeclare": "Zu erklärende MwSt.",
   "due": "Fällig",
-  "noFilings": "Laden Sie einen Zeitraum mit OSS-Umsätzen hoch, um Fristen zu sehen.",
-  "disclaimer": "Fristen folgen dem üblichen lokalen Kalender. Ihre Registrierung kann abweichen — mit Berater bestätigen.",
-  "aiTitle": "Befunde erklären lassen oder eigene Frage stellen?",
-  "aiSub": "Öffnen Sie den Analysten — er liest die Zahlen dieses Zeitraums und antwortet verständlich.",
-  "openAnalyst": "Analyst öffnen"
+  "noFilings": "Laden Sie einen Zeitraum mit OSS-Verkäufen hoch, um Fristen zu sehen.",
+  "disclaimer": "Die Fristen entsprechen dem regulären lokalen Kalender des jeweiligen Landes. Ihre individuelle Registrierung kann ein abweichendes Datum vorsehen — bitte stimmen Sie dies mit Ihrer steuerlichen Beratung ab.",
+  "aiTitle": "Möchten Sie diese Ergebnisse erklärt bekommen oder eine eigene Frage stellen?",
+  "aiSub": "Öffnen Sie den Analysten — er analysiert die Zahlen dieses Zeitraums und antwortet verständlich.",
+  "openAnalyst": "Analysten öffnen"
 }

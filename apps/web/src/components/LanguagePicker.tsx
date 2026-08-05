@@ -9,10 +9,12 @@ export function LanguagePicker({
   value,
   onChange,
   variant = "light",
+  className,
 }: {
   value: string;
   onChange: (code: string) => void;
   variant?: Variant;
+  className?: string;
 }) {
   const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
@@ -40,7 +42,7 @@ export function LanguagePicker({
   if (variant === "sidebar" || variant === "light") {
     return (
       <div
-        className={`${styles.pills} ${variant === "sidebar" ? styles.pillsSidebar : styles.pillsLight}`}
+        className={`${styles.pills} ${variant === "sidebar" ? styles.pillsSidebar : styles.pillsLight}${className ? ` ${className}` : ""}`}
         role="group"
         aria-label={t("language")}
       >
@@ -66,7 +68,7 @@ export function LanguagePicker({
 
   // Mobile brand bar: compact trigger + menu
   return (
-    <div className={styles.brandRoot} ref={rootRef}>
+    <div className={`${styles.brandRoot}${className ? ` ${className}` : ""}`} ref={rootRef}>
       <button
         type="button"
         className={`${styles.brandTrigger} ${open ? styles.brandTriggerOpen : ""}`}

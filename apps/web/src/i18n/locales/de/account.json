@@ -5,17 +5,17 @@
   "saveChanges": "Änderungen speichern",
   "amazonTitle": "Amazon Seller Central",
   "comingSoon": "Demnächst verfügbar",
-  "amazonMovedHint": "Die automatische Seller Central-Synchronisierung ist noch nicht verfügbar — tippen, um zu sehen, was kommt und wie du in der Zwischenzeit manuell hochlädst.",
+  "amazonMovedHint": "Die automatische Seller Central-Synchronisierung ist noch nicht live – klicken Sie hier, um zu sehen, was kommt und wie Sie in der Zwischenzeit manuell hochladen.",
   "password": "Passwort",
   "currentPassword": "Aktuelles Passwort",
   "newPassword": "Neues Passwort",
   "confirmPassword": "Passwort bestätigen",
   "changePassword": "Passwort ändern",
   "profileSaved": "Profil gespeichert",
-  "profileFailed": "Profil speichern fehlgeschlagen",
+  "profileFailed": "Fehler beim Speichern des Profils",
   "passwordsMismatch": "Passwörter stimmen nicht überein",
   "passwordRequired": "Passwort erforderlich",
-  "currentPasswordRequired": "Aktuelles Passwort eingeben",
+  "currentPasswordRequired": "Geben Sie Ihr aktuelles Passwort ein",
   "passwordChanged": "Passwort geändert",
-  "passwordFailed": "Passwort ändern fehlgeschlagen"
+  "passwordFailed": "Fehler beim Ändern des Passworts"
 }

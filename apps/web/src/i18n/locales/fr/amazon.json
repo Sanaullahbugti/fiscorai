@@ -1,17 +1,17 @@
 {
   "badge": "Bientôt disponible",
   "title": "Connectez votre compte Amazon Seller Central",
-  "intro": "La synchronisation directe et automatique avec Seller Central n'est pas encore disponible.",
-  "introBody": "Pour l'instant, importez votre rapport de transactions TVA Amazon manuellement depuis VAT reports — tout le reste de FiscorAI fonctionne déjà à partir de ce fichier. La synchronisation automatique est la prochaine étape.",
+  "intro": "La synchronisation automatique et directe avec Seller Central n'est pas encore active.",
+  "introBody": "Pour l'instant, importez manuellement votre rapport de TVA Amazon depuis la section Rapports de TVA. Tout le reste fonctionne déjà avec ce fichier dans FiscorAI. La synchronisation automatique arrive très prochainement.",
   "previewLabel": "amazon_seller_id",
   "previewPlaceholder": "amzn1.mws....",
   "previewButton": "Connecter Seller Central",
   "previewOverlay": "Pas encore disponible",
-  "comingTitle": "Ce qui arrive",
-  "comingItem1": "Import automatique des rapports via la Selling Partner API d'Amazon — plus d'exports CSV manuels.",
-  "comingItem2": "Suivi de l'emplacement des stocks, pour que les alertes de nexus se mettent à jour dès que votre stock bouge.",
-  "comingItem3": "Reconnexion en un clic si votre autorisation expire.",
+  "comingTitle": "Prochainement",
+  "comingItem1": "Import automatique des rapports via l'API Selling Partner d'Amazon — fini les exports CSV manuels.",
+  "comingItem2": "Suivi des emplacements de stock, pour que les alertes de seuil se mettent à jour dès que vos marchandises bougent.",
+  "comingItem3": "Reconnexion en un clic si votre autorisation venait à expirer.",
   "manualCta": "Importer un rapport manuellement à la place",
-  "notify": "Envie d'être prévenu dès la sortie ?",
-  "notifyCta": "Écrivez-nous"
+  "notify": "Vous souhaitez être averti dès sa sortie ?",
+  "notifyCta": "Envoyez-nous un e-mail"
 }

@@ -1,21 +1,21 @@
 {
   "profile": "Perfil",
   "name": "Nombre",
-  "email": "Correo",
+  "email": "Correo electrónico",
   "saveChanges": "Guardar cambios",
   "amazonTitle": "Amazon Seller Central",
   "comingSoon": "Próximamente",
-  "amazonMovedHint": "La sincronización automática con Seller Central todavía no está disponible — toca para ver qué viene y cómo subir informes manualmente mientras tanto.",
+  "amazonMovedHint": "La sincronización automática con Seller Central aún no está activa; pulse para ver las novedades y cómo subir los datos manualmente mientras tanto.",
   "password": "Contraseña",
   "currentPassword": "Contraseña actual",
   "newPassword": "Nueva contraseña",
   "confirmPassword": "Confirmar contraseña",
   "changePassword": "Cambiar contraseña",
   "profileSaved": "Perfil guardado",
-  "profileFailed": "Error al guardar perfil",
+  "profileFailed": "Error al guardar el perfil",
   "passwordsMismatch": "Las contraseñas no coinciden",
   "passwordRequired": "Contraseña obligatoria",
-  "currentPasswordRequired": "Introduce tu contraseña actual",
-  "passwordChanged": "Contraseña cambiada",
-  "passwordFailed": "Error al cambiar contraseña"
+  "currentPasswordRequired": "Introduzca su contraseña actual",
+  "passwordChanged": "Contraseña modificada",
+  "passwordFailed": "Error al cambiar la contraseña"
 }

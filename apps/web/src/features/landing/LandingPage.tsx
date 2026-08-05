@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
+import { LanguagePicker } from "@/components/LanguagePicker";
+import { useUiStore } from "@/stores/uiStore";
 import { CheckIcon, FileIcon, SendIcon, SparkIcon, UploadIcon } from "@/features/analyst/icons";
 import {
   BoxIcon3D,
@@ -14,95 +17,6 @@ import {
 import { useLandingDemo } from "./useLandingDemo";
 import { CountryVatChart } from "@/components/CountryVatChart";
 import styles from "./LandingPage.module.css";
-
-const NAV = [
-  { href: "#how", label: "How it works" },
-  { href: "#chat", label: "Ask FiscorAI" },
-  { href: "#proof", label: "What you get" },
-  { href: "#report", label: "Reports" },
-  { href: "#pricing", label: "Pricing" },
-  // Plain page, not an in-page anchor — static blog outside the SPA router.
-  { href: "/blog/", label: "Blog" },
-] as const;
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Upload your Amazon report",
-    body: "Drop your VAT transactions CSV once. No template, no column renaming — FiscorAI reads Amazon’s export as-is.",
-    image: "/landing/step-01-upload.png",
-    alt: "3D morphic icon of an Amazon VAT CSV upload",
-  },
-  {
-    n: "02",
-    title: "Processed locally, in minutes",
-    body: "Every row is parsed, matched to the correct VAT rate by country, and scanned for wrong rates, refund anomalies, and unclassified rows.",
-    image: "/landing/step-02-process.png",
-    alt: "3D morphic icon of automated VAT processing",
-  },
-  {
-    n: "03",
-    title: "Ask anything, anytime",
-    body: 'Just ask — “vat this quarter”, “what changed”, “send me the PDF” — answers from your real figures, never estimates.',
-    image: "/landing/step-03-chat.png",
-    alt: "3D morphic icon of the FiscorAI chat analyst",
-  },
-] as const;
-
-const OFFER_ITEMS = [
-  {
-    title: "One chat, every answer",
-    body: 'Ask in plain language — "vat this quarter", "what changed", "send me the PDF" — and get answers computed from your real data, never estimated.',
-    icon: ChatIcon3D,
-  },
-  {
-    title: "Reports, the moment you ask",
-    body: "The chat hands you the exact PDF or Excel file as soon as you need it — no menu, no period picker to hunt through, just ask.",
-    icon: DocumentIcon3D,
-  },
-  {
-    title: "Country-by-country VAT report",
-    body: "Net sales, refunds, applied vs. correct rate, and VAT due for every EU country you sold in — ready to export.",
-    icon: GlobeIcon3D,
-  },
-  {
-    title: "Deterministic error checks",
-    body: "Every upload is scanned for wrong rates, refund anomalies, and unclassified rows — the same checks, every time, not a model's best guess.",
-    icon: ShieldIcon3D,
-  },
-] as const;
-
-// A second, fuller exchange for the dedicated showcase section — illustrates
-// casual phrasing, a "what changed" question, and a report request landing on
-// an actual download card, back to back, the way a real conversation runs.
-const CHAT_SHOWCASE = [
-  { role: "user" as const, text: "vat this quarter?" },
-  {
-    role: "ai" as const,
-    text: (
-      <>
-        Q2 2026: you owe about <strong>€4,812.30</strong> in VAT on net sales of{" "}
-        <strong>€21,340.10</strong> — refunds were <strong>€918.20</strong>.
-      </>
-    ),
-  },
-  { role: "user" as const, text: "what changed since last quarter?" },
-  {
-    role: "ai" as const,
-    text: (
-      <>
-        VAT due is up <strong>12%</strong> quarter-on-quarter, mostly from higher Germany sales.
-        Refund rate is steady at <strong>4.3%</strong>, right at your 12-month norm.
-      </>
-    ),
-  },
-  { role: "user" as const, text: "can I get that as a pdf?" },
-  {
-    role: "ai" as const,
-    text: <>Here's your Q2 2026 VAT report — ready to download or hand to your accountant.</>,
-    report: { title: "Q2 2026 VAT report", meta: "Ready to download" },
-  },
-] as const;
 
 /**
  * Animates a stat like "€36,466" or "90 sec" counting up from 0 the first
@@ -188,8 +102,6 @@ function Reveal({
           else window.setTimeout(() => setVisible(true), delayMs);
         }
       },
-      // Generous rootMargin so fast scrolls still trip the reveal; 0.01 threshold
-      // avoids needing a large fraction of tall sections on screen.
       { threshold: 0.01, rootMargin: "0px 0px -4% 0px" },
     );
     obs.observe(el);
@@ -241,6 +153,9 @@ function MorphImg({
 }
 
 export function LandingPage() {
+  const { t } = useTranslation("landing");
+  const lang = useUiStore((s) => s.lang);
+  const setLang = useUiStore((s) => s.setLang);
   const d = useLandingDemo();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -249,9 +164,68 @@ export function LandingPage() {
   const parallaxSlow = useParallaxStyle(18);
   const parallaxFast = useParallaxStyle(42);
 
+  const nav = [
+    { href: "#how", label: t("nav.how") },
+    { href: "#chat", label: t("nav.chat") },
+    { href: "#proof", label: t("nav.proof") },
+    { href: "#report", label: t("nav.report") },
+    { href: "#pricing", label: t("nav.pricing") },
+    { href: "/blog/", label: t("nav.blog") },
+  ] as const;
+
+  const steps = [
+    {
+      n: "01",
+      title: t("steps.s1Title"),
+      body: t("steps.s1Body"),
+      image: "/landing/step-01-upload.png",
+      alt: t("steps.s1Alt"),
+    },
+    {
+      n: "02",
+      title: t("steps.s2Title"),
+      body: t("steps.s2Body"),
+      image: "/landing/step-02-process.png",
+      alt: t("steps.s2Alt"),
+    },
+    {
+      n: "03",
+      title: t("steps.s3Title"),
+      body: t("steps.s3Body"),
+      image: "/landing/step-03-chat.png",
+      alt: t("steps.s3Alt"),
+    },
+  ] as const;
+
+  const offerItems = [
+    { title: t("offer.i1Title"), body: t("offer.i1Body"), icon: ChatIcon3D },
+    { title: t("offer.i2Title"), body: t("offer.i2Body"), icon: DocumentIcon3D },
+    { title: t("offer.i3Title"), body: t("offer.i3Body"), icon: GlobeIcon3D },
+    { title: t("offer.i4Title"), body: t("offer.i4Body"), icon: ShieldIcon3D },
+  ] as const;
+
+  const chatShowcase = [
+    { role: "user" as const, text: t("chat.u1") },
+    {
+      role: "ai" as const,
+      text: <Trans i18nKey="landing:chat.a1" components={{ strong: <strong /> }} />,
+    },
+    { role: "user" as const, text: t("chat.u2") },
+    {
+      role: "ai" as const,
+      text: <Trans i18nKey="landing:chat.a2" components={{ strong: <strong /> }} />,
+    },
+    { role: "user" as const, text: t("chat.u3") },
+    {
+      role: "ai" as const,
+      text: t("chat.a3"),
+      report: { title: t("chat.reportTitle"), meta: t("chat.reportMeta") },
+    },
+  ] as const;
+
   useEffect(() => {
-    document.title = "FiscorAI — Ask your VAT questions, get the answer and the report";
-  }, []);
+    document.title = t("docTitle");
+  }, [t]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -292,8 +266,8 @@ export function LandingPage() {
             Fiscor<span>AI</span>
           </a>
 
-          <nav className={styles.navDesktop} aria-label="Primary">
-            {NAV.map((item) => (
+          <nav className={styles.navDesktop} aria-label={t("nav.primary")}>
+            {nav.map((item) => (
               <a key={item.href} href={item.href} className={styles.navLink}>
                 {item.label}
               </a>
@@ -301,18 +275,21 @@ export function LandingPage() {
           </nav>
 
           <div className={styles.headerActions}>
+            <div className={styles.langPicker}>
+              <LanguagePicker value={lang} onChange={setLang} variant="brand" />
+            </div>
             <Link to={ROUTES.signin} className={styles.btnGhost}>
-              Sign in
+              {t("cta.signIn")}
             </Link>
             <Link to={ROUTES.signup} className={styles.btnPrimarySm}>
-              Chat free
+              {t("cta.chatFree")}
             </Link>
             <button
               type="button"
               className={styles.menuBtn}
               aria-expanded={menuOpen}
               aria-controls="landing-mobile-nav"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={menuOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
               onClick={() => setMenuOpen((o) => !o)}
             >
               <span className={menuOpen ? styles.menuIconOpen : styles.menuIcon} />
@@ -321,17 +298,20 @@ export function LandingPage() {
         </div>
 
         {menuOpen && (
-          <nav id="landing-mobile-nav" className={styles.navMobile} aria-label="Mobile">
-            {NAV.map((item) => (
+          <nav id="landing-mobile-nav" className={styles.navMobile} aria-label={t("nav.mobile")}>
+            {nav.map((item) => (
               <a key={item.href} href={item.href} className={styles.navMobileLink} onClick={closeMenu}>
                 {item.label}
               </a>
             ))}
+            <div className={styles.navMobileLang}>
+              <LanguagePicker value={lang} onChange={setLang} variant="brand" />
+            </div>
             <Link to={ROUTES.signin} className={styles.navMobileLink} onClick={closeMenu}>
-              Sign in
+              {t("cta.signIn")}
             </Link>
             <Link to={ROUTES.signup} className={styles.btnPrimary} onClick={closeMenu}>
-              Chat with FiscorAI free
+              {t("cta.chatFreeLong")}
             </Link>
           </nav>
         )}
@@ -360,23 +340,20 @@ export function LandingPage() {
             <p className={styles.brandHero}>
               Fiscor<span>AI</span>
             </p>
-            <h1 className={styles.heroTitle}>Ask what you owe. Get the answer — and the report.</h1>
-            <p className={styles.heroLead}>
-              Upload your Amazon VAT file once. From then on, just ask — grounded in your figures,
-              never guessed.
-            </p>
+            <h1 className={styles.heroTitle}>{t("hero.title")}</h1>
+            <p className={styles.heroLead}>{t("hero.lead")}</p>
             <div className={styles.ctaRow}>
               <Link to={ROUTES.signup} className={`${styles.btnPrimary} ${styles.heroPulse}`}>
-                Chat with FiscorAI free
+                {t("cta.chatFreeLong")}
               </Link>
               <a href="#how" className={styles.btnSecondary}>
-                See how it works
+                {t("cta.seeHow")}
               </a>
             </div>
             <div className={styles.trust}>
-              <span>No card required</span>
+              <span>{t("hero.noCard")}</span>
               <span aria-hidden>·</span>
-              <span>Your file stays yours</span>
+              <span>{t("hero.fileYours")}</span>
             </div>
           </div>
 
@@ -384,13 +361,13 @@ export function LandingPage() {
             <div className={styles.heroGlassRing} aria-hidden />
             <MorphImg
               src="/landing/hero-vat-analyst.png"
-              alt="FiscorAI soft-3D product scene with VAT report, euro coin, and marketplace carts"
+              alt={t("hero.artAlt")}
               className={styles.heroArt}
             />
           </div>
         </div>
 
-        <a href="#how" className={styles.scrollCue} aria-label="Scroll to how it works">
+        <a href="#how" className={styles.scrollCue} aria-label={t("a11y.scrollHow")}>
           <span className={styles.scrollCueLine} />
         </a>
       </section>
@@ -398,11 +375,9 @@ export function LandingPage() {
       <section id="how" className={styles.stepsSection}>
         <Reveal>
           <div className={styles.sectionHeadCenter}>
-            <span className={styles.kicker}>How it works</span>
-            <h2 className={styles.h2}>Three steps. Upload to answer.</h2>
-            <p className={styles.sectionLead}>
-              A continuous loop from CSV to chat — no dashboards to configure, nothing to remap.
-            </p>
+            <span className={styles.kicker}>{t("steps.kicker")}</span>
+            <h2 className={styles.h2}>{t("steps.title")}</h2>
+            <p className={styles.sectionLead}>{t("steps.lead")}</p>
           </div>
         </Reveal>
 
@@ -410,13 +385,13 @@ export function LandingPage() {
           <div className={styles.stepsRailTrack} />
           <div
             className={styles.stepsRailFill}
-            style={{ width: `${((activeStep + 1) / STEPS.length) * 100}%` }}
+            style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
           />
         </div>
 
         <Reveal>
           <ol className={styles.stepsGrid}>
-            {STEPS.map((s, i) => (
+            {steps.map((s, i) => (
               <li
                 key={s.n}
                 ref={(el) => {
@@ -440,16 +415,12 @@ export function LandingPage() {
         <section className={styles.splitSection}>
           <div className={styles.splitRow}>
             <div className={styles.splitCopy}>
-              <span className={styles.splitKicker}>Watch it run</span>
-              <h2 className={styles.splitTitle}>The actual pipeline, animated on repeat</h2>
-              <p className={styles.splitBody}>
-                This is the real upload-to-report flow, looping so you can watch the whole thing
-                without lifting a finger — parsing every row, matching VAT rates by country, and
-                building the report.
-              </p>
+              <span className={styles.splitKicker}>{t("pipeline.kicker")}</span>
+              <h2 className={styles.splitTitle}>{t("pipeline.title")}</h2>
+              <p className={styles.splitBody}>{t("pipeline.body")}</p>
               <div className={styles.ctaRow} style={{ justifyContent: "flex-start", marginTop: 24 }}>
                 <Link to={ROUTES.signup} className={styles.btnPrimary}>
-                  Try it on my own file
+                  {t("cta.tryOwnFile")}
                 </Link>
               </div>
             </div>
@@ -469,11 +440,10 @@ export function LandingPage() {
                 </div>
 
                 <div className={styles.pipelineStage} aria-hidden>
-                  {/* Step 1 — upload */}
                   <div className={`${styles.pipelinePanel} ${styles.pipelineUpload}`}>
                     <div className={styles.dropZone}>
                       <UploadIcon className={styles.dropZoneIcon} />
-                      <span className={styles.dropZoneLabel}>Drop your Amazon VAT CSV</span>
+                      <span className={styles.dropZoneLabel}>{t("pipeline.dropLabel")}</span>
                     </div>
                     <div className={styles.fileChip}>
                       <FileIcon className={styles.fileChipIcon} />
@@ -481,20 +451,18 @@ export function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Step 2 — processing */}
                   <div className={`${styles.pipelinePanel} ${styles.pipelineProcessing}`}>
                     <div className={styles.spinnerRing} />
                     <div className={styles.statusCycle}>
-                      <span className={`${styles.statusLine} ${styles.statusLine1}`}>Parsing every row…</span>
-                      <span className={`${styles.statusLine} ${styles.statusLine2}`}>Matching VAT rates by country…</span>
-                      <span className={`${styles.statusLine} ${styles.statusLine3}`}>Building your report…</span>
+                      <span className={`${styles.statusLine} ${styles.statusLine1}`}>{t("pipeline.status1")}</span>
+                      <span className={`${styles.statusLine} ${styles.statusLine2}`}>{t("pipeline.status2")}</span>
+                      <span className={`${styles.statusLine} ${styles.statusLine3}`}>{t("pipeline.status3")}</span>
                     </div>
                     <div className={styles.progressTrack}>
                       <div className={styles.progressFill} />
                     </div>
                   </div>
 
-                  {/* Step 3 — PDF ready */}
                   <div className={`${styles.pipelinePanel} ${styles.pipelinePdf}`}>
                     <div className={styles.pdfPreview}>
                       <div className={styles.pdfPreviewHead}>
@@ -505,20 +473,20 @@ export function LandingPage() {
                         </span>
                       </div>
                       <div className={styles.pdfPreviewRow}>
-                        <span>Germany</span>
+                        <span>{t("pipelinePreview.germany")}</span>
                         <span>€1,842.10</span>
                       </div>
                       <div className={styles.pdfPreviewRow}>
-                        <span>France</span>
+                        <span>{t("pipelinePreview.france")}</span>
                         <span>€1,203.55</span>
                       </div>
                       <div className={styles.pdfPreviewRow}>
-                        <span>Italy</span>
+                        <span>{t("pipelinePreview.italy")}</span>
                         <span>€866.90</span>
                       </div>
                     </div>
                     <div className={styles.pdfBadgeRow}>
-                      <span className={styles.pdfBadge}>Ready</span>
+                      <span className={styles.pdfBadge}>{t("pipeline.ready")}</span>
                       <span className={styles.chip}>PDF</span>
                       <span className={styles.chip}>Excel</span>
                     </div>
@@ -526,9 +494,9 @@ export function LandingPage() {
                 </div>
 
                 <div className={styles.pipelineCaptions}>
-                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption1}`}>1. You drop the file</span>
-                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption2}`}>2. Processed locally</span>
-                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption3}`}>3. Report's ready</span>
+                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption1}`}>{t("pipeline.cap1")}</span>
+                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption2}`}>{t("pipeline.cap2")}</span>
+                  <span className={`${styles.pipelineCaption} ${styles.pipelineCaption3}`}>{t("pipeline.cap3")}</span>
                 </div>
               </div>
               </div>
@@ -541,15 +509,12 @@ export function LandingPage() {
         <section id="chat" className={styles.splitSection}>
           <div className={`${styles.splitRow} ${styles.splitReverse}`}>
             <div className={styles.splitCopy}>
-              <span className={styles.splitKicker}>This is the product now</span>
-              <h2 className={styles.splitTitle}>Not a dashboard. A conversation.</h2>
-              <p className={styles.splitBody}>
-                Casual phrasing is fine, and every figure it gives you is computed from your data,
-                never estimated. Ask a follow-up, ask for a comparison, or just ask for the file.
-              </p>
+              <span className={styles.splitKicker}>{t("chat.kicker")}</span>
+              <h2 className={styles.splitTitle}>{t("chat.title")}</h2>
+              <p className={styles.splitBody}>{t("chat.body")}</p>
               <div className={styles.ctaRow} style={{ justifyContent: "flex-start", marginTop: 24 }}>
                 <Link to={ROUTES.signup} className={styles.btnPrimary}>
-                  Chat with FiscorAI free
+                  {t("cta.chatFreeLong")}
                 </Link>
               </div>
             </div>
@@ -563,7 +528,7 @@ export function LandingPage() {
               />
               <div className={styles.heroCard}>
                 <div className={styles.chatShowcaseBody} style={{ padding: 0 }}>
-                  {CHAT_SHOWCASE.map((turn, i) =>
+                  {chatShowcase.map((turn, i) =>
                     turn.role === "user" ? (
                       <div key={i} className={styles.chatMsg}>
                         <span className={styles.chatBubbleUser}>{turn.text}</span>
@@ -591,7 +556,7 @@ export function LandingPage() {
                     ),
                   )}
                   <Link to={ROUTES.signup} className={styles.chatComposer}>
-                    <span className={styles.chatComposerText}>Ask about VAT, refunds, filings…</span>
+                    <span className={styles.chatComposerText}>{t("chat.composer")}</span>
                     <span className={styles.chatComposerBtn} aria-hidden>
                       <SendIcon className={styles.chatComposerIcon} />
                     </span>
@@ -607,14 +572,12 @@ export function LandingPage() {
       <Reveal>
         <section id="proof" className={styles.offerSection}>
           <div className={styles.sectionHeadCenter}>
-            <span className={styles.kicker}>What you get</span>
-            <h2 className={styles.h2}>One upload, a complete VAT position</h2>
-            <p className={styles.sectionLead}>
-              The report, the checks, and someone to ask about it — all from a single upload.
-            </p>
+            <span className={styles.kicker}>{t("offer.kicker")}</span>
+            <h2 className={styles.h2}>{t("offer.title")}</h2>
+            <p className={styles.sectionLead}>{t("offer.lead")}</p>
           </div>
           <div className={styles.offerGrid}>
-            {OFFER_ITEMS.map((item) => {
+            {offerItems.map((item) => {
               const OfferIcon = item.icon;
               return (
                 <div key={item.title} className={styles.offerCard}>
@@ -655,13 +618,11 @@ export function LandingPage() {
         <section className={styles.section}>
           <div className={styles.chartsHead}>
             <div>
-              <span className={styles.kicker}>The numbers</span>
-              <h2 className={styles.h2}>The charts your accountant asks for</h2>
-              <p className={styles.sectionLead}>
-                Live from a real 12-month seller file. Switch the window — everything recalculates.
-              </p>
+              <span className={styles.kicker}>{t("charts.kicker")}</span>
+              <h2 className={styles.h2}>{t("charts.title")}</h2>
+              <p className={styles.sectionLead}>{t("charts.lead")}</p>
             </div>
-            <div className={styles.rangePills} role="group" aria-label="Time range">
+            <div className={styles.rangePills} role="group" aria-label={t("a11y.timeRange")}>
               {d.ranges.map((n) => (
                 <button
                   key={n}
@@ -669,7 +630,7 @@ export function LandingPage() {
                   className={d.range === n ? styles.rangeActive : styles.rangeBtn}
                   onClick={() => d.setRange(n)}
                 >
-                  {n} months
+                  {t("charts.months", { n })}
                 </button>
               ))}
             </div>
@@ -678,7 +639,7 @@ export function LandingPage() {
           <div className={styles.chartsGrid}>
             <div className={styles.card}>
               <div className={styles.cardHead}>
-                <span className={styles.cardTitle}>Net sales vs VAT due</span>
+                <span className={styles.cardTitle}>{t("charts.netVsVat")}</span>
                 <span className={styles.lineLegend}>
                   {d.lineLegend.map((l) => (
                     <span key={l.label} className={styles.lineLegendItem}>
@@ -725,7 +686,7 @@ export function LandingPage() {
 
             <div className={styles.card}>
               <div className={styles.cardHead}>
-                <span className={styles.cardTitle}>VAT due by country</span>
+                <span className={styles.cardTitle}>{t("charts.vatByCountry")}</span>
                 <span className={styles.mutedSmall}>{d.rangeLabel}</span>
               </div>
               <CountryVatChart
@@ -745,24 +706,21 @@ export function LandingPage() {
 
       <Reveal>
         <section id="report" className={styles.section}>
-          <span className={styles.kicker}>Reports</span>
-          <h2 className={styles.h2}>Ask for it, get exactly this</h2>
-          <p className={styles.sectionLead}>
-            The file the chat hands you — net sales, refunds, the rate actually applied, and the rate
-            that should have applied.
-          </p>
+          <span className={styles.kicker}>{t("report.kicker")}</span>
+          <h2 className={styles.h2}>{t("report.title")}</h2>
+          <p className={styles.sectionLead}>{t("report.lead")}</p>
 
           <div className={styles.reportStage}>
             <div className={styles.reportAsk} aria-hidden>
-              <span className={styles.reportAskBubble}>send me january 2026 as pdf</span>
+              <span className={styles.reportAskBubble}>{t("report.askBubble")}</span>
             </div>
 
             <div className={styles.tableCard}>
               <div className={styles.reportDocHead}>
                 <FileIcon className={styles.reportDocIcon} />
                 <div className={styles.reportDocText}>
-                  <span className={styles.reportDocTitle}>January 2026 VAT report</span>
-                  <span className={styles.reportDocMeta}>Opened from chat · ready to export</span>
+                  <span className={styles.reportDocTitle}>{t("report.docTitle")}</span>
+                  <span className={styles.reportDocMeta}>{t("report.docMeta")}</span>
                 </div>
                 <div className={styles.reportChips}>
                   <span className={styles.chip}>PDF</span>
@@ -774,13 +732,13 @@ export function LandingPage() {
                 <table className={styles.table}>
                   <thead>
                     <tr>
-                      <th className={styles.thLeft}>Country</th>
-                      <th className={styles.thRight}>Net sales</th>
-                      <th className={styles.thRight}>Refunds</th>
-                      <th className={styles.thRight}>Applied</th>
-                      <th className={styles.thRight}>Correct</th>
-                      <th className={styles.thRight}>VAT due</th>
-                      <th className={styles.thRight}>Gap</th>
+                      <th className={styles.thLeft}>{t("report.country")}</th>
+                      <th className={styles.thRight}>{t("report.netSales")}</th>
+                      <th className={styles.thRight}>{t("report.refunds")}</th>
+                      <th className={styles.thRight}>{t("report.applied")}</th>
+                      <th className={styles.thRight}>{t("report.correct")}</th>
+                      <th className={styles.thRight}>{t("report.vatDue")}</th>
+                      <th className={styles.thRight}>{t("report.gap")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -800,7 +758,7 @@ export function LandingPage() {
                   </tbody>
                   <tfoot>
                     <tr className={styles.tfoot}>
-                      <td className={styles.tdName}>Total</td>
+                      <td className={styles.tdName}>{t("report.total")}</td>
                       <td className={styles.tdStrong}>{d.totalNetLabel}</td>
                       <td className={styles.tdMuted}>{d.totalRefundLabel}</td>
                       <td />
@@ -818,32 +776,36 @@ export function LandingPage() {
                     <span className={styles.reportLedgerName}>{r.name}</span>
                     <span className={styles.reportLedgerVat}>{r.vat}</span>
                     <div className={styles.reportLedgerMeta}>
-                      <span>Net {r.net}</span>
-                      <span>Refunds {r.refunds}</span>
+                      <span>{t("report.ledgerNet", { value: r.net })}</span>
+                      <span>{t("report.ledgerRefunds", { value: r.refunds })}</span>
                       <span>
-                        Rate {r.applied} → {r.correct}
+                        {t("report.ledgerRate", { applied: r.applied, correct: r.correct })}
                       </span>
-                      <span className={styles.reportLedgerGap}>Gap {r.gap}</span>
+                      <span className={styles.reportLedgerGap}>
+                        {t("report.ledgerGap", { value: r.gap })}
+                      </span>
                     </div>
                   </div>
                 ))}
                 <div className={`${styles.reportLedgerRow} ${styles.reportLedgerTotal}`}>
-                  <span className={styles.reportLedgerName}>Total</span>
+                  <span className={styles.reportLedgerName}>{t("report.total")}</span>
                   <span className={styles.reportLedgerVat}>{d.totalVatLabel}</span>
                   <div className={styles.reportLedgerMeta}>
-                    <span>Net {d.totalNetLabel}</span>
-                    <span>Refunds {d.totalRefundLabel}</span>
-                    <span className={styles.reportLedgerGap}>Gap {d.totalGapLabel}</span>
+                    <span>{t("report.ledgerNet", { value: d.totalNetLabel })}</span>
+                    <span>{t("report.ledgerRefunds", { value: d.totalRefundLabel })}</span>
+                    <span className={styles.reportLedgerGap}>
+                      {t("report.ledgerGap", { value: d.totalGapLabel })}
+                    </span>
                   </div>
                 </div>
               </div>
 
               <div className={styles.tableFooter}>
-                <span className={styles.mutedSmall}>Export as</span>
+                <span className={styles.mutedSmall}>{t("report.exportAs")}</span>
                 <span className={styles.chip}>PDF</span>
                 <span className={styles.chip}>Excel</span>
                 <Link to={ROUTES.signup} className={styles.tableLink}>
-                  Open this report in the tool →
+                  {t("cta.openReport")}
                 </Link>
               </div>
             </div>
@@ -854,10 +816,8 @@ export function LandingPage() {
       <Reveal>
         <section id="risk" className={styles.riskSection}>
           <div className={styles.card}>
-            <div className={styles.cardTitleLg}>What nobody else tells you</div>
-            <p className={styles.cardLead}>
-              Deterministic checks run on every upload. These are the real ones from the sample file.
-            </p>
+            <div className={styles.cardTitleLg}>{t("risk.title")}</div>
+            <p className={styles.cardLead}>{t("risk.lead")}</p>
             <div className={styles.flags}>
               {d.flags.map((f) => (
                 <div
@@ -882,10 +842,8 @@ export function LandingPage() {
 
           <div className={styles.riskAside}>
             <div className={styles.card}>
-              <div className={styles.cardTitleLg}>Next filings</div>
-              <p className={styles.cardLead}>
-                Counted from today. Miss one and the penalty is a percentage, not a fee.
-              </p>
+              <div className={styles.cardTitleLg}>{t("risk.filingsTitle")}</div>
+              <p className={styles.cardLead}>{t("risk.filingsLead")}</p>
               <div className={styles.filings}>
                 {d.filings.map((f, i) => (
                   <div key={f.title} className={i === 0 ? styles.filingFirst : styles.filing}>
@@ -905,14 +863,11 @@ export function LandingPage() {
 
             {d.showCalculator && (
               <div className={styles.calc}>
-                <div className={styles.cardTitleLg}>What is this costing you?</div>
-                <p className={styles.calcLead}>
-                  Slide your monthly EU sales. Based on the average error rate we measure across uploaded
-                  files.
-                </p>
+                <div className={styles.cardTitleLg}>{t("risk.calcTitle")}</div>
+                <p className={styles.calcLead}>{t("risk.calcLead")}</p>
                 <div className={styles.calcRev}>
                   <span className={styles.calcRevValue}>{d.calcRevenueLabel}</span>
-                  <span className={styles.calcRevUnit}>EU sales / month</span>
+                  <span className={styles.calcRevUnit}>{t("risk.calcUnit")}</span>
                 </div>
                 <input
                   type="range"
@@ -922,7 +877,7 @@ export function LandingPage() {
                   value={d.calcRevenue}
                   onChange={(e) => d.setCalc(Number(e.target.value))}
                   className={styles.slider}
-                  aria-label="Monthly EU sales"
+                  aria-label={t("a11y.monthlyEuSales")}
                 />
                 <div className={styles.calcOut}>
                   {d.calcOut.map((c) => (
@@ -933,7 +888,7 @@ export function LandingPage() {
                   ))}
                 </div>
                 <Link to={ROUTES.signup} className={styles.btnAccent}>
-                  Check my real numbers free
+                  {t("cta.checkNumbers")}
                 </Link>
               </div>
             )}
@@ -948,11 +903,9 @@ export function LandingPage() {
             style={{ width: 40, height: 40, top: -10, left: "4%" }}
           />
           <div className={styles.sectionHeadCenter}>
-            <span className={styles.kicker}>Pricing</span>
-            <h2 className={styles.h2}>Start free with the full report</h2>
-            <p className={styles.sectionLead}>
-              Upgrade for higher transaction limits and unlimited analyst questions.
-            </p>
+            <span className={styles.kicker}>{t("pricing.kicker")}</span>
+            <h2 className={styles.h2}>{t("pricing.title")}</h2>
+            <p className={styles.sectionLead}>{t("pricing.lead")}</p>
           </div>
           <div className={styles.plansGrid}>
             {d.plans.map((p) => (
@@ -999,8 +952,8 @@ export function LandingPage() {
             style={{ width: 34, height: 34, top: -2, right: "6%" }}
           />
           <div className={styles.sectionHeadCenter}>
-            <span className={styles.kicker}>FAQ</span>
-            <h2 className={styles.h2}>Popular questions</h2>
+            <span className={styles.kicker}>{t("faq.kicker")}</span>
+            <h2 className={styles.h2}>{t("faq.title")}</h2>
           </div>
           <div className={styles.faqPanel}>
             {d.faqs.map((q, i) => {
@@ -1043,13 +996,11 @@ export function LandingPage() {
             style={{ width: 64, bottom: 28, left: "7%", animationDelay: "-4s", ...parallaxFast }}
           />
           <div className={styles.ctaPanel}>
-            <div className={styles.ctaTitle}>One upload. Then just ask.</div>
-            <p className={styles.ctaLead}>
-              Free, no card, deletes on request. The report is yours either way.
-            </p>
+            <div className={styles.ctaTitle}>{t("finalCta.title")}</div>
+            <p className={styles.ctaLead}>{t("finalCta.lead")}</p>
             <div className={styles.ctaActions}>
               <Link to={ROUTES.signup} className={styles.btnLight}>
-                Chat with FiscorAI
+                {t("cta.chatShort")}
               </Link>
             </div>
           </div>
@@ -1061,15 +1012,14 @@ export function LandingPage() {
           Fiscor<span>AI</span>
         </span>
         <span className={styles.footerLinks}>
-          {/* Plain <a>, not <Link> — /blog is a static page outside the SPA router. */}
-          <a href="/blog/">Blog</a>
-          <Link to={ROUTES.signin}>Sign in</Link>
+          <a href="/blog/">{t("nav.blog")}</a>
+          <Link to={ROUTES.signin}>{t("cta.signIn")}</Link>
           <a href="mailto:support@fiscor.ai">support@fiscor.ai</a>
-          <Link to={ROUTES.faq}>FAQ</Link>
-          <Link to={ROUTES.privacy}>Privacy</Link>
-          <Link to={ROUTES.terms}>Terms</Link>
-          <Link to={ROUTES.refund}>Refunds</Link>
-          <Link to={ROUTES.cookies}>Cookies</Link>
+          <Link to={ROUTES.faq}>{t("footer.faq")}</Link>
+          <Link to={ROUTES.privacy}>{t("footer.privacy")}</Link>
+          <Link to={ROUTES.terms}>{t("footer.terms")}</Link>
+          <Link to={ROUTES.refund}>{t("footer.refunds")}</Link>
+          <Link to={ROUTES.cookies}>{t("footer.cookies")}</Link>
         </span>
       </footer>
     </div>

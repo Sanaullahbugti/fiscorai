@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PLANS } from "@/constants";
 import {
   COUNTRIES,
@@ -7,31 +8,6 @@ import {
   SALES,
   SHOW_CALCULATOR,
 } from "./landingDemoData";
-
-// Mirrors the real per-plan gating (data.service.ts transaction caps, and the
-// unlimited-analyst-questions rule for any active paid plan) so this section
-// can never quote a different product than checkout actually sells.
-const PLAN_FEATURES: Record<string, string[]> = {
-  Free: [
-    "Up to 50 transactions per document",
-    "Country VAT summary + charts",
-    "PDF and Excel export",
-    "All deterministic checks",
-    "3 analyst questions / day",
-  ],
-  Basic: [
-    "1,500 transactions / month or 4,500 / quarter",
-    "Everything in Free",
-    "Unlimited analyst questions",
-  ],
-  Standard: [
-    "4,500 transactions / month or 13,500 / quarter",
-    "Everything in Basic",
-  ],
-  Pro: ["Unlimited transactions", "Everything in Standard"],
-};
-
-const PLAN_TAGS: Record<string, string> = { Standard: "Most sellers" };
 
 function eur(n: number, dp?: number) {
   const digits = dp || 0;
@@ -90,36 +66,8 @@ function donut(items: { n: number; label: string; color: string }[]) {
   });
 }
 
-function filings(vat: number) {
-  const today = new Date();
-  const defs = [
-    { title: "OSS return — Q3 2026", date: new Date(2026, 9, 31), amount: 0.34 },
-    { title: "Germany — monthly VAT (Jul)", date: new Date(2026, 7, 10), amount: 0.28 },
-    { title: "France — monthly VAT (Jul)", date: new Date(2026, 7, 19), amount: 0.17 },
-    { title: "Italy — LIPE Q3 2026", date: new Date(2026, 10, 16), amount: 0.13 },
-    { title: "Spain — Modelo 303 Q3", date: new Date(2026, 9, 20), amount: 0.12 },
-  ];
-  return defs
-    .map((d) => {
-      const days = Math.max(0, Math.ceil((d.date.getTime() - today.getTime()) / 86400000));
-      const urgent = days <= 21;
-      return {
-        title: d.title,
-        due:
-          "Due " +
-          d.date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
-        amount: eur(vat * d.amount),
-        countdown: days + (days === 1 ? " day" : " days"),
-        days,
-        bg: urgent ? "var(--surface-critical-tint)" : "var(--surface-brand-tint)",
-        fg: urgent ? "#8E2F1F" : "#2E5D3B",
-      };
-    })
-    .sort((a, b) => a.days - b.days)
-    .slice(0, 5);
-}
-
 export function useLandingDemo() {
+  const { t, i18n } = useTranslation("landing");
   const [range, setRange] = useState(12);
   const [calc, setCalc] = useState(60000);
 
@@ -134,7 +82,8 @@ export function useLandingDemo() {
       const base = net - refunds;
       const vat = base * (c.correct / 100);
       const gap = base * ((c.correct - c.applied) / 100);
-      return { ...c, netRaw: net, refundRaw: refunds, vatRaw: vat, gapRaw: gap };
+      const name = t(`countries.${c.code}`, { defaultValue: c.name });
+      return { ...c, name, netRaw: net, refundRaw: refunds, vatRaw: vat, gapRaw: gap };
     });
     const vatTotal = rows.reduce((s, r) => s + r.vatRaw, 0);
     const gapTotal = rows.reduce((s, r) => s + r.gapRaw, 0);
@@ -148,8 +97,8 @@ export function useLandingDemo() {
     const py = (v: number) => y1 - (v / maxV) * (y1 - y0);
     const vatMonthly = sales.map((s) => s * (vatTotal / netTotal));
     const series = [
-      { color: "#2E5D3B", vals: sales as number[], label: "Net sales" },
-      { color: "#C8862B", vals: vatMonthly, label: "VAT due" },
+      { color: "#2E5D3B", vals: sales as number[], label: t("charts.netSales") },
+      { color: "#C8862B", vals: vatMonthly, label: t("charts.vatDue") },
     ];
     const lineSeries = series.map((s) => ({
       color: s.color,
@@ -192,49 +141,46 @@ export function useLandingDemo() {
     const pl = rows.find((r) => r.code === "PL")!;
     const flags = [
       {
-        level: "Critical",
-        title: "Poland taxed at 8%, should be 23%",
+        level: t("risk.levelCritical"),
+        title: t("risk.flagPlTitle"),
         amount: eur(pl.gapRaw),
-        body:
-          "Reduced-rate mapping applied to standard-rate goods across " +
-          range +
-          " months of Polish sales. This is the single largest exposure in the file.",
+        body: t("risk.flagPlBody", { range }),
         bg: "var(--surface-critical-tint)",
         border: "#F0C9C0",
         fg: "#8E2F1F",
       },
       {
-        level: "Critical",
-        title: "Italy taxed at 19%, should be 22%",
+        level: t("risk.levelCritical"),
+        title: t("risk.flagItTitle"),
         amount: eur(it.gapRaw),
-        body: "German rate carried over to Italian destination orders — a classic OSS mapping error after a marketplace settings change.",
+        body: t("risk.flagItBody"),
         bg: "var(--surface-critical-tint)",
         border: "#F0C9C0",
         fg: "#8E2F1F",
       },
       {
-        level: "Warning",
-        title: "Local registration likely required in NL",
+        level: t("risk.levelWarning"),
+        title: t("risk.flagNlTitle"),
         amount: eur(netTotal * 0.1),
-        body: "Dutch fulfilment movements suggest stock held locally, which puts these sales outside OSS and into a Dutch VAT registration.",
+        body: t("risk.flagNlBody"),
         bg: "var(--surface-warning-tint)",
         border: "#EBD9BC",
         fg: "#8A5B15",
       },
       {
-        level: "Warning",
-        title: "Refund rate above your 12-month norm",
+        level: t("risk.levelWarning"),
+        title: t("risk.flagRefundTitle"),
         amount: "4.3%",
-        body: "Refunds are outpacing sales growth in two countries, so VAT already remitted on those orders is recoverable but unclaimed.",
+        body: t("risk.flagRefundBody"),
         bg: "var(--surface-warning-tint)",
         border: "#EBD9BC",
         fg: "#8A5B15",
       },
       {
-        level: "Info",
-        title: "412 rows with no tax classification",
+        level: t("risk.levelInfo"),
+        title: t("risk.flagUnclassTitle"),
         amount: eur(netTotal * 0.021),
-        body: "Rows missing a jurisdiction or rate code are excluded from every total until you classify them. Nothing else flags this.",
+        body: t("risk.flagUnclassBody"),
         bg: "var(--surface-info-tint)",
         border: "#CBDBE5",
         fg: "#2C566E",
@@ -245,9 +191,9 @@ export function useLandingDemo() {
     const annual = calc * 12;
     const exposure = annual * (ERROR_RATE_PCT / 100);
     const calcOut = [
-      { label: "VAT stated wrong / year", value: eur(exposure) },
-      { label: "Penalties + interest at 20%", value: eur(exposure * 0.2) },
-      { label: "FiscorAI Pro / year", value: eur(proPrice * 12) },
+      { label: t("risk.calcWrong"), value: eur(exposure) },
+      { label: t("risk.calcPenalties"), value: eur(exposure * 0.2) },
+      { label: t("risk.calcPro"), value: eur(proPrice * 12) },
     ];
 
     const heroDonut = donut([
@@ -256,21 +202,32 @@ export function useLandingDemo() {
       { n: vatTotal * 0.11, label: "Domestic", color: "#8AB894" },
     ]);
 
-    // Driven by the same PLANS the billing page checks out against, so the
-    // pitch here can never drift from what a signup actually gets charged.
+    const planFeatures: Record<string, string[]> = {
+      Free: [
+        t("pricing.featFree1"),
+        t("pricing.featFree2"),
+        t("pricing.featFree3"),
+        t("pricing.featFree4"),
+        t("pricing.featFree5"),
+      ],
+      Basic: [t("pricing.featBasic1"), t("pricing.featBasic2"), t("pricing.featBasic3")],
+      Standard: [t("pricing.featStandard1"), t("pricing.featStandard2")],
+      Pro: [t("pricing.featPro1"), t("pricing.featPro2")],
+    };
+
     const plans = PLANS.map((p) => {
       const isFeatured = p.code === "Standard";
       return {
         name: p.code,
-        tag: PLAN_TAGS[p.code] || "",
+        tag: p.code === "Standard" ? t("pricing.tagStandard") : "",
         price: p.price === 0 ? "€0" : "€" + p.price.toFixed(2),
-        per: p.price === 0 ? "forever" : "/ month",
+        per: p.price === 0 ? t("pricing.forever") : t("pricing.perMonth"),
         surface: isFeatured ? "var(--surface-brand)" : "var(--surface-card)",
         ink: isFeatured ? "var(--text-on-brand)" : "var(--text-primary)",
         border: isFeatured ? "var(--surface-brand)" : "var(--border-default)",
         check: isFeatured ? "#C8862B" : "var(--brand-primary)",
-        features: PLAN_FEATURES[p.code] || [],
-        cta: p.price === 0 ? "Start free" : `Upgrade to ${p.code}`,
+        features: planFeatures[p.code] || [],
+        cta: p.price === 0 ? t("cta.startFree") : t("cta.upgradeTo", { plan: p.code }),
         ctaBg: isFeatured ? "var(--brand-accent)" : "var(--surface-card)",
         ctaFg: isFeatured ? "#FFFFFF" : "var(--text-primary)",
         ctaBorder: isFeatured ? "var(--brand-accent)" : "var(--border-strong)",
@@ -278,23 +235,42 @@ export function useLandingDemo() {
     });
 
     const faqs = [
-      {
-        q: "Where does the AI come in?",
-        a: "It's the main way you use FiscorAI. Ask in plain language and the analyst reads your aggregates and flags — never your raw rows — to answer, and hands you the PDF or Excel report the moment you ask for it. Every number it gives you is computed, not generated.",
-      },
-      {
-        q: "What file do I upload?",
-        a: "Your Amazon VAT transactions report, or the standard transaction report. CSV or TXT, any date range.",
-      },
-      {
-        q: "Does it file for me?",
-        a: "No. FiscorAI does the arithmetic and tells you what is due where and when. Filing stays with you or your accountant.",
-      },
-      {
-        q: "Is my data safe?",
-        a: "Your file is processed for your report and deleted on request. It is never shared with other sellers or used to train anything.",
-      },
+      { q: t("faq.q1"), a: t("faq.a1") },
+      { q: t("faq.q2"), a: t("faq.a2") },
+      { q: t("faq.q3"), a: t("faq.a3") },
+      { q: t("faq.q4"), a: t("faq.a4") },
     ];
+
+    const today = new Date();
+    const filingDefs = [
+      { key: "oss" as const, date: new Date(2026, 9, 31), amount: 0.34 },
+      { key: "de" as const, date: new Date(2026, 7, 10), amount: 0.28 },
+      { key: "fr" as const, date: new Date(2026, 7, 19), amount: 0.17 },
+      { key: "it" as const, date: new Date(2026, 10, 16), amount: 0.13 },
+      { key: "es" as const, date: new Date(2026, 9, 20), amount: 0.12 },
+    ];
+    const filings = filingDefs
+      .map((d) => {
+        const days = Math.max(0, Math.ceil((d.date.getTime() - today.getTime()) / 86400000));
+        const urgent = days <= 21;
+        return {
+          title: t(`filings.${d.key}`),
+          due: t("filings.due", {
+            date: d.date.toLocaleDateString(i18n.language, {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }),
+          }),
+          amount: eur(vatTotal * d.amount),
+          countdown: t("filings.days", { count: days }),
+          days,
+          bg: urgent ? "var(--surface-critical-tint)" : "var(--surface-brand-tint)",
+          fg: urgent ? "#8E2F1F" : "#2E5D3B",
+        };
+      })
+      .sort((a, b) => a.days - b.days)
+      .slice(0, 5);
 
     return {
       heroPeriod: "Aug 2025 – Jul 2026 · sample seller file",
@@ -305,34 +281,34 @@ export function useLandingDemo() {
       totalRefundLabel: "−" + eur(refundTotal),
       totalGapLabel: "+" + eur(gapTotal),
       heroKpis: [
-        { label: "Net sales", value: compact(netTotal), color: "var(--text-primary)" },
+        { label: t("charts.netSales"), value: compact(netTotal), color: "var(--text-primary)" },
         { label: "Underpaid VAT", value: compact(gapTotal), color: "#8E2F1F" },
         { label: "Countries", value: String(COUNTRIES.length), color: "var(--text-primary)" },
       ],
       stats: [
         {
           value: eur(gapTotal),
-          label: "Underpaid VAT found in this one seller file — before penalties.",
+          label: t("stats.s1"),
           color: "#8E2F1F",
         },
         {
           value: "7",
-          label: "EU jurisdictions reconciled from a single Amazon transaction report.",
+          label: t("stats.s2"),
           color: "var(--text-primary)",
         },
         {
-          value: "90 sec",
-          label: "From upload to a filing-ready country report with flagged rows.",
+          value: t("stats.s3Value"),
+          label: t("stats.s3"),
           color: "var(--brand-primary)",
         },
         {
           value: "412",
-          label: "Unclassified rows silently excluded from your totals elsewhere.",
+          label: t("stats.s4"),
           color: "var(--brand-accent)",
         },
       ],
       ranges: [12, 6, 3] as const,
-      rangeLabel: "Last " + range + " months",
+      rangeLabel: t("charts.rangeLabel", { n: range }),
       lineLegend: series.map((s) => ({ label: s.label, color: s.color })),
       lineSeries,
       lineDots,
@@ -342,7 +318,7 @@ export function useLandingDemo() {
       countryBars,
       reportRows,
       flags,
-      filings: filings(vatTotal),
+      filings,
       showCalculator: SHOW_CALCULATOR,
       calcRevenue: calc,
       calcRevenueLabel: eur(calc),
@@ -350,7 +326,7 @@ export function useLandingDemo() {
       plans,
       faqs,
     };
-  }, [range, calc]);
+  }, [range, calc, t, i18n.language]);
 
   return {
     ...demo,

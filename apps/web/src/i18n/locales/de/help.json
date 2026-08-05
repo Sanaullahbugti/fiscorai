@@ -1,110 +1,110 @@
 {
-  "helpTitle": "Hilfezentrum",
-  "helpSubtitle": "Antworten auf die häufigsten Fragen. Nicht gefunden? Der Support ist einen Klick entfernt.",
-  "searchPlaceholder": "Fragen suchen…",
-  "noResults": "Keine Fragen passen zu dieser Suche.",
+  "helpTitle": "Hilfe-Center",
+  "helpSubtitle": "Antworten auf die am häufigsten gestellten Fragen von Verkäufern. Sie finden hier nicht, was Sie suchen? Der Support ist nur einen Klick entfernt.",
+  "searchPlaceholder": "Fragen durchsuchen…",
+  "noResults": "Keine Fragen zu dieser Suche gefunden.",
   "contactTitle": "Support kontaktieren",
-  "contactSubtitle": "Schildern Sie Ihr Anliegen — wir lesen jede Nachricht.",
-  "fillAll": "Bitte alle Felder ausfüllen",
+  "contactSubtitle": "Teilen Sie uns mit, worum es geht — eine echte Person liest jede Nachricht.",
+  "fillAll": "Bitte füllen Sie alle Felder aus",
   "messageSent": "Nachricht gesendet!",
-  "sendFailed": "Nachricht konnte nicht gesendet werden",
+  "sendFailed": "Fehler beim Senden der Nachricht",
   "sending": "Wird gesendet…",
-  "otherWays": "Weitere Kontaktwege",
-  "responseTime": "Antwort in der Regel innerhalb eines Werktags",
+  "otherWays": "Weitere Wege, uns zu erreichen",
+  "responseTime": "Typische Antwort innerhalb eines Werktags",
   "getInTouch": "Kontakt aufnehmen",
   "name": "Name",
   "email": "E-Mail",
   "message": "Nachricht",
   "sendMessage": "Nachricht senden",
-  "asideBody": "Fragen zu Umsatzsteuer-Schemata, Limits oder Rechnungen — auf Deutsch, Englisch, Spanisch, Französisch oder Italienisch.",
-  "asideFooter": " · Spanien · VAT-Reporting für Amazon-EU-Verkäufer.",
+  "asideBody": "Fragen zu VAT-Regelungen, Freigrenzen oder Rechnungen — schreiben Sie uns auf Englisch, Deutsch, Spanisch, Französisch oder Italienisch.",
+  "asideFooter": " · Spanien · VAT-Berichterstattungstools für Amazon EU-Verkäufer.",
   "privacyTitle": "Datenschutzerklärung",
   "termsTitle": "Nutzungsbedingungen",
-  "refundTitle": "Erstattung & Kündigung",
+  "refundTitle": "Rückerstattung & Stornierung",
   "cookiesTitle": "Cookie-Richtlinie",
-  "legalIntro": "FiscorAI wird von FiscorAI betrieben, einem spanischen Unternehmen für VAT-Reporting-Tools für Amazon-EU-Verkäufer.",
-  "legalNote": "Dieser Text ist für den Soft Launch und nicht anwaltlich geprüft. Vor dem Vollbetrieb bitte rechtlich für Ihre Rechtsordnung und Firmendaten aktualisieren lassen.",
+  "legalIntro": "FiscorAI wird von FiscorAI betrieben, einem spanischen Unternehmen, das VAT-Berichterstattungstools für Amazon EU-Verkäufer entwickelt.",
+  "legalNote": "Dieser Text dient dem Soft Launch und wurde nicht von einem Rechtsanwalt geprüft. Lassen Sie ihn vor dem vollständigen Live-Betrieb von einem Anwalt für Ihre Jurisdiktion und Unternehmensdetails aktualisieren.",
   "privacyPoints": [
-    "Wir erheben Kontodaten für den Betrieb: E-Mail, Benutzername, Passwort-Hash, optionale USt-IdNr. und optionaler Amazon-MWS-Token.",
-    "Hochgeladene Amazon-VAT-CSV-Dateien werden serverseitig verarbeitet. Ergebnisse und nötige Aktivitätsdaten können während der Kontonutzung gespeichert werden.",
-    "Zahlungsdaten verarbeitet Lemon Squeezy. Wir speichern Lemon Squeezy-Kunden- und Zahlungsreferenzen (keine vollständigen Kartennummern).",
-    "Der KI-Analyst kann relevante VAT-Zusammenfassungen an Google Gemini senden. Geben Sie keine Geheimnisse in den Chat ein.",
-    "Rechnungen und Abrechnungsdaten können bis zu 7 Jahre aufbewahrt werden, soweit steuerlich erforderlich.",
-    "Sie können die Löschung von Konto und personenbezogenen Daten verlangen: support@fiscor.ai — Ziel: monatlich bis zur Kündigung, außer gesetzliche Aufbewahrung.",
-    "Wir verkaufen keine personenbezogenen Daten. Auftragsverarbeiter u. a. Lemon Squeezy und Google (Gemini)."
+    "Wir erheben Kontodaten, die für die Bereitstellung des Dienstes erforderlich sind: E-Mail, Benutzername, Passwort-Hash, optionale VAT-Nummer und optionales Amazon MWS-Token.",
+    "Hochgeladene Amazon VAT CSV-Dateien werden serverseitig verarbeitet, um Berichte zu erstellen. Verarbeitete Ergebnisse und für das Produkt erforderliche Aktivitäten können gespeichert werden, während Ihr Konto aktiv ist.",
+    "Zahlungsdaten werden von Lemon Squeezy (Merchant of Record) verarbeitet. Wir speichern Kunden- und Zahlungsreferenzen von Lemon (keine vollständigen Kartennummern), um Tarife zu aktivieren und Rechnungen anzuzeigen.",
+    "Die KI-Analysten-Funktion kann relevante VAT-Zusammenfassungskontexte an Google Gemini senden, um Ihre Fragen zu beantworten. Geben Sie keine Geheimnisse in die Analysten-Chats ein.",
+    "Rechnungen und Abrechnungsdaten können bis zu 7 Jahre aufbewahrt werden, sofern dies für steuer- und buchhalterische Vorschriften erforderlich ist.",
+    "Sie können die Löschung Ihres Kontos und Ihrer personenbezogenen Daten beantragen. Kontaktieren Sie support@fiscor.ai; wir bemühen uns, die Löschung innerhalb von 30 Tagen abzuschließen, es sei denn, das Gesetz schreibt eine Aufbewahrung vor.",
+    "Wir verkaufen keine personenbezogenen Daten. Zu den derzeitigen Auftragsverarbeitern gehören Lemon Squeezy (Zahlungen) und Google (Gemini) gemäß deren jeweiligen Bedingungen."
   ],
   "termsPoints": [
-    "FiscorAI bietet VAT-Analyse für Amazon-EU-Verkäufer. Ausgaben sind informativ, keine Steuer-, Rechts- oder Buchhaltungsberatung.",
-    "Pläne: Free (begrenzt), Basic, Standard, Pro. Bezahlter Zugang per einmaliger Lemon Squeezy-Zahlung für ca. monatlich bis zur Kündigung ab Aktivierung.",
-    "Sie sind für Zugangsdaten und verbundene Amazon-Token verantwortlich.",
-    "Kündigung unter Pläne & Abrechnung wechselt zu Free. Nicht genutzte Zeit wird in der Regel nicht automatisch erstattet — siehe Erstattungsrichtlinie.",
-    "Wir können Konten bei Missbrauch, Reverse Engineering oder Rechtsverstößen sperren.",
-    "Der Dienst wird „wie besehen“ bereitgestellt. Haftung ist nach spanischem und EU-Recht begrenzt.",
-    "Es gilt spanisches Recht; Gerichtsstand Madrid, unbeschadet zwingenden Verbraucherschutzes."
+    "FiscorAI stellt VAT-Analysetools für Amazon EU-Verkäufer bereit. Die Ausgabe hat informativen Charakter und stellt keine steuerliche, rechtliche oder buchhalterische Beratung dar. Überprüfen Sie Zahlen stets mit Ihrem Berater.",
+    "Tarife: Free (eingeschränkt), Basic, Standard und Pro. Der kostenpflichtige Zugriff ist ein monatliches Lemon Squeezy-Abonnement, das sich verlängert, bis Sie kündigen.",
+    "Sie sind für Ihre Kontodaten und alle von Ihnen verbundenen Amazon-Token verantwortlich. Geben Sie keine Anmeldedaten weiter.",
+    "Sie können einen kostenpflichtigen Tarif in der Rechnungsstellung kündigen; durch die Kündigung bleibt der Zugriff bis zum Ende des Abrechnungszeitraums erhalten, danach werden Sie auf Free herabgestuft. Ungenutzte Zeit wird in der Regel nicht automatisch erstattet – siehe die Rückerstattungsrichtlinie.",
+    "Wir können Konten sperren oder kündigen, die den Dienst missbrauchen, ihn zurückentwickeln (Reverse Engineering) oder geltendes Recht verletzen.",
+    "Der Dienst wird im vorliegenden Zustand bereitgestellt. Soweit nach spanischem und EU-Recht zulässig, ist die Haftung für Berechnungsfehler oder Ausfallzeiten begrenzt.",
+    "Diese Bedingungen unterliegen spanischem Recht. Die Gerichte von Madrid sind unbeschadet zwingender Verbraucherschutzvorschriften zuständig."
   ],
   "refundPoints": [
-    "Bezahlte Pläne werden über Lemon Checkout als Einmalzahlung aktiviert. Zugang ca. monatlich bis zur Kündigung ab erfolgreicher Aktivierung.",
-    "Jederzeit unter Pläne & Abrechnung kündigen → Free. Keine automatische Erstattung der laufenden Periode.",
-    "Bei Abbruch von Lemon Checkout erfolgt keine Belastung. Erneut unter Abrechnung versuchen.",
-    "Bei Fehlbelastung innerhalb von 14 Tagen an support@fiscor.ai mit E-Mail und Rechnungsdaten wenden.",
-    "Chargebacks folgen dem Verfahren Ihres Zahlungsanbieters. Das Konto kann währenddessen pausiert werden.",
-    "Der Free-Plan ist kostenlos — keine Erstattungen."
+    "Kostenpflichtige Tarife werden über die Lemon Squeezy Checkout-Seite als monatliche Abonnements aktiviert.",
+    "Sie können jederzeit unter Tarife & Abrechnung kündigen. Die Kündigung stoppt die Verlängerung; Sie behalten die kostenpflichtigen Funktionen bis zum Ende des Zeitraums und wechseln dann zu Free. Für den aktuellen Zeitraum erfolgt keine automatische Rückerstattung.",
+    "Wenn der Checkout fehlschlägt oder Sie den Lemon Checkout abbrechen, wird Ihnen nichts berechnet. Nutzen Sie die Rechnungsstellung, um es erneut zu versuchen.",
+    "Wenn Ihnen fälschlicherweise etwas berechnet wurde (doppelte Zahlung, technischer Fehler), kontaktieren Sie support@fiscor.ai innerhalb von 14 Tagen mit Ihrer Konto-E-Mail und den Rechnungsdetails.",
+    "Rückbuchungen und Kartenstreitigkeiten folgen dem Prozess Ihres Zahlungsanbieters. Wir können das Konto während eines laufenden Streitfalls pausieren.",
+    "Die Nutzung des Free-Tarifs erfordert keine Zahlung und beinhaltet keine Rückerstattungen."
   ],
   "cookiesPoints": [
-    "Wir nutzen notwendige Speicherung: Auth-Token, Sprache, Session-Idle und App-Einstellungen im Browser.",
-    "Diese sind für Anmeldung, Sicherheit und Sprache erforderlich — nicht für Werbung.",
-    "Derzeit keine Marketing- oder Analytics-Cookies Dritter. Bei Änderung aktualisieren wir diese Richtlinie.",
-    "Lemon Checkout kann eigene Cookies auf Lemon Squeezy-Seiten setzen.",
-    "Sie können Website-Daten jederzeit löschen; danach ist eine erneute Anmeldung nötig."
+    "Wir verwenden essenzielle Speicher, die für die Funktion des Produkts erforderlich sind: Authentifizierungstoken, Spracheinstellung, Inaktivitätsverfolgung der Sitzung und ähnliche App-Einstellungen im Browserspeicher.",
+    "Diese sind für die Anmeldung, die Sicherheit und das Speichern Ihrer Sprache zwingend erforderlich. Sie werden nicht für Werbezwecke verwendet.",
+    "Wir setzen derzeit keine Marketing- oder Analyse-Cookies von Drittanbietern ein. Sollte sich dies ändern, werden wir diese Richtlinie aktualisieren und gegebenenfalls einen Einwilligungmechanismus hinzufügen.",
+    "Lemon Squeezy Checkout kann eigene Cookies setzen, wenn Sie auf den gehosteten Seiten von Lemon bezahlen, gemäß der Cookie-Richtlinie von Lemon Squeezy.",
+    "Sie können Websitedaten in Ihrem Browser jederzeit löschen; Sie müssen sich danach erneut anmelden."
   ],
   "faqs": [
     {
-      "q": "Brauche ich eine Kreditkarte zum Start?",
-      "a": "Nein. Der Free-Plan braucht keine Karte und bleibt kostenlos — bis zu 50 Transaktionen pro Dokument."
+      "q": "Muss ich eine Kreditkarte angeben, um zu starten?",
+      "a": "Nein. Der Free-Tarif benötigt keine Karte und bleibt kostenlos – er verarbeitet bis zu 50 Transaktionen pro Dokument."
     },
     {
       "q": "Was zählt als Transaktion?",
-      "a": "Jede Zeile im Amazon VAT Transactions Report: Bestellungen, Retouren, Erstattungen, Liquidationen und Lagerbewegungen."
+      "a": "Jede Zeile im Amazon VAT-Transaktionsbericht: Bestellungen, Retouren, Rückerstattungen, Liquidationen und Bestandsbewegungen."
     },
     {
-      "q": "Monats- oder Quartalslimits — wie funktionieren sie?",
-      "a": "Limits gelten pro Dokument. Basic 1.500/Monat oder 4.500/Quartal; Standard 4.500 / 13.500; Pro unbegrenzt."
+      "q": "Monatliche oder vierteljährliche Limits – wie funktionieren sie?",
+      "a": "Limits gelten pro Dokument. Basic erlaubt 1.500 pro Monat oder 4.500 pro Quartal; Standard 4.500 / 13.500; Pro ist unbegrenzt. Sie können mehrere Zeiträume hochladen, solange jedes Dokument unter dem Limit liegt."
     },
     {
-      "q": "Was passiert bei Überschreitung?",
-      "a": "Die Datei wird teilweise verarbeitet; PDF und Excel zeigen ATTENTION. Upgrade und erneut hochladen."
+      "q": "Was passiert, wenn ich das Limit überschreite?",
+      "a": "Die Datei wird dennoch verarbeitet, jedoch nur teilweise, und die PDF- und Excel-Dateien tragen einen ACHTUNG-Banner. Führen Sie ein Upgrade durch und laden Sie die Datei für eine vollständige Analyse erneut hoch."
     },
     {
-      "q": "Welche Datei und wo finde ich sie?",
-      "a": "Amazon Seller Central → Berichte → Fulfilment by Amazon → Amazon VAT Transactions Report. Nur CSV, max. 100 MB."
+      "q": "Welche Datei lade ich hoch und wo finde ich sie?",
+      "a": "Amazon Seller Central → Berichte → Versand durch Amazon → Amazon VAT-Transaktionsbericht. Nur CSV, max. 100 MB."
     },
     {
       "q": "Wie lange dauert die Verarbeitung?",
-      "a": "Meist unter einer Minute. Der Status zeigt Processing, bis Ergebnisse bereit sind."
+      "a": "Normalerweise unter einer Minute. In der Dateizeile wird „Wird verarbeitet“ angezeigt, bis die Ergebnisse fertig sind; die Seite aktualisiert sich von selbst."
     },
     {
-      "q": "Was erhalte ich?",
-      "a": "Online-Ansicht, PDF-Zusammenfassung und detailliertes Excel nach Steuerschema und Land."
+      "q": "Was erhalte ich dadurch?",
+      "a": "Die Online-Ansicht (Diagramme und Tabellen pro Land), eine PDF-Zusammenfassung für Ihren Steuerberater und eine detaillierte Excel-Datei, aufgeschlüsselt nach Steuerschema und Land."
     },
     {
-      "q": "Erneutes Hochladen derselben Periode — sicher?",
-      "a": "Ja. Ein neuer Upload ersetzt die vorherigen Dateien für diese Periode."
+      "q": "Dasselbe Zeitfenster erneut hochladen – ist das sicher?",
+      "a": "Ja. Ein neuer Upload ersetzt die vorherigen Dateien für diesen Zeitraum, und die Diagramme werden aus den neuen Daten aktualisiert."
     },
     {
-      "q": "Was passiert nach der Zahlung?",
-      "a": "Lemon Squeezy leitet Sie zur Dankeseite; der Plan wird aktiviert. Bezahlter Zugang ca. monatlich bis zur Kündigung. Verwaltung unter Pläne & Abrechnung."
+      "q": "Was passiert nach meiner Zahlung?",
+      "a": "Lemon Squeezy leitet Sie auf eine Dankeseite weiter, während wir Ihren Tarif aktivieren. Der kostenpflichtige Zugriff verlängert sich monatlich, bis Sie kündigen. Sie können Tarife und Rechnungen unter Tarife & Abrechnung verwalten."
     },
     {
-      "q": "Zahlung nicht abgeschlossen — wurde belastet?",
-      "a": "Bei Abbruch von Checkout in der Regel nicht. Erneut unter Abrechnung versuchen oder Support kontaktieren."
+      "q": "Meine Zahlung wurde nicht abgeschlossen – wurde mir etwas berechnet?",
+      "a": "Wenn Sie abgebrochen oder den Lemon Checkout verlassen haben, sollte Ihnen nichts berechnet worden sein. Kehren Sie zu Tarife & Abrechnung zurück, um es erneut zu versuchen. Wenn fälschlicherweise Geld von Ihrem Konto abgebucht wurde, kontaktieren Sie den Support mit Ihrer E-Mail-Adresse und Quittung."
     },
     {
-      "q": "Wie kündige oder erhalte ich eine Erstattung?",
-      "a": "Unter Pläne & Abrechnung zu Free wechseln. Automatische Tageserstattungen gibt es nicht — siehe Erstattungsrichtlinie oder support@fiscor.ai."
+      "q": "Wie kündige ich oder erhalte eine Rückerstattung?",
+      "a": "Kündigen Sie jederzeit unter Tarife & Abrechnung, um die Verlängerung zu stoppen (Sie behalten den Zugriff bis zum Ende des Zeitraums, danach Free). Automatische Rückerstattungen für ungenutzte Tage werden nicht ausgestellt; siehe die Richtlinie für Rückerstattung & Stornierung oder schreiben Sie eine E-Mail an support@fiscor.ai bei Abrechnungsfehlern."
     },
     {
-      "q": "Warum sehe ich keine Warnung zu gekürzten / teilweisen Daten?",
-      "a": "Ältere Uploads können Meta-Daten fehlen, bis Sie dieselbe Amazon-VAT-CSV für den Zeitraum erneut hochladen. Neue Uploads speichern Kürzung und Zeilenzahlen immer."
+      "q": "Warum sehe ich keine Warnung zu Teildaten / Kürzungen?",
+      "a": "Ältere Uploads verfügen möglicherweise über keine Verarbeitungsmetadaten, bis Sie denselben Amazon VAT CSV-Bericht für diesen Zeitraum erneut hochladen. Neue Uploads speichern stets Kürzungen und Zeilenanzahldetails."
     }
   ]
 }

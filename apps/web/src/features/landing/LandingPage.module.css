@@ -498,6 +498,23 @@
   flex-shrink: 0;
 }
 
+.langPicker {
+  display: flex;
+  align-items: center;
+}
+
+.langPicker > div {
+  margin-left: 0;
+}
+
+.navMobileLang {
+  padding: 4px 0 8px;
+}
+
+.navMobileLang > div {
+  margin-left: 0;
+}
+
 .btnGhost {
   font-size: 13px;
   font-weight: 600;
