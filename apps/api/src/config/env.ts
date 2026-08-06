@@ -14,7 +14,13 @@ const schema = z.object({
   JWT_REFRESH_SECRET: z.string().min(8),
   JWT_EXPIRES_IN: z.string().default("2h"),
   JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
+  /** `local` = filesystem under STORAGE_ROOT; `r2` = Cloudflare R2 (production). */
+  STORAGE_BACKEND: z.enum(["local", "r2"]).default("local"),
   STORAGE_ROOT: z.string().default("../../storage"),
+  R2_ACCOUNT_ID: optionalNonEmpty,
+  R2_ACCESS_KEY_ID: optionalNonEmpty,
+  R2_SECRET_ACCESS_KEY: optionalNonEmpty,
+  R2_BUCKET: optionalNonEmpty,
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
   // Lemon Squeezy (Merchant of Record). Optional so Free-tier / local API can
   // boot without keys; paid checkout returns 503 until configured.
@@ -31,4 +37,15 @@ const schema = z.object({
   TAVILY_API_KEY: optionalNonEmpty,
 });
 
-export const env = schema.parse(process.env);
+const parsed = schema.parse(process.env);
+
+if (parsed.STORAGE_BACKEND === "r2") {
+  const missing = (
+    ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"] as const
+  ).filter((k) => !parsed[k]);
+  if (missing.length) {
+    throw new Error(`STORAGE_BACKEND=r2 requires: ${missing.join(", ")}`);
+  }
+}
+
+export const env = parsed;

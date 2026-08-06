@@ -6,9 +6,13 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const e2eRoot = join(root, "tmp", "e2e");
-const dbPath = join(e2eRoot, "test.db");
 const storageRoot = join(e2eRoot, "storage");
 const apiRoot = join(root, "apps", "api");
+
+const databaseUrl =
+  process.env.TEST_DATABASE_URL ||
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@localhost:5432/fiscorai_test";
 
 rmSync(e2eRoot, { recursive: true, force: true });
 mkdirSync(storageRoot, { recursive: true });
@@ -16,18 +20,19 @@ mkdirSync(storageRoot, { recursive: true });
 const env = {
   ...process.env,
   PORT: "9292",
-  DATABASE_URL: `file:${dbPath}`,
+  DATABASE_URL: databaseUrl,
   JWT_SECRET: "e2e-jwt-secret-min-8-chars",
   JWT_REFRESH_SECRET: "e2e-refresh-secret-min-8",
   JWT_EXPIRES_IN: "2h",
   JWT_REFRESH_EXPIRES_IN: "7d",
+  STORAGE_BACKEND: "local",
   STORAGE_ROOT: storageRoot,
   CORS_ORIGIN: "http://localhost:5173",
   PAYMENT_SUCCESS_URL: "http://localhost:5173/thankyou",
   PAYMENT_CANCEL_URL: "http://localhost:5173/payment-failed",
 };
 
-execSync("pnpm exec prisma db push --skip-generate", {
+execSync("pnpm exec prisma migrate deploy", {
   cwd: apiRoot,
   env,
   stdio: "inherit",

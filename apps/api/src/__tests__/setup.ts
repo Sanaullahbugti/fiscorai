@@ -1,21 +1,25 @@
 import { execSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll } from "vitest";
 
 const apiRoot = join(dirname(fileURLToPath(import.meta.url)), "../..");
-const root = mkdtempSync(join(tmpdir(), "fiscorai-api-"));
-const dbPath = join(root, "test.db");
-const storageRoot = join(root, "storage");
+const storageRoot = join(tmpdir(), `fiscorai-api-storage-${process.pid}`);
 mkdirSync(storageRoot, { recursive: true });
 
-process.env.DATABASE_URL = `file:${dbPath}`;
+const databaseUrl =
+  process.env.TEST_DATABASE_URL ||
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@localhost:5432/fiscorai_test";
+
+process.env.DATABASE_URL = databaseUrl;
 process.env.JWT_SECRET = "test-jwt-secret-min-8";
 process.env.JWT_REFRESH_SECRET = "test-refresh-secret-min-8";
 process.env.JWT_EXPIRES_IN = "2h";
 process.env.JWT_REFRESH_EXPIRES_IN = "7d";
+process.env.STORAGE_BACKEND = "local";
 process.env.STORAGE_ROOT = storageRoot;
 process.env.CORS_ORIGIN = "http://localhost:5173";
 process.env.PORT = "9292";
@@ -28,7 +32,7 @@ process.env.LEMONSQUEEZY_VARIANT_PRO = process.env.LEMONSQUEEZY_VARIANT_PRO || "
 process.env.PAYMENT_SUCCESS_URL = "http://localhost:5173/thankyou";
 process.env.PAYMENT_CANCEL_URL = "http://localhost:5173/payment-failed";
 
-execSync("pnpm exec prisma db push --skip-generate", {
+execSync("pnpm exec prisma migrate deploy", {
   cwd: apiRoot,
   env: { ...process.env },
   stdio: "pipe",
@@ -36,7 +40,7 @@ execSync("pnpm exec prisma db push --skip-generate", {
 
 afterAll(() => {
   try {
-    rmSync(root, { recursive: true, force: true });
+    rmSync(storageRoot, { recursive: true, force: true });
   } catch {
     /* ignore */
   }

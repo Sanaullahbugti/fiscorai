@@ -10,6 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fiscorai_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fiscorai_test
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,6 +46,9 @@ jobs:
       - name: Generate Prisma client
         run: pnpm db:generate
 
+      - name: Apply database migrations
+        run: pnpm db:migrate
+
       - name: Build
         run: pnpm build
 
@@ -41,6 +62,7 @@ jobs:
         run: pnpm test:e2e
         env:
           CI: true
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fiscorai_test
 
       - name: Upload Playwright report
         if: failure()

@@ -1,62 +1,68 @@
 # FiscorAI
 
-Local-first Amazon EU VAT analyser.
+Amazon EU VAT analyser — local dev + zero-cost production on Render.
 
-## Quick start
+## Quick start (local)
 
 ```bash
 cd fiscorai
 pnpm install
 cp apps/api/.env.example apps/api/.env
-pnpm db:push
+# Set DATABASE_URL to Neon pooled URL or local Postgres (see Production)
+pnpm db:migrate
 pnpm --filter @fiscorai/tax-processor build
 pnpm dev
 ```
 
 - Web: http://localhost:5173
 - API: http://localhost:9292
-- Uploads land in `./storage/{user-email}/...` and are processed locally.
+- Uploads: `./storage/{user-email}/...` (`STORAGE_BACKEND=local`)
+
+**Tests** need Postgres (`TEST_DATABASE_URL` or `DATABASE_URL`). CI uses a service container; locally:
+
+```bash
+docker run -d --name fiscorai-pg -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=fiscorai_test -p 5432:5432 postgres:16-alpine
+export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fiscorai_test
+pnpm db:migrate && pnpm test
+```
+
+## Production ($0 stack)
+
+| Layer | Service |
+|-------|---------|
+| Web | Render static — `https://fiscorai.com` |
+| API | Render free — `https://api.fiscorai.com` |
+| DB | [Neon](https://neon.tech) free Postgres |
+| Files | [Cloudflare R2](https://developers.cloudflare.com/r2/) free bucket |
+| Payments | Lemon Squeezy **live** |
+
+See [`render.yaml`](render.yaml) and [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for env vars and DNS.
+
+### DNS (`fiscorai.com`)
+
+In your DNS host (GoDaddy, etc.):
+
+| Host | Type | Target |
+|------|------|--------|
+| `@` | CNAME or A | Render custom domain for **fiscorai-web** |
+| `www` | CNAME | Render custom domain for **fiscorai-web** |
+| `api` | CNAME | Render custom domain for **fiscorai** API |
+
+Add custom domains in Render dashboard for each service, then paste the records Render shows.
 
 ## Blog (`apps/web/public/blog/`)
 
-The blog is hand-authored static HTML, not part of the React SPA — it's served
-as-is so crawlers and AI answer engines can read full content without running
-JavaScript. Vite copies `apps/web/public/**` into the build output verbatim,
-so `pnpm --filter @fiscorai/web build` picks it up automatically; nothing else
-to run.
+Static HTML served from `apps/web/dist/blog/`. Render static sites serve files before the SPA `/*` rewrite, so blog URLs work for crawlers.
 
-**Hosting requirement:** whatever serves the built `apps/web/dist/` in
-production must check for a matching file on disk *before* falling back to
-`index.html` for client-side routing (e.g. nginx's `try_files $uri $uri/
-/index.html;`, or the default static-file-first behavior on Vercel/Netlify).
-A naive rule that rewrites every request straight to `index.html` — bypassing
-the on-disk check — will swallow `/blog/*` and serve the SPA shell instead.
-No such config exists in this repo yet; whoever sets up the production host
-needs to get this right, since it's the one thing that would make the blog
-invisible to crawlers despite building correctly.
+New post: add `apps/web/public/blog/<slug>/index.html`, update `blog/index.html`, `sitemap.xml`, and `llms.txt`.
 
-New post checklist: add `apps/web/public/blog/<slug>/index.html` (copy an
-existing post as a template — meta tags, Open Graph, and the two JSON-LD
-blocks all need updating per post), add it to `apps/web/public/blog/index.html`'s
-list, `apps/web/public/sitemap.xml`, and the "Blog" section of
-`apps/web/public/llms.txt`.
+## Billing / Lemon Squeezy (live)
 
-## Billing / Lemon Squeezy
+Paid plans checkout through Lemon (Merchant of Record). Webhooks sync subscription state.
 
-Paid plans (Basic / Standard / Pro) check out through **Lemon Squeezy** (Merchant of Record). Lemon owns renewals; FiscorAI syncs plan state from webhooks.
+1. Lemon dashboard → **Live mode** → subscription product with variants matching `shared/plans.ts` (€14.90 / €39.90 / €79.90).
+2. Webhook: `POST https://api.fiscorai.com/api/v1/webhook/` — events: `subscription_*`, `subscription_payment_*`.
+3. Set on Render API (secrets): `LEMONSQUEEZY_API_KEY`, `STORE_ID`, `WEBHOOK_SECRET`, three `VARIANT_*` ids.
+4. `PAYMENT_SUCCESS_URL=https://fiscorai.com/thankyou`, `PAYMENT_CANCEL_URL=https://fiscorai.com/payment-failed`.
 
-**Dashboard setup (Test mode, then Live):**
-
-1. Create a store and a subscription product with three monthly variants matching `shared/plans.ts` (€14.90 / €39.90 / €79.90).
-2. Webhook → `POST https://<api>/api/v1/webhook/` with signing secret. Subscribe to:
-   `subscription_created`, `subscription_updated`, `subscription_cancelled`, `subscription_expired`, `subscription_resumed`, `subscription_payment_success`, `subscription_payment_failed`.
-3. Copy API key, store id, variant ids, and webhook secret into `apps/api/.env` (see `.env.example`).
-
-**Local schema after pulling:**
-
-```bash
-pnpm --filter @fiscorai/api db:generate
-pnpm --filter @fiscorai/api db:push
-```
-
-Cancel is cancel-at-period-end: Lemon cancel API + local `canceled` flag; `subscription_expired` drops the user to Free. Payment methods are managed via the Lemon customer portal (`GET /api/v1/payments/portal`).
+Cancel is at period end via Lemon portal; `subscription_expired` drops user to Free.

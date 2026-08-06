@@ -82,7 +82,9 @@ export class DataService {
     const raw = await storageRepository.readJson(email, input);
     if (!raw?.countries) throw new AppError("No data present", 404);
 
-    const countries = mapCountries(raw.countries);
+    const countries = mapCountries(
+      raw.countries as Array<{ country: string; transactionCategories: Array<Record<string, unknown>> }>,
+    );
     const meta = (raw.meta as ProcessMeta | undefined) ?? null;
     return { countries, meta };
   }

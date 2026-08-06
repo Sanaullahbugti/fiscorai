@@ -1,22 +1,21 @@
 # FiscorAI — Render Blueprint
-# After adding a payment method at https://dashboard.render.com/billing
-# you can deploy via MCP or: Dashboard → New → Blueprint → this repo.
+# Secrets (DATABASE_URL, R2, LEMONSQUEEZY_*) are set in the Render dashboard — not committed.
 
 services:
   - type: web
-    name: fiscorai-api
+    name: fiscorai
     runtime: node
     plan: free
     region: frankfurt
     branch: main
     autoDeploy: true
     buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @fiscorai/tax-processor build && pnpm --filter @fiscorai/api exec prisma generate && pnpm --filter @fiscorai/api build
-    startCommand: mkdir -p storage && cd apps/api && npx prisma db push && node dist/server.js
+    startCommand: cd apps/api && npx prisma migrate deploy && node dist/server.js
     envVars:
       - key: NODE_VERSION
         value: "20"
       - key: DATABASE_URL
-        value: file:./prod.db
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
@@ -25,17 +24,34 @@ services:
         value: 2h
       - key: JWT_REFRESH_EXPIRES_IN
         value: 7d
-      - key: STORAGE_ROOT
-        value: ../../storage
+      - key: STORAGE_BACKEND
+        value: r2
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
       - key: CORS_ORIGIN
-        fromService:
-          name: fiscorai-web
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://fiscorai.com,https://www.fiscorai.com
       - key: PAYMENT_SUCCESS_URL
-        value: https://fiscorai-web.onrender.com/thankyou
+        value: https://fiscorai.com/thankyou
       - key: PAYMENT_CANCEL_URL
-        value: https://fiscorai-web.onrender.com/payment-failed
+        value: https://fiscorai.com/payment-failed
+      - key: LEMONSQUEEZY_API_KEY
+        sync: false
+      - key: LEMONSQUEEZY_STORE_ID
+        sync: false
+      - key: LEMONSQUEEZY_WEBHOOK_SECRET
+        sync: false
+      - key: LEMONSQUEEZY_VARIANT_BASIC
+        sync: false
+      - key: LEMONSQUEEZY_VARIANT_STANDARD
+        sync: false
+      - key: LEMONSQUEEZY_VARIANT_PRO
+        sync: false
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
@@ -58,7 +74,4 @@ services:
       - key: NODE_VERSION
         value: "20"
       - key: VITE_API_URL
-        fromService:
-          name: fiscorai-api
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://api.fiscorai.com

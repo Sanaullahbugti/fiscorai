@@ -12,7 +12,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:all": "pnpm test && pnpm test:e2e",
     "db:push": "pnpm --filter @fiscorai/api db:push",
-    "db:generate": "pnpm --filter @fiscorai/api db:generate"
+    "db:generate": "pnpm --filter @fiscorai/api db:generate",
+    "db:migrate": "pnpm --filter @fiscorai/api db:migrate"
   },
   "engines": {
     "node": ">=20"

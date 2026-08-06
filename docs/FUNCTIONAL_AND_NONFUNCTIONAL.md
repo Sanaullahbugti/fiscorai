@@ -18,7 +18,7 @@ FiscorAI lets Amazon EU sellers:
 5. Ask an AI Analyst (Gemini) about **all uploaded data**.
 6. Manage profile, Amazon token, billing, FAQ, and contact.
 
-Data stays on the machine under default config: **SQLite** for accounts/billing metadata, **filesystem** for CSV/JSON/PDF/XLSX artifacts.
+Data stays on the machine under default config: **PostgreSQL** (Neon in production) for accounts/billing metadata, **filesystem or R2** for CSV/JSON/PDF/XLSX artifacts.
 
 ---
 
@@ -293,11 +293,11 @@ Upload several months/quarters → Dashboard/Review still period-scoped via Peri
 
 | ID | Requirement | Notes |
 |----|-------------|-------|
-| NF-SCALE-01 | Single-node local-first | SQLite + local disk; not multi-instance safe |
-| NF-SCALE-02 | No object storage | No S3 abstraction in default path |
-| NF-SCALE-03 | No containers in-repo | No Docker/K8s manifests |
+| NF-SCALE-01 | Production database | PostgreSQL (Neon free tier); Prisma migrations on deploy |
+| NF-SCALE-02 | Production file storage | Cloudflare R2 when `STORAGE_BACKEND=r2`; local disk in dev |
+| NF-SCALE-03 | No containers in-repo | No Docker/K8s manifests (Render blueprint only) |
 | NF-SCALE-04 | Dev ports | Web `:5173`, API `:9292` |
-| NF-SCALE-05 | Config | `apps/api/.env`; web `VITE_API_URL` optional |
+| NF-SCALE-05 | Config | `apps/api/.env`; web `VITE_API_URL`; see `docs/DEPLOYMENT.md` |
 
 ### 5.4 Reliability & availability
 
@@ -446,12 +446,17 @@ Paid “active” while Lemon subscription status is active (local `expiresAt` f
 
 ## 11. Production go-live checklist (payments & legal)
 
+See also [`docs/DEPLOYMENT.md`](DEPLOYMENT.md).
+
 | Item | Notes |
 |------|--------|
+| Neon Postgres | `DATABASE_URL` pooled URL on Render API; `prisma migrate deploy` on start |
+| Cloudflare R2 | `STORAGE_BACKEND=r2` + `R2_*` env vars; VAT files survive redeploys |
+| Custom domain | `fiscorai.com` / `www` → web; `api.fiscorai.com` → API; DNS at registrar |
 | Lemon live keys | `LEMONSQUEEZY_API_KEY`, store id, three variant ids on API |
-| Webhook endpoint | `POST /api/v1/webhook/` with `LEMONSQUEEZY_WEBHOOK_SECRET`; subscription + payment events |
-| Return URLs | `PAYMENT_SUCCESS_URL` = `https://<prod>/thankyou`; `PAYMENT_CANCEL_URL` = `https://<prod>/payment-failed` |
-| CORS / web API | `CORS_ORIGIN` matches prod web origin; web `VITE_API_URL` points at prod API |
+| Webhook endpoint | `POST https://api.fiscorai.com/api/v1/webhook/` with `LEMONSQUEEZY_WEBHOOK_SECRET` |
+| Return URLs | `PAYMENT_SUCCESS_URL` = `https://fiscorai.com/thankyou`; `PAYMENT_CANCEL_URL` = `https://fiscorai.com/payment-failed` |
+| CORS / web API | `CORS_ORIGIN` = `https://fiscorai.com,https://www.fiscorai.com`; web `VITE_API_URL` = `https://api.fiscorai.com` |
 | Legal review | Replace soft-launch Privacy/Terms/Refund/Cookies with counsel-approved copy and real company entity |
 | Email | Contact + password reset still need outbound mail for full production |
 
