@@ -1,10 +1,17 @@
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
+import { env } from "../../config/env.js";
 import { AppError } from "../../shared/errors.js";
 import { signAccess, signRefresh, verifyRefresh } from "../../shared/jwt.js";
+import { mailService } from "../mail/mail.service.js";
 import { subscriptionRepository } from "../subscriptions/subscriptions.repository.js";
 import { userRepository as users } from "../users/users.repository.js";
+import { emailVerificationTokenRepository } from "./email-verification.repository.js";
 import { passwordResetTokenRepository } from "./password-reset.repository.js";
+
+function webUrl(path: string) {
+  return `${env.WEB_APP_URL.replace(/\/$/, "")}${path}`;
+}
 
 export class AuthService {
   async register(input: {
@@ -37,7 +44,9 @@ export class AuthService {
       expiresAt: null,
     });
 
-    return { id: user.id, email: user.email };
+    await this.issueVerificationEmail(user.id, user.email, user.username);
+
+    return { id: user.id, email: user.email, emailSent: true };
   }
 
   async login(email: string, password: string, opts?: { businessUser?: boolean }) {
@@ -51,6 +60,13 @@ export class AuthService {
     if (!user) throw new AppError("Invalid credentials", 401);
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) throw new AppError("Invalid credentials", 401);
+
+    if (!user.emailVerifiedAt) {
+      throw new AppError("Please confirm your email before signing in", 403, {
+        code: "EMAIL_NOT_VERIFIED",
+        email: user.email,
+      });
+    }
 
     const sub = await subscriptionRepository.findByUserId(user.id);
     const payload = { sub: user.id, email: user.email };
@@ -95,15 +111,18 @@ export class AuthService {
     // Same response whether or not the account exists, so this can't be used
     // to test which emails are registered.
     if (!user) return { sent: true };
+
     const token = randomBytes(32).toString("hex");
+    await passwordResetTokenRepository.deleteAllForUser(user.id);
     await passwordResetTokenRepository.create({
       userId: user.id,
       token,
       expiresAt: new Date(Date.now() + 3600_000),
     });
-    // Never returned to the caller or logged in production — this token is a
-    // full account-takeover credential until it expires or is used. With no
-    // email provider wired up yet, dev/test flows read it from this log line.
+
+    const resetUrl = webUrl(`/reset-password?token=${token}`);
+    await mailService.sendPasswordResetEmail(user.email, user.username, resetUrl);
+
     if (process.env.NODE_ENV !== "production") {
       console.log(`[dev] password reset token for ${email}: ${token}`);
     }
@@ -116,6 +135,41 @@ export class AuthService {
     const hash = await bcrypt.hash(newPassword, 10);
     await users.update(row.userId, { password: hash });
     await passwordResetTokenRepository.deleteById(row.id);
+  }
+
+  async verifyEmail(token: string) {
+    const row = await emailVerificationTokenRepository.findByToken(token);
+    if (!row || row.expiresAt < new Date()) {
+      throw new AppError("Invalid or expired confirmation link", 400);
+    }
+    await users.update(row.userId, { emailVerifiedAt: new Date() });
+    await emailVerificationTokenRepository.deleteAllForUser(row.userId);
+    return { verified: true };
+  }
+
+  async resendVerification(email: string) {
+    const user = await users.findByEmail(email);
+    // Same response either way — avoid email enumeration.
+    if (!user) return { sent: true };
+    if (user.emailVerifiedAt) return { sent: true };
+
+    await this.issueVerificationEmail(user.id, user.email, user.username);
+    return { sent: true };
+  }
+
+  private async issueVerificationEmail(userId: string, email: string, username: string) {
+    await emailVerificationTokenRepository.deleteAllForUser(userId);
+    const token = randomBytes(32).toString("hex");
+    await emailVerificationTokenRepository.create({
+      userId,
+      token,
+      expiresAt: new Date(Date.now() + 24 * 3600_000),
+    });
+    const verifyUrl = webUrl(`/verify-email?token=${token}`);
+    await mailService.sendVerificationEmail(email, username, verifyUrl);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[dev] email verification token for ${email}: ${token}`);
+    }
   }
 }
 

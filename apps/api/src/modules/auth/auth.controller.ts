@@ -53,6 +53,24 @@ export class AuthController {
       next(e);
     }
   };
+
+  verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await authService.verifyEmail(req.body.token);
+      res.json(ok(data));
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  resendVerification = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await authService.resendVerification(req.body.email);
+      res.json(ok(data));
+    } catch (e) {
+      next(e);
+    }
+  };
 }
 
 export const authController = new AuthController();

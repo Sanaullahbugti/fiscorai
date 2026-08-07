@@ -60,13 +60,40 @@ LEMONSQUEEZY_VARIANT_STANDARD
 LEMONSQUEEZY_VARIANT_PRO
 ```
 
-## 5. Smoke test
+## 5. Transactional email (account confirm + password reset)
+
+Mailbox: **support@fiscorai.com** (GoDaddy Professional Email / Titan).
+
+On Render API, set:
+
+```
+WEB_APP_URL=https://fiscorai.com
+EMAIL_FROM=FiscorAI <support@fiscorai.com>
+EMAIL_NOTIFY_TO=sanaullahbugti821@gmail.com
+SMTP_HOST=smtpout.secureserver.net
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=support@fiscorai.com
+SMTP_PASS=<mailbox password from Email & Office Dashboard>
+```
+
+If SMTP is unset, the API logs email bodies instead of sending (local/dev only).
+
+Flows:
+
+1. Sign up → confirmation email → `/verify-email?token=…` → sign in
+2. Forgot password → reset email → `/reset-password?token=…`
+3. Contact form → optional copy to `EMAIL_NOTIFY_TO`
+
+## 6. Smoke test
 
 1. `https://api.fiscorai.com/health` → `{"ok":true}`
-2. Register → upload CSV → dashboard shows data
-3. Redeploy API → data still present (Neon + R2)
-4. Billing → checkout → `/thankyou` → plan active
-5. `https://fiscorai.com/blog/` serves HTML (not SPA shell)
+2. Register with a real inbox → open confirmation email → sign in
+3. Forgot password → reset → sign in with new password
+4. Upload CSV → dashboard shows data
+5. Redeploy API → data still present (Neon + R2)
+6. Billing → checkout → `/thankyou` → plan active
+7. `https://fiscorai.com/blog/` serves HTML (not SPA shell)
 
 ## Local `.env` reference
 
@@ -74,4 +101,5 @@ Copy `apps/api/.env.example` → `apps/api/.env` and fill:
 
 - `DATABASE_URL` — Neon URL or `postgresql://postgres:postgres@localhost:5432/fiscorai_dev`
 - `STORAGE_BACKEND=local` for dev
+- `SMTP_*` + `WEB_APP_URL` for real emails (optional locally)
 - Lemon keys for local checkout testing (test or live)

@@ -6,8 +6,8 @@ import { usersService } from "./users.service.js";
 export class UsersController {
   register = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      await usersService.register(req.body);
-      res.json(ok(undefined));
+      const data = await usersService.register(req.body);
+      res.json(ok(data));
     } catch (e) {
       next(e);
     }

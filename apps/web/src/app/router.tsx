@@ -2,7 +2,7 @@ import { Navigate, Outlet, Route, Routes, Link } from "react-router-dom";
 import { AppShell } from "@/components/AppShell";
 import { ROUTES } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
-import { SignInPage, SignUpPage } from "@/features/auth/AuthPages";
+import { SignInPage, SignUpPage, ForgotPasswordPage, ResetPasswordPage, VerifyEmailPage } from "@/features/auth/AuthPages";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { ReportsPage } from "@/features/reports/ReportsPage";
 import { ReviewPage } from "@/features/review/ReviewPage";
@@ -73,6 +73,9 @@ export function AppRouter() {
       <Route path={ROUTES.home} element={<LandingPage />} />
       <Route path={ROUTES.signin} element={<SignInPage />} />
       <Route path={ROUTES.signup} element={<SignUpPage />} />
+      <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
+      <Route path={ROUTES.resetPassword} element={<ResetPasswordPage />} />
+      <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />
       <Route path={ROUTES.privacy} element={<PublicLegal kind="privacy" />} />
       <Route path={ROUTES.terms} element={<PublicLegal kind="terms" />} />
       <Route path={ROUTES.refund} element={<PublicLegal kind="refund" />} />

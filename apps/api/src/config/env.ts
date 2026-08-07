@@ -35,6 +35,24 @@ const schema = z.object({
   GEMINI_API_KEY: optionalNonEmpty,
   GEMINI_MODEL: z.string().default("gemini-3.5-flash-lite"),
   TAVILY_API_KEY: optionalNonEmpty,
+  /** Public web origin used in email links (verify / reset password). */
+  WEB_APP_URL: z.string().url().default("http://localhost:5173"),
+  /** From header, e.g. `FiscorAI <support@fiscorai.com>`. */
+  EMAIL_FROM: z.string().default("FiscorAI <support@fiscorai.com>"),
+  /** Inbox for contact-form copies (optional). */
+  EMAIL_NOTIFY_TO: optionalNonEmpty,
+  /** GoDaddy Titan / Professional Email: smtpout.secureserver.net:465 (SSL). */
+  SMTP_HOST: optionalNonEmpty,
+  SMTP_PORT: z.coerce.number().default(465),
+  SMTP_SECURE: z
+    .preprocess((v) => {
+      if (v === undefined || v === null || v === "") return true;
+      if (typeof v === "boolean") return v;
+      return String(v).toLowerCase() === "true" || String(v) === "1";
+    }, z.boolean())
+    .default(true),
+  SMTP_USER: optionalNonEmpty,
+  SMTP_PASS: optionalNonEmpty,
 });
 
 const parsed = schema.parse(process.env);

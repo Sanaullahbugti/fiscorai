@@ -12,6 +12,10 @@ export class PasswordResetTokenRepository {
   deleteById(id: string) {
     return prisma.passwordResetToken.delete({ where: { id } });
   }
+
+  deleteAllForUser(userId: string) {
+    return prisma.passwordResetToken.deleteMany({ where: { userId } });
+  }
 }
 
 export const passwordResetTokenRepository = new PasswordResetTokenRepository();

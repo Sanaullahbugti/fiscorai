@@ -7,7 +7,9 @@ import {
   changePasswordSchema,
   forgotPasswordSchema,
   loginSchema,
+  resendVerificationSchema,
   resetPasswordSchema,
+  verifyEmailSchema,
 } from "./auth.dto.js";
 
 const router = Router();
@@ -37,6 +39,12 @@ router.post(
   "/reset-password",
   validateBody(resetPasswordSchema),
   authController.resetPassword,
+);
+router.post("/verify-email", validateBody(verifyEmailSchema), authController.verifyEmail);
+router.post(
+  "/resend-verification",
+  validateBody(resendVerificationSchema),
+  authController.resendVerification,
 );
 
 export default router;

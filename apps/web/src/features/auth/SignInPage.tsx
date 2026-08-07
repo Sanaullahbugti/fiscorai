@@ -1,9 +1,10 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { authApi } from "@/api";
 import { ROUTES } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { getApiErrorCode, getApiErrorMessage } from "@/lib/api-error";
 import { AuthLangPills } from "./AuthLangPills";
 import styles from "./AuthPages.module.css";
 
@@ -12,22 +13,46 @@ export function SignInPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const [email, setEmail] = useState("demo@fiscor.ai");
-  const [password, setPassword] = useState("demo1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(params.get("expired") ? t("sessionExpired") : "");
+  const [info, setInfo] = useState(params.get("verified") ? t("verifyDone") : "");
+  const [needsVerify, setNeedsVerify] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setInfo("");
+    setNeedsVerify(false);
     try {
       await login(email, password);
       navigate(ROUTES.analyst);
     } catch (err: unknown) {
-      setError(getApiErrorMessage(err, t("signInFailed")));
+      if (getApiErrorCode(err) === "EMAIL_NOT_VERIFIED") {
+        setNeedsVerify(true);
+        setError(t("emailNotVerified"));
+      } else {
+        setError(getApiErrorMessage(err, t("signInFailed")));
+      }
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function onResend() {
+    setResending(true);
+    setError("");
+    try {
+      await authApi.resendVerification(email);
+      setInfo(t("resendSent"));
+      setNeedsVerify(false);
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t("resendFailed")));
+    } finally {
+      setResending(false);
     }
   }
 
@@ -55,6 +80,12 @@ export function SignInPage() {
           <h2>{t("signInTitle")}</h2>
           <p className={styles.sub}>{t("signInSub")}</p>
           {error ? <div className={styles.error}>{error}</div> : null}
+          {info ? <div className={styles.success}>{info}</div> : null}
+          {needsVerify ? (
+            <button type="button" className={styles.secondaryBtn} disabled={resending} onClick={onResend}>
+              {resending ? t("sending") : t("resendVerification")}
+            </button>
+          ) : null}
           <label>
             <span>{t("email")}</span>
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
@@ -68,9 +99,8 @@ export function SignInPage() {
           </button>
           <div className={styles.links}>
             <Link to={ROUTES.signup}>{t("createAccountLink")}</Link>
-            <span className={styles.muted}>{t("forgotPassword")}</span>
+            <Link to={ROUTES.forgotPassword}>{t("forgotPassword")}</Link>
           </div>
-          <div className={styles.demo} dangerouslySetInnerHTML={{ __html: t("demoNote") }} />
         </form>
       </section>
     </div>

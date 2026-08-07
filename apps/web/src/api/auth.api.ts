@@ -15,7 +15,11 @@ export const authApi = {
     username: string;
     password: string;
     plan?: string;
-  }) => http.post<GeneralResponse<unknown>>("/api/v1/users", body),
+  }) =>
+    http.post<GeneralResponse<{ id: string; email: string; emailSent: boolean }>>(
+      "/api/v1/users",
+      body,
+    ),
 
   changePassword: (currentPassword: string, newPassword: string) =>
     http.put("/api/v1/auth/change-password", { currentPassword, newPassword }),
@@ -24,4 +28,9 @@ export const authApi = {
 
   resetPassword: (token: string, newPassword: string) =>
     http.post("/api/v1/auth/reset-password", { token, newPassword }),
+
+  verifyEmail: (token: string) => http.post("/api/v1/auth/verify-email", { token }),
+
+  resendVerification: (email: string) =>
+    http.post("/api/v1/auth/resend-verification", { email }),
 };

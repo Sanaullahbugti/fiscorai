@@ -8,23 +8,26 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  username     String
-  password     String
-  contact      String?
-  alias        String?
-  amazonId     String?
-  plan            String   @default("Free")
+  id              String    @id @default(uuid())
+  email           String    @unique
+  username        String
+  password        String
+  contact         String?
+  alias           String?
+  amazonId        String?
+  plan            String    @default("Free")
   lemonCustomerId String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  /// Null until the seller confirms via the link emailed at signup.
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  subscription  Subscription?
-  payments      Payment[]
-  resetTokens   PasswordResetToken[]
-  analystUsage  AnalystUsage[]
-  conversations AnalystConversation[]
+  subscription         Subscription?
+  payments             Payment[]
+  resetTokens          PasswordResetToken[]
+  verificationTokens   EmailVerificationToken[]
+  analystUsage         AnalystUsage[]
+  conversations        AnalystConversation[]
 }
 
 /// A saved Analyst chat. Scoped to its owner — every read is filtered by userId.
@@ -116,6 +119,17 @@ model PasswordResetToken {
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Contact {

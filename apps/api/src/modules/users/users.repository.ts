@@ -36,6 +36,7 @@ export class UserRepository {
       plan?: string;
       password?: string;
       lemonCustomerId?: string;
+      emailVerifiedAt?: Date | null;
     },
   ) {
     return prisma.user.update({ where: { id }, data });
