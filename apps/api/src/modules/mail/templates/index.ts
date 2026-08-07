@@ -292,3 +292,169 @@ export function betaInviteEmailText(input: {
     "https://fiscorai.com",
   ].join("\n");
 }
+
+
+export type PaymentEmailInput = {
+  username: string;
+  plan: string;
+  amountLabel: string;
+  invoiceUrl?: string | null;
+  billingUrl?: string;
+};
+
+export function paymentSuccessEmailHtml(input: PaymentEmailInput): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  const invoiceBlock = input.invoiceUrl
+    ? `<p style="margin:0 0 14px;"><a href="${escapeHtml(input.invoiceUrl)}" style="color:${brand.green};font-weight:600;">View invoice</a></p>`
+    : "";
+  return wrapEmail({
+    preheader: `Payment confirmed — you're on FiscorAI ${input.plan}.`,
+    eyebrow: "Billing",
+    title: "Payment successful",
+    bodyHtml: `
+      ${greeting(input.username)}
+      <p style="margin:0 0 14px;">
+        Thanks for your payment. Your <strong>${escapeHtml(input.plan)}</strong> plan is active.
+      </p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 20px;background:${brand.cream};border:1px solid ${brand.border};border-radius:12px;">
+        <tr>
+          <td style="padding:16px 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:${brand.ink};">
+            <strong style="color:${brand.green};">Receipt</strong><br/>
+            Plan: ${escapeHtml(input.plan)}<br/>
+            Amount: ${escapeHtml(input.amountLabel)}
+          </td>
+        </tr>
+      </table>
+      ${invoiceBlock}
+      ${ctaButton("Open billing", billingUrl)}
+    `,
+  });
+}
+
+export function paymentSuccessEmailText(input: PaymentEmailInput): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  const lines = [
+    `Hi ${input.username || "there"},`,
+    "",
+    `Thanks for your payment. Your ${input.plan} plan is active.`,
+    `Amount: ${input.amountLabel}`,
+  ];
+  if (input.invoiceUrl) lines.push(`Invoice: ${input.invoiceUrl}`);
+  lines.push("", `Billing: ${billingUrl}`, "", "— FiscorAI · support@fiscorai.com");
+  return lines.join("\n");
+}
+
+export function paymentFailedEmailHtml(input: PaymentEmailInput): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  return wrapEmail({
+    preheader: "We couldn't process your FiscorAI payment.",
+    eyebrow: "Billing",
+    title: "Payment failed",
+    bodyHtml: `
+      ${greeting(input.username)}
+      <p style="margin:0 0 14px;">
+        We couldn't process the payment for your <strong>${escapeHtml(input.plan)}</strong> plan
+        (${escapeHtml(input.amountLabel)}). Update your payment method to keep access.
+      </p>
+      ${ctaButton("Manage billing", billingUrl)}
+      <p style="margin:18px 0 0;color:${brand.muted};font-size:13.5px;">
+        Need help? Email
+        <a href="mailto:support@fiscorai.com" style="color:${brand.green};font-weight:600;">support@fiscorai.com</a>.
+      </p>
+    `,
+  });
+}
+
+export function paymentFailedEmailText(input: PaymentEmailInput): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  return [
+    `Hi ${input.username || "there"},`,
+    "",
+    `We couldn't process the payment for your ${input.plan} plan (${input.amountLabel}).`,
+    `Manage billing: ${billingUrl}`,
+    "",
+    "— FiscorAI · support@fiscorai.com",
+  ].join("\n");
+}
+
+export function subscriptionCancelledEmailHtml(input: {
+  username: string;
+  plan: string;
+  endsAtLabel?: string | null;
+  billingUrl?: string;
+}): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  const ends = input.endsAtLabel
+    ? `<p style="margin:0 0 14px;">You'll keep <strong>${escapeHtml(input.plan)}</strong> access until <strong>${escapeHtml(input.endsAtLabel)}</strong>, then move to Free.</p>`
+    : `<p style="margin:0 0 14px;">Your <strong>${escapeHtml(input.plan)}</strong> subscription is cancelled.</p>`;
+  return wrapEmail({
+    preheader: `Your FiscorAI ${input.plan} subscription was cancelled.`,
+    eyebrow: "Billing",
+    title: "Subscription cancelled",
+    bodyHtml: `
+      ${greeting(input.username)}
+      ${ends}
+      ${ctaButton("View plans", billingUrl)}
+    `,
+  });
+}
+
+export function subscriptionCancelledEmailText(input: {
+  username: string;
+  plan: string;
+  endsAtLabel?: string | null;
+  billingUrl?: string;
+}): string {
+  const billingUrl = input.billingUrl || "https://fiscorai.com/billing";
+  const ends = input.endsAtLabel
+    ? `You'll keep ${input.plan} until ${input.endsAtLabel}, then move to Free.`
+    : `Your ${input.plan} subscription is cancelled.`;
+  return [
+    `Hi ${input.username || "there"},`,
+    "",
+    ends,
+    `Plans: ${billingUrl}`,
+    "",
+    "— FiscorAI · support@fiscorai.com",
+  ].join("\n");
+}
+
+export function paymentNotifyOwnerEmailHtml(input: {
+  email: string;
+  username: string;
+  plan: string;
+  amountLabel: string;
+}): string {
+  return wrapEmail({
+    preheader: `New paid subscriber: ${input.plan}`,
+    eyebrow: "Revenue",
+    title: "New successful payment",
+    bodyHtml: `
+      <p style="margin:0 0 14px;">A customer completed a FiscorAI payment.</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;border:1px solid ${brand.border};border-radius:12px;overflow:hidden;">
+        <tr>
+          <td style="padding:14px 16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:${brand.ink};">
+            <strong>${escapeHtml(input.username)}</strong><br/>
+            <a href="mailto:${escapeHtml(input.email)}" style="color:${brand.green};">${escapeHtml(input.email)}</a><br/>
+            Plan: ${escapeHtml(input.plan)} · ${escapeHtml(input.amountLabel)}
+          </td>
+        </tr>
+      </table>
+    `,
+  });
+}
+
+export function paymentNotifyOwnerEmailText(input: {
+  email: string;
+  username: string;
+  plan: string;
+  amountLabel: string;
+}): string {
+  return [
+    "New successful FiscorAI payment",
+    "",
+    `Customer: ${input.username} <${input.email}>`,
+    `Plan: ${input.plan}`,
+    `Amount: ${input.amountLabel}`,
+  ].join("\n");
+}

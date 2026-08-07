@@ -12,10 +12,19 @@ import {
   passwordChangedEmailText,
   passwordResetEmailHtml,
   passwordResetEmailText,
+  paymentFailedEmailHtml,
+  paymentFailedEmailText,
+  paymentNotifyOwnerEmailHtml,
+  paymentNotifyOwnerEmailText,
+  paymentSuccessEmailHtml,
+  paymentSuccessEmailText,
+  subscriptionCancelledEmailHtml,
+  subscriptionCancelledEmailText,
   verificationEmailHtml,
   verificationEmailText,
   welcomeEmailHtml,
   welcomeEmailText,
+  type PaymentEmailInput,
 } from "./templates/index.js";
 
 export type SendMailInput = {
@@ -179,6 +188,85 @@ export class MailService {
       text: betaInviteEmailText({ name, signupUrl }),
       html: betaInviteEmailHtml({ name, signupUrl }),
     });
+  }
+
+  private billingUrl() {
+    return `${env.WEB_APP_URL.replace(/\/$/, "")}/billing`;
+  }
+
+  async sendPaymentSuccessEmail(to: string, input: Omit<PaymentEmailInput, "billingUrl">) {
+    const payload: PaymentEmailInput = { ...input, billingUrl: this.billingUrl() };
+    await this.send({
+      to,
+      subject: `Payment confirmed — FiscorAI ${input.plan}`,
+      text: paymentSuccessEmailText(payload),
+      html: paymentSuccessEmailHtml(payload),
+    });
+  }
+
+  async sendPaymentFailedEmail(to: string, input: Omit<PaymentEmailInput, "billingUrl">) {
+    const payload: PaymentEmailInput = { ...input, billingUrl: this.billingUrl() };
+    await this.send({
+      to,
+      subject: "Payment failed — FiscorAI",
+      text: paymentFailedEmailText(payload),
+      html: paymentFailedEmailHtml(payload),
+    });
+  }
+
+  async sendSubscriptionCancelledEmail(
+    to: string,
+    input: { username: string; plan: string; endsAtLabel?: string | null },
+  ) {
+    await this.send({
+      to,
+      subject: `Subscription cancelled — FiscorAI ${input.plan}`,
+      text: subscriptionCancelledEmailText({ ...input, billingUrl: this.billingUrl() }),
+      html: subscriptionCancelledEmailHtml({ ...input, billingUrl: this.billingUrl() }),
+    });
+  }
+
+  async sendPaymentOwnerNotify(input: {
+    email: string;
+    username: string;
+    plan: string;
+    amountLabel: string;
+  }) {
+    if (!env.EMAIL_NOTIFY_TO) return;
+    await this.send({
+      to: env.EMAIL_NOTIFY_TO,
+      subject: `New payment: ${input.plan} · ${input.amountLabel}`,
+      text: paymentNotifyOwnerEmailText(input),
+      html: paymentNotifyOwnerEmailHtml(input),
+    });
+  }
+
+  enqueuePaymentSuccess(
+    to: string,
+    input: Omit<PaymentEmailInput, "billingUrl"> & { email: string },
+  ) {
+    this.enqueue(`payment-success→${to}`, async () => {
+      await this.sendPaymentSuccessEmail(to, input);
+      await this.sendPaymentOwnerNotify({
+        email: input.email,
+        username: input.username,
+        plan: input.plan,
+        amountLabel: input.amountLabel,
+      });
+    });
+  }
+
+  enqueuePaymentFailed(to: string, input: Omit<PaymentEmailInput, "billingUrl">) {
+    this.enqueue(`payment-failed→${to}`, () => this.sendPaymentFailedEmail(to, input));
+  }
+
+  enqueueSubscriptionCancelled(
+    to: string,
+    input: { username: string; plan: string; endsAtLabel?: string | null },
+  ) {
+    this.enqueue(`subscription-cancelled→${to}`, () =>
+      this.sendSubscriptionCancelledEmail(to, input),
+    );
   }
 }
 
