@@ -61,6 +61,7 @@ export class MailService {
       if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS) {
         throw new Error("SMTP is not configured");
       }
+      // nodemailer TransportOptions typing is awkward across versions — cast the SMTP config.
       this.transporter = nodemailer.createTransport({
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
@@ -69,12 +70,11 @@ export class MailService {
           user: env.SMTP_USER,
           pass: env.SMTP_PASS,
         },
-        // GoDaddy often never answers from cloud IPs — fail fast.
         connectionTimeout: 4_000,
         greetingTimeout: 4_000,
         socketTimeout: 8_000,
         pool: false,
-      });
+      } as Parameters<typeof nodemailer.createTransport>[0]);
     }
     return this.transporter;
   }
