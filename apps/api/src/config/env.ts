@@ -46,6 +46,11 @@ const schema = z.object({
   EMAIL_FROM: z.string().default("FiscorAI <support@fiscorai.com>"),
   /** Inbox for contact-form copies (optional). */
   EMAIL_NOTIFY_TO: optionalNonEmpty,
+  /**
+   * Prefer Resend HTTP API in production (Render datacenters often cannot
+   * reach GoDaddy SMTP). Falls back to SMTP_* when unset.
+   */
+  RESEND_API_KEY: optionalNonEmpty,
   /** GoDaddy Titan / Professional Email: smtpout.secureserver.net:465 (SSL). */
   SMTP_HOST: optionalNonEmpty,
   SMTP_PORT: z.coerce.number().default(465),

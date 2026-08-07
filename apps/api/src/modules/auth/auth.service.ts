@@ -28,23 +28,27 @@ export class AuthService {
     if (existing) throw new AppError("Email already registered", 409);
 
     const plan = "Free";
-    const hash = await bcrypt.hash(input.password, 10);
-    const user = await users.create({
+    const [hash, token] = await Promise.all([
+      bcrypt.hash(input.password, 10),
+      Promise.resolve(randomBytes(32).toString("hex")),
+    ]);
+
+    // One write round-trip (user + free subscription + verify token) instead of 4.
+    const user = await users.createWithSubscriptionAndVerification({
       email: input.email,
       username: input.username,
       password: hash,
       contact: input.contact,
       plan,
+      verificationToken: token,
+      verificationExpiresAt: new Date(Date.now() + 24 * 3600_000),
     });
 
-    await subscriptionRepository.upsertForUser(user.id, {
-      plan: "Free",
-      price: 0,
-      active: false,
-      expiresAt: null,
-    });
-
-    await this.issueVerificationEmail(user.id, user.email, user.username);
+    const verifyUrl = webUrl(`/verify-email?token=${token}`);
+    mailService.enqueueVerificationEmail(user.email, user.username, verifyUrl);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[dev] email verification token for ${user.email}: ${token}`);
+    }
 
     return { id: user.id, email: user.email, emailSent: true };
   }

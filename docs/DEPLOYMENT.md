@@ -80,6 +80,8 @@ SMTP_PASS=<mailbox password from Email & Office Dashboard>
 
 If SMTP is unset, the API logs email bodies instead of sending (local/dev only).
 
+**Production tip:** Render’s cloud IPs often cannot reach GoDaddy SMTP (`Connection timeout`). Prefer [Resend](https://resend.com) — set `RESEND_API_KEY` on the API service and verify `support@fiscorai.com` (or your domain) in Resend. SMTP_* can stay as a local/dev fallback.
+
 Flows:
 
 1. Sign up → confirmation email → `/verify-email?token=…` → sign in

@@ -35,22 +35,32 @@ export type SendMailInput = {
 };
 
 /**
- * SMTP mailer (GoDaddy Titan / Professional Email by default).
- * When SMTP_HOST / SMTP_USER / SMTP_PASS are unset, messages are logged
- * instead of sent so local/dev can still exercise auth flows.
+ * Mailer: prefers Resend HTTP API when `RESEND_API_KEY` is set (works from
+ * Render). Otherwise uses SMTP (GoDaddy). When neither is configured,
+ * messages are logged so local/dev can still exercise auth flows.
  *
- * Auth/contact HTTP handlers must not await SMTP — GoDaddy can take
- * several seconds (or hang). Use `enqueue` so the API returns immediately.
+ * Auth/contact HTTP handlers must not await send — use `enqueue`.
  */
 export class MailService {
   private transporter: Transporter | null = null;
 
-  private get enabled() {
+  private get resendEnabled() {
+    return Boolean(env.RESEND_API_KEY);
+  }
+
+  private get smtpEnabled() {
     return Boolean(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS);
+  }
+
+  private get enabled() {
+    return this.resendEnabled || this.smtpEnabled;
   }
 
   private getTransport(): Transporter {
     if (!this.transporter) {
+      if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS) {
+        throw new Error("SMTP is not configured");
+      }
       this.transporter = nodemailer.createTransport({
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
@@ -59,16 +69,36 @@ export class MailService {
           user: env.SMTP_USER,
           pass: env.SMTP_PASS,
         },
-        // Fail fast instead of holding signup/verify requests open.
-        connectionTimeout: 10_000,
-        greetingTimeout: 10_000,
-        socketTimeout: 20_000,
-        pool: true,
-        maxConnections: 2,
-        maxMessages: 50,
+        // GoDaddy often never answers from cloud IPs — fail fast.
+        connectionTimeout: 4_000,
+        greetingTimeout: 4_000,
+        socketTimeout: 8_000,
+        pool: false,
       });
     }
     return this.transporter;
+  }
+
+  private async sendViaResend(input: SendMailInput): Promise<void> {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: env.EMAIL_FROM,
+        to: [input.to],
+        subject: input.subject,
+        text: input.text,
+        html: input.html,
+      }),
+      signal: AbortSignal.timeout(12_000),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Resend ${res.status}: ${body.slice(0, 200)}`);
+    }
   }
 
   async send(input: SendMailInput): Promise<void> {
@@ -76,6 +106,11 @@ export class MailService {
       console.log(
         `[mail:dev] to=${input.to} subject=${JSON.stringify(input.subject)}\n${input.text}`,
       );
+      return;
+    }
+
+    if (this.resendEnabled) {
+      await this.sendViaResend(input);
       return;
     }
 
@@ -91,10 +126,13 @@ export class MailService {
   /**
    * Queue mail without blocking the caller. Errors are logged only —
    * tokens/DB writes already succeeded before this is called.
+   * Deferred with setImmediate so the HTTP response can flush first.
    */
   enqueue(label: string, task: () => Promise<void>): void {
-    void task().catch((err) => {
-      console.error(`[mail] ${label} failed`, err instanceof Error ? err.message : err);
+    setImmediate(() => {
+      void task().catch((err) => {
+        console.error(`[mail] ${label} failed`, err instanceof Error ? err.message : err);
+      });
     });
   }
 

@@ -9,8 +9,9 @@ services:
     region: frankfurt
     branch: main
     autoDeploy: true
-    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @fiscorai/tax-processor build && pnpm --filter @fiscorai/api exec prisma generate && pnpm --filter @fiscorai/api build
-    startCommand: cd apps/api && npx prisma migrate deploy && node dist/server.js
+    buildCommand: corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --frozen-lockfile && pnpm --filter @fiscorai/tax-processor build && pnpm --filter @fiscorai/api exec prisma generate && pnpm --filter @fiscorai/api exec prisma migrate deploy && pnpm --filter @fiscorai/api build
+    # Keep start lean — free-tier cold starts used to burn 20–30s on migrate before listen.
+    startCommand: cd apps/api && node dist/server.js
     envVars:
       - key: NODE_VERSION
         value: "20"
