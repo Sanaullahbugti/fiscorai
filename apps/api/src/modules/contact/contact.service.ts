@@ -7,6 +7,7 @@ export class ContactService {
     await contactRepository.create(input);
     try {
       await mailService.sendContactNotification(input);
+      await mailService.sendContactReceipt(input.email, input.name);
     } catch (err) {
       console.error("[contact] failed to send notification email", err);
     }

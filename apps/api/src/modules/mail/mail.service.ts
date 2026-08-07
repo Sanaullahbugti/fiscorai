@@ -1,6 +1,20 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import { env } from "../../config/env.js";
+import {
+  contactNotifyEmailHtml,
+  contactNotifyEmailText,
+  contactReceiptEmailHtml,
+  contactReceiptEmailText,
+  passwordChangedEmailHtml,
+  passwordChangedEmailText,
+  passwordResetEmailHtml,
+  passwordResetEmailText,
+  verificationEmailHtml,
+  verificationEmailText,
+  welcomeEmailHtml,
+  welcomeEmailText,
+} from "./templates/index.js";
 
 export type SendMailInput = {
   to: string;
@@ -54,71 +68,39 @@ export class MailService {
   }
 
   async sendVerificationEmail(to: string, username: string, verifyUrl: string) {
-    const subject = "Confirm your FiscorAI account";
-    const text = [
-      `Hi ${username},`,
-      "",
-      "Thanks for signing up for FiscorAI. Confirm your email with this link:",
-      verifyUrl,
-      "",
-      "This link expires in 24 hours. If you did not create an account, you can ignore this email.",
-      "",
-      "— FiscorAI",
-      "support@fiscorai.com",
-    ].join("\n");
-
-    const html = `
-      <div style="font-family:Georgia,serif;max-width:520px;line-height:1.5;color:#1a1a1a">
-        <p>Hi ${escapeHtml(username)},</p>
-        <p>Thanks for signing up for <strong>FiscorAI</strong>. Confirm your email to activate your account:</p>
-        <p style="margin:24px 0">
-          <a href="${verifyUrl}" style="background:#1a3a2a;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:600">
-            Confirm email
-          </a>
-        </p>
-        <p style="font-size:13px;color:#555">Or paste this link into your browser:<br/>
-          <a href="${verifyUrl}">${verifyUrl}</a>
-        </p>
-        <p style="font-size:13px;color:#555">This link expires in 24 hours. If you did not create an account, ignore this email.</p>
-        <p style="font-size:13px;color:#555">— FiscorAI · support@fiscorai.com</p>
-      </div>
-    `;
-
-    await this.send({ to, subject, text, html });
+    await this.send({
+      to,
+      subject: "Confirm your FiscorAI account",
+      text: verificationEmailText(username, verifyUrl),
+      html: verificationEmailHtml(username, verifyUrl),
+    });
   }
 
   async sendPasswordResetEmail(to: string, username: string, resetUrl: string) {
-    const subject = "Reset your FiscorAI password";
-    const text = [
-      `Hi ${username},`,
-      "",
-      "We received a request to reset your FiscorAI password. Use this link:",
-      resetUrl,
-      "",
-      "This link expires in 1 hour. If you did not request a reset, you can ignore this email.",
-      "",
-      "— FiscorAI",
-      "support@fiscorai.com",
-    ].join("\n");
+    await this.send({
+      to,
+      subject: "Reset your FiscorAI password",
+      text: passwordResetEmailText(username, resetUrl),
+      html: passwordResetEmailHtml(username, resetUrl),
+    });
+  }
 
-    const html = `
-      <div style="font-family:Georgia,serif;max-width:520px;line-height:1.5;color:#1a1a1a">
-        <p>Hi ${escapeHtml(username)},</p>
-        <p>We received a request to reset your <strong>FiscorAI</strong> password:</p>
-        <p style="margin:24px 0">
-          <a href="${resetUrl}" style="background:#1a3a2a;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:600">
-            Reset password
-          </a>
-        </p>
-        <p style="font-size:13px;color:#555">Or paste this link into your browser:<br/>
-          <a href="${resetUrl}">${resetUrl}</a>
-        </p>
-        <p style="font-size:13px;color:#555">This link expires in 1 hour. If you did not request a reset, ignore this email.</p>
-        <p style="font-size:13px;color:#555">— FiscorAI · support@fiscorai.com</p>
-      </div>
-    `;
+  async sendPasswordChangedEmail(to: string, username: string) {
+    await this.send({
+      to,
+      subject: "Your FiscorAI password was updated",
+      text: passwordChangedEmailText(username),
+      html: passwordChangedEmailHtml(username),
+    });
+  }
 
-    await this.send({ to, subject, text, html });
+  async sendWelcomeEmail(to: string, username: string) {
+    await this.send({
+      to,
+      subject: "Welcome to FiscorAI — you’re confirmed",
+      text: welcomeEmailText(username),
+      html: welcomeEmailHtml(username),
+    });
   }
 
   async sendContactNotification(input: {
@@ -128,30 +110,22 @@ export class MailService {
   }) {
     if (!env.EMAIL_NOTIFY_TO) return;
 
-    const subject = `Contact form: ${input.name}`;
-    const text = [
-      `From: ${input.name} <${input.email}>`,
-      "",
-      input.message,
-    ].join("\n");
-
-    const html = `
-      <div style="font-family:Georgia,serif;max-width:520px;line-height:1.5;color:#1a1a1a">
-        <p><strong>From:</strong> ${escapeHtml(input.name)} &lt;${escapeHtml(input.email)}&gt;</p>
-        <p style="white-space:pre-wrap">${escapeHtml(input.message)}</p>
-      </div>
-    `;
-
-    await this.send({ to: env.EMAIL_NOTIFY_TO, subject, text, html });
+    await this.send({
+      to: env.EMAIL_NOTIFY_TO,
+      subject: `Contact form: ${input.name}`,
+      text: contactNotifyEmailText(input),
+      html: contactNotifyEmailHtml(input),
+    });
   }
-}
 
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  async sendContactReceipt(to: string, name: string) {
+    await this.send({
+      to,
+      subject: "We received your message — FiscorAI",
+      text: contactReceiptEmailText(name),
+      html: contactReceiptEmailHtml(name),
+    });
+  }
 }
 
 export const mailService = new MailService();

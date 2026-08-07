@@ -104,6 +104,11 @@ export class AuthService {
     if (!matches) throw new AppError("Current password is incorrect", 401);
     const hash = await bcrypt.hash(newPassword, 10);
     await users.update(user.id, { password: hash });
+    try {
+      await mailService.sendPasswordChangedEmail(user.email, user.username);
+    } catch (err) {
+      console.error("[auth] password-changed email failed", err);
+    }
   }
 
   async forgotPassword(email: string) {
@@ -135,6 +140,14 @@ export class AuthService {
     const hash = await bcrypt.hash(newPassword, 10);
     await users.update(row.userId, { password: hash });
     await passwordResetTokenRepository.deleteById(row.id);
+    const user = await users.findById(row.userId);
+    if (user) {
+      try {
+        await mailService.sendPasswordChangedEmail(user.email, user.username);
+      } catch (err) {
+        console.error("[auth] password-changed email failed", err);
+      }
+    }
   }
 
   async verifyEmail(token: string) {
@@ -144,6 +157,14 @@ export class AuthService {
     }
     await users.update(row.userId, { emailVerifiedAt: new Date() });
     await emailVerificationTokenRepository.deleteAllForUser(row.userId);
+    const user = await users.findById(row.userId);
+    if (user) {
+      try {
+        await mailService.sendWelcomeEmail(user.email, user.username);
+      } catch (err) {
+        console.error("[auth] welcome email failed", err);
+      }
+    }
     return { verified: true };
   }
 
