@@ -2,6 +2,8 @@ import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import { env } from "../../config/env.js";
 import {
+  betaInviteEmailHtml,
+  betaInviteEmailText,
   contactNotifyEmailHtml,
   contactNotifyEmailText,
   contactReceiptEmailHtml,
@@ -27,6 +29,9 @@ export type SendMailInput = {
  * SMTP mailer (GoDaddy Titan / Professional Email by default).
  * When SMTP_HOST / SMTP_USER / SMTP_PASS are unset, messages are logged
  * instead of sent so local/dev can still exercise auth flows.
+ *
+ * Auth/contact HTTP handlers must not await SMTP — GoDaddy can take
+ * several seconds (or hang). Use `enqueue` so the API returns immediately.
  */
 export class MailService {
   private transporter: Transporter | null = null;
@@ -45,6 +50,13 @@ export class MailService {
           user: env.SMTP_USER,
           pass: env.SMTP_PASS,
         },
+        // Fail fast instead of holding signup/verify requests open.
+        connectionTimeout: 10_000,
+        greetingTimeout: 10_000,
+        socketTimeout: 20_000,
+        pool: true,
+        maxConnections: 2,
+        maxMessages: 50,
       });
     }
     return this.transporter;
@@ -67,6 +79,16 @@ export class MailService {
     });
   }
 
+  /**
+   * Queue mail without blocking the caller. Errors are logged only —
+   * tokens/DB writes already succeeded before this is called.
+   */
+  enqueue(label: string, task: () => Promise<void>): void {
+    void task().catch((err) => {
+      console.error(`[mail] ${label} failed`, err instanceof Error ? err.message : err);
+    });
+  }
+
   async sendVerificationEmail(to: string, username: string, verifyUrl: string) {
     await this.send({
       to,
@@ -74,6 +96,10 @@ export class MailService {
       text: verificationEmailText(username, verifyUrl),
       html: verificationEmailHtml(username, verifyUrl),
     });
+  }
+
+  enqueueVerificationEmail(to: string, username: string, verifyUrl: string) {
+    this.enqueue(`verification→${to}`, () => this.sendVerificationEmail(to, username, verifyUrl));
   }
 
   async sendPasswordResetEmail(to: string, username: string, resetUrl: string) {
@@ -85,6 +111,10 @@ export class MailService {
     });
   }
 
+  enqueuePasswordResetEmail(to: string, username: string, resetUrl: string) {
+    this.enqueue(`password-reset→${to}`, () => this.sendPasswordResetEmail(to, username, resetUrl));
+  }
+
   async sendPasswordChangedEmail(to: string, username: string) {
     await this.send({
       to,
@@ -94,6 +124,10 @@ export class MailService {
     });
   }
 
+  enqueuePasswordChangedEmail(to: string, username: string) {
+    this.enqueue(`password-changed→${to}`, () => this.sendPasswordChangedEmail(to, username));
+  }
+
   async sendWelcomeEmail(to: string, username: string) {
     await this.send({
       to,
@@ -101,6 +135,10 @@ export class MailService {
       text: welcomeEmailText(username),
       html: welcomeEmailHtml(username),
     });
+  }
+
+  enqueueWelcomeEmail(to: string, username: string) {
+    this.enqueue(`welcome→${to}`, () => this.sendWelcomeEmail(to, username));
   }
 
   async sendContactNotification(input: {
@@ -124,6 +162,22 @@ export class MailService {
       subject: "We received your message — FiscorAI",
       text: contactReceiptEmailText(name),
       html: contactReceiptEmailHtml(name),
+    });
+  }
+
+  enqueueContactEmails(input: { name: string; email: string; message: string }) {
+    this.enqueue(`contact-notify`, async () => {
+      await this.sendContactNotification(input);
+      await this.sendContactReceipt(input.email, input.name);
+    });
+  }
+
+  async sendBetaInvite(to: string, name: string, signupUrl?: string) {
+    await this.send({
+      to,
+      subject: "You’re invited to the FiscorAI private beta",
+      text: betaInviteEmailText({ name, signupUrl }),
+      html: betaInviteEmailHtml({ name, signupUrl }),
     });
   }
 }

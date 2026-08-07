@@ -18,6 +18,7 @@ describe("API integration", () => {
   let refreshToken = "";
 
   beforeAll(async () => {
+    const { prisma } = await import("../shared/prisma.js");
     const reg = await request(app).post("/api/v1/users").send({
       email,
       username,
@@ -25,6 +26,18 @@ describe("API integration", () => {
       plan: "Free",
     });
     expect(reg.status).toBe(200);
+
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    expect(user).toBeTruthy();
+    const verify = await prisma.emailVerificationToken.findFirst({
+      where: { userId: user!.id },
+      orderBy: { createdAt: "desc" },
+    });
+    expect(verify?.token).toBeTruthy();
+    const confirmed = await request(app)
+      .post("/api/v1/auth/verify-email")
+      .send({ token: verify!.token });
+    expect(confirmed.status).toBe(200);
   });
 
   it("GET /health", async () => {

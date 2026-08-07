@@ -104,11 +104,7 @@ export class AuthService {
     if (!matches) throw new AppError("Current password is incorrect", 401);
     const hash = await bcrypt.hash(newPassword, 10);
     await users.update(user.id, { password: hash });
-    try {
-      await mailService.sendPasswordChangedEmail(user.email, user.username);
-    } catch (err) {
-      console.error("[auth] password-changed email failed", err);
-    }
+    mailService.enqueuePasswordChangedEmail(user.email, user.username);
   }
 
   async forgotPassword(email: string) {
@@ -126,7 +122,7 @@ export class AuthService {
     });
 
     const resetUrl = webUrl(`/reset-password?token=${token}`);
-    await mailService.sendPasswordResetEmail(user.email, user.username, resetUrl);
+    mailService.enqueuePasswordResetEmail(user.email, user.username, resetUrl);
 
     if (process.env.NODE_ENV !== "production") {
       console.log(`[dev] password reset token for ${email}: ${token}`);
@@ -142,11 +138,7 @@ export class AuthService {
     await passwordResetTokenRepository.deleteById(row.id);
     const user = await users.findById(row.userId);
     if (user) {
-      try {
-        await mailService.sendPasswordChangedEmail(user.email, user.username);
-      } catch (err) {
-        console.error("[auth] password-changed email failed", err);
-      }
+      mailService.enqueuePasswordChangedEmail(user.email, user.username);
     }
   }
 
@@ -159,11 +151,7 @@ export class AuthService {
     await emailVerificationTokenRepository.deleteAllForUser(row.userId);
     const user = await users.findById(row.userId);
     if (user) {
-      try {
-        await mailService.sendWelcomeEmail(user.email, user.username);
-      } catch (err) {
-        console.error("[auth] welcome email failed", err);
-      }
+      mailService.enqueueWelcomeEmail(user.email, user.username);
     }
     return { verified: true };
   }
@@ -187,7 +175,8 @@ export class AuthService {
       expiresAt: new Date(Date.now() + 24 * 3600_000),
     });
     const verifyUrl = webUrl(`/verify-email?token=${token}`);
-    await mailService.sendVerificationEmail(email, username, verifyUrl);
+    // Do not await SMTP — it was blocking signup/resend for many seconds.
+    mailService.enqueueVerificationEmail(email, username, verifyUrl);
     if (process.env.NODE_ENV !== "production") {
       console.log(`[dev] email verification token for ${email}: ${token}`);
     }

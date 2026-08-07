@@ -217,3 +217,78 @@ export function contactReceiptEmailText(name: string): string {
     "— FiscorAI · support@fiscorai.com",
   ].join("\n");
 }
+
+export function betaInviteEmailHtml(input: {
+  name: string;
+  signupUrl?: string;
+}): string {
+  const signupUrl = input.signupUrl || "https://fiscorai.com/signup";
+  const first = input.name.trim().split(/\s+/)[0] || "there";
+
+  return wrapEmail({
+    preheader:
+      "You’re invited to the private FiscorAI beta — Amazon EU VAT reports, sorted in one upload.",
+    eyebrow: "Private beta invite",
+    title: "You’re invited to try FiscorAI",
+    bodyHtml: `
+      ${greeting(first)}
+      <p style="margin:0 0 14px;">
+        I’m opening a <strong>small private beta</strong> of FiscorAI for Amazon EU sellers —
+        and I’d love your feedback.
+      </p>
+      <p style="margin:0 0 14px;">
+        Upload one Amazon <strong>VAT Transactions Report</strong> (month or quarter).
+        We split it by country and tax scheme — OSS, regular, VOEC — then hand you a
+        PDF summary and a detailed Excel your accountant can use.
+      </p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 22px;background:${brand.cream};border:1px solid ${brand.border};border-radius:12px;">
+        <tr>
+          <td style="padding:16px 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:${brand.ink};">
+            <strong style="color:${brand.green};">What to do (takes ~10 minutes)</strong><br/>
+            1. Create a free account<br/>
+            2. Confirm your email<br/>
+            3. Upload one real VAT CSV<br/>
+            4. Reply with what worked — and what didn’t
+          </td>
+        </tr>
+      </table>
+      ${ctaButton("Join the beta — free", signupUrl)}
+      <p style="margin:18px 0 0;font-size:13.5px;line-height:1.55;color:${brand.muted};">
+        No credit card. Free plan is enough for this beta.
+        Questions? Just reply to this email — it comes straight to me.
+      </p>
+    `,
+    noteHtml: `This invite is part of a private group of Amazon sellers. If this isn’t relevant, you can ignore it — no follow-ups.`,
+  });
+}
+
+export function betaInviteEmailText(input: {
+  name: string;
+  signupUrl?: string;
+}): string {
+  const signupUrl = input.signupUrl || "https://fiscorai.com/signup";
+  const first = input.name.trim().split(/\s+/)[0] || "there";
+  return [
+    `Hi ${first},`,
+    "",
+    "You’re invited to a small private beta of FiscorAI for Amazon EU sellers.",
+    "",
+    "Upload one Amazon VAT Transactions Report (month or quarter).",
+    "We split it by country and scheme — OSS, regular, VOEC — then give you a PDF",
+    "summary and a detailed Excel for your accountant.",
+    "",
+    "What to do (~10 minutes):",
+    "1. Create a free account",
+    "2. Confirm your email",
+    "3. Upload one real VAT CSV",
+    "4. Reply with what worked — and what didn’t",
+    "",
+    `Join here: ${signupUrl}`,
+    "",
+    "No credit card. Free plan is enough for this beta.",
+    "Questions? Just reply to this email.",
+    "",
+    "— FiscorAI · support@fiscorai.com",
+    "https://fiscorai.com",
+  ].join("\n");
+}

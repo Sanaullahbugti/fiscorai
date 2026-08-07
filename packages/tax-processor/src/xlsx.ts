@@ -92,13 +92,26 @@ type TableOptions = {
   categoryValues?: string[];
 };
 
-function styleHeaderRow(row: ExcelJS.Row, colCount: number) {
-  row.height = 20;
-  row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-    if (colNumber > colCount) return;
+/** Header horizontal align must match the data column (money/right → right). */
+function colAlign(col: ColSpec): "left" | "right" {
+  if (col.money || col.align === "right") return "right";
+  return "left";
+}
+
+function styleHeaderRow(row: ExcelJS.Row, columns: ColSpec[]) {
+  row.height = 22;
+  columns.forEach((col, i) => {
+    const cell = row.getCell(i + 1);
     cell.font = { name: FONT, bold: true, size: 10, color: { argb: argb(WHITE) } };
     cell.fill = fill(T.ink);
-    cell.alignment = { vertical: "middle", horizontal: "left" };
+    cell.alignment = {
+      vertical: "middle",
+      horizontal: colAlign(col),
+      wrapText: false,
+    };
+    cell.border = {
+      bottom: { style: "thin", color: { argb: argb(T.ink) } },
+    };
   });
 }
 
@@ -106,28 +119,37 @@ function writeTable(ws: ExcelJS.Worksheet, opts: TableOptions): number {
   const { startRow, columns, rows } = opts;
 
   columns.forEach((c, i) => {
-    ws.getColumn(i + 1).width = c.width;
+    const col = ws.getColumn(i + 1);
+    col.width = c.width;
+    // Default column alignment so empty filter cells still match the header.
+    col.alignment = { horizontal: colAlign(c), vertical: "middle" };
   });
 
   const headerRow = ws.getRow(startRow);
   columns.forEach((c, i) => {
     headerRow.getCell(i + 1).value = c.header.toUpperCase();
   });
-  styleHeaderRow(headerRow, columns.length);
+  styleHeaderRow(headerRow, columns);
 
   rows.forEach((r, rIdx) => {
     const excelRow = ws.getRow(startRow + 1 + rIdx);
+    excelRow.height = 18;
     const zebra = rIdx % 2 === 1;
 
-    r.forEach((val, cIdx) => {
+    // Paint every column in the table width so short rows don't look shifted.
+    columns.forEach((col, cIdx) => {
       const cell = excelRow.getCell(cIdx + 1);
-      cell.value = val;
-      const col = columns[cIdx];
-      const negative = !!col.money && typeof val === "number" && val < 0;
+      const val = r[cIdx];
+      if (val !== undefined && val !== null && val !== "") cell.value = val;
 
+      const negative = !!col.money && typeof val === "number" && val < 0;
       cell.font = { name: FONT, size: 10, color: negative ? { argb: argb(T.alert) } : undefined };
-      cell.alignment = { horizontal: col.money ? "right" : col.align || "left" };
-      if (col.money) cell.numFmt = MONEY_FMT;
+      cell.alignment = {
+        horizontal: colAlign(col),
+        vertical: "middle",
+        wrapText: false,
+      };
+      if (col.money && typeof val === "number") cell.numFmt = MONEY_FMT;
       if (zebra) cell.fill = fill(T.wash);
       cell.border = { bottom: { style: "hair", color: { argb: argb(T.ruleSoft) } } };
     });
@@ -139,7 +161,12 @@ function writeTable(ws: ExcelJS.Worksheet, opts: TableOptions): number {
     }
     if (opts.categoryColumnIndex != null && opts.categoryValues) {
       const cc = excelRow.getCell(opts.categoryColumnIndex + 1);
-      cc.font = { name: FONT, size: 10, bold: true, color: { argb: argb(schemeColor(opts.categoryValues[rIdx])) } };
+      cc.font = {
+        name: FONT,
+        size: 10,
+        bold: true,
+        color: { argb: argb(schemeColor(opts.categoryValues[rIdx])) },
+      };
     }
   });
 
@@ -231,15 +258,16 @@ function buildSummarySheet(wb: ExcelJS.Workbook, report: ProcessedReport) {
     const labelCell = labelRow.getCell(i + 1);
     labelCell.value = label.toUpperCase();
     labelCell.font = { name: FONT, size: 8, bold: true, color: { argb: argb(T.muted) } };
+    labelCell.alignment = { horizontal: "left", vertical: "middle" };
     const valueCell = valueRow.getCell(i + 1);
     valueCell.value = value;
     valueCell.font = { name: FONT, size: 16, bold: true, color: { argb: argb(T.ink) } };
+    valueCell.alignment = { horizontal: "left", vertical: "middle" };
   });
-  for (const r of [labelRow, valueRow]) {
-    r.eachCell({ includeEmpty: true }, (cell, col) => {
-      if (col > 6) return;
-      cell.fill = fill(T.wash);
-    });
+  // Only paint the KPI columns that exist (not empty cols 5–6).
+  for (let col = 1; col <= kpis.length; col++) {
+    labelRow.getCell(col).fill = fill(T.wash);
+    valueRow.getCell(col).fill = fill(T.wash);
   }
   labelRow.height = 14;
   valueRow.height = 24;
@@ -268,21 +296,25 @@ function buildSummarySheet(wb: ExcelJS.Workbook, report: ProcessedReport) {
   const sortedGrand = [...grand.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   for (const [currency, v] of sortedGrand) {
     const r = ws.getRow(totalRow);
-    r.getCell(1).value = sortedGrand.length > 1 ? `GRAND TOTAL — ${currency}` : "GRAND TOTAL";
-    r.getCell(3).value = v.total;
-    r.getCell(4).value = v.base;
-    r.getCell(5).value = v.vat;
-    r.getCell(6).value = currency;
     r.height = 24;
-    r.eachCell({ includeEmpty: true }, (cell, col) => {
-      if (col > 6) return;
+    // Same 6-column grid as the table above — keep Category blank so
+    // Total / Base / VAT / Currency stay under their headers.
+    const cells: Array<{ col: number; value: string | number; align: "left" | "right"; money?: boolean }> = [
+      { col: 1, value: sortedGrand.length > 1 ? `GRAND TOTAL — ${currency}` : "GRAND TOTAL", align: "left" },
+      { col: 2, value: "", align: "left" },
+      { col: 3, value: v.total, align: "right", money: true },
+      { col: 4, value: v.base, align: "right", money: true },
+      { col: 5, value: v.vat, align: "right", money: true },
+      { col: 6, value: currency, align: "right" },
+    ];
+    for (const spec of cells) {
+      const cell = r.getCell(spec.col);
+      cell.value = spec.value === "" ? null : spec.value;
       cell.fill = fill(T.ink);
       cell.font = { name: FONT, size: 11, bold: true, color: { argb: argb(WHITE) } };
-      if (col >= 3 && col <= 5) {
-        cell.numFmt = MONEY_FMT;
-        cell.alignment = { horizontal: "right" };
-      }
-    });
+      cell.alignment = { horizontal: spec.align, vertical: "middle" };
+      if (spec.money) cell.numFmt = MONEY_FMT;
+    }
     r.getCell(5).font = { name: FONT, size: 13, bold: true, color: { argb: argb(ACCENT) } };
     totalRow++;
   }
