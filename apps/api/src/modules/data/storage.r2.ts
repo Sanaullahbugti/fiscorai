@@ -37,9 +37,15 @@ export class R2StorageRepository implements StorageRepository {
   constructor() {
     const accountId = env.R2_ACCOUNT_ID!;
     this.bucket = env.R2_BUCKET!;
+    // Jurisdiction-locked buckets (e.g. EU) live on `{account}.{eu|fedramp}.r2…`;
+    // the default endpoint returns NoSuchBucket even when the bucket exists.
+    const jurisdiction = env.R2_JURISDICTION;
+    const host = jurisdiction
+      ? `${accountId}.${jurisdiction}.r2.cloudflarestorage.com`
+      : `${accountId}.r2.cloudflarestorage.com`;
     this.client = new S3Client({
       region: "auto",
-      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+      endpoint: `https://${host}`,
       credentials: {
         accessKeyId: env.R2_ACCESS_KEY_ID!,
         secretAccessKey: env.R2_SECRET_ACCESS_KEY!,

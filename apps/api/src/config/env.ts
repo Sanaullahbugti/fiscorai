@@ -21,6 +21,11 @@ const schema = z.object({
   R2_ACCESS_KEY_ID: optionalNonEmpty,
   R2_SECRET_ACCESS_KEY: optionalNonEmpty,
   R2_BUCKET: optionalNonEmpty,
+  /** R2 location hint: omit for default; `eu` / `fedramp` for jurisdiction-locked buckets. */
+  R2_JURISDICTION: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.enum(["eu", "fedramp"]).optional(),
+  ),
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
   // Lemon Squeezy (Merchant of Record). Optional so Free-tier / local API can
   // boot without keys; paid checkout returns 503 until configured.
@@ -41,6 +46,11 @@ const schema = z.object({
   EMAIL_FROM: z.string().default("FiscorAI <support@fiscorai.com>"),
   /** Inbox for contact-form copies (optional). */
   EMAIL_NOTIFY_TO: optionalNonEmpty,
+  /**
+   * Prefer Resend HTTP API in production (Render datacenters often cannot
+   * reach GoDaddy SMTP). Falls back to SMTP_* when unset.
+   */
+  RESEND_API_KEY: optionalNonEmpty,
   /** GoDaddy Titan / Professional Email: smtpout.secureserver.net:465 (SSL). */
   SMTP_HOST: optionalNonEmpty,
   SMTP_PORT: z.coerce.number().default(465),

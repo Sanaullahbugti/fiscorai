@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
@@ -17,7 +17,21 @@ export function SignUpPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingHint, setLoadingHint] = useState("");
   const [checkEmail, setCheckEmail] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingHint("");
+      return;
+    }
+    const t1 = window.setTimeout(() => setLoadingHint(t("creatingHintWarm")), 2_000);
+    const t2 = window.setTimeout(() => setLoadingHint(t("creatingHintLong")), 8_000);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [loading, t]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -108,6 +122,7 @@ export function SignUpPage() {
             <button disabled={loading} type="submit">
               {loading ? t("creating") : t("createAccountCta")}
             </button>
+            {loading && loadingHint ? <p className={styles.sub}>{loadingHint}</p> : null}
             <div className={styles.links}>
               <Link to={ROUTES.signin}>{t("alreadyHaveAccount")}</Link>
             </div>

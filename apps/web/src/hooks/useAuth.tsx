@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { authApi } from "@/api";
+import { authApi, subscriptionsApi } from "@/api";
 import { STORAGE_KEYS, SESSION_IDLE_MS } from "@/constants";
 import type { AuthUser } from "@/types/api";
 
@@ -9,6 +9,8 @@ type AuthState = {
   register: (email: string, username: string, password: string, plan?: string) => Promise<void>;
   logout: () => void;
   touch: () => void;
+  /** Re-fetch subscription from API and patch auth/localStorage so the shell plan updates. */
+  refreshSubscription: () => Promise<AuthUser["userSubscription"] | null>;
 };
 
 const Ctx = createContext<AuthState | null>(null);
@@ -20,6 +22,10 @@ function loadUser(): AuthUser | null {
   } catch {
     return null;
   }
+}
+
+function persistUser(next: AuthUser) {
+  localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(next));
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -52,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(STORAGE_KEYS.accessToken, payload.jwtToken);
         if (payload.refreshToken) localStorage.setItem(STORAGE_KEYS.refreshToken, payload.refreshToken);
         const next = { ...payload, email };
-        localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(next));
+        persistUser(next);
         touch();
         setUser(next);
         return next;
@@ -65,6 +71,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(STORAGE_KEYS.refreshToken);
         localStorage.removeItem(STORAGE_KEYS.user);
         setUser(null);
+      },
+      async refreshSubscription() {
+        const res = await subscriptionsApi.current();
+        const sub = res.data.data;
+        if (!sub) return null;
+        setUser((prev) => {
+          if (!prev) return prev;
+          const next: AuthUser = {
+            ...prev,
+            userSubscription: {
+              plan: sub.plan,
+              price: sub.price,
+              active: sub.active,
+              expiresAt: sub.expiresAt ?? null,
+            },
+          };
+          persistUser(next);
+          return next;
+        });
+        return {
+          plan: sub.plan,
+          price: sub.price,
+          active: sub.active,
+          expiresAt: sub.expiresAt ?? null,
+        };
       },
     }),
     [user],

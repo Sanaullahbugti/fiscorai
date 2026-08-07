@@ -1,6 +1,7 @@
 import { env } from "../../config/env.js";
 import { AppError } from "../../shared/errors.js";
 import { PLAN_AMOUNT_CENTS, PLAN_PRICES, normalizePlan, PAID_PLANS } from "../../shared/plans.js";
+import { mailService } from "../mail/mail.service.js";
 import { subscriptionRepository } from "../subscriptions/subscriptions.repository.js";
 import { userRepository } from "../users/users.repository.js";
 import {
@@ -42,6 +43,16 @@ function isInvoiceResource(data: LemonWebhookPayload["data"]): data is LemonInvo
 
 function isPaidActiveStatus(status: string): boolean {
   return status === "active" || status === "on_trial" || status === "past_due";
+}
+
+function formatAmount(cents: number, currency = "eur"): string {
+  const amount = (Number(cents) || 0) / 100;
+  const code = (currency || "eur").toUpperCase();
+  try {
+    return new Intl.NumberFormat("en-IE", { style: "currency", currency: code }).format(amount);
+  } catch {
+    return `€${amount.toFixed(2)}`;
+  }
 }
 
 export class PaymentsService {
@@ -169,6 +180,37 @@ export class PaymentsService {
     return this.resolveUserIdFromEmailOrCustom(payload, sub.attributes.user_email, sub.id);
   }
 
+  private async notifyPayment(
+    userId: string,
+    opts: {
+      status: "paid" | "failed";
+      plan: string;
+      amountCents: number;
+      currency?: string;
+      invoiceUrl?: string | null;
+    },
+  ) {
+    const user = await userRepository.findById(userId);
+    if (!user?.email) return;
+    const amountLabel = formatAmount(opts.amountCents, opts.currency);
+    if (opts.status === "paid") {
+      mailService.enqueuePaymentSuccess(user.email, {
+        email: user.email,
+        username: user.username,
+        plan: opts.plan,
+        amountLabel,
+        invoiceUrl: opts.invoiceUrl,
+      });
+      return;
+    }
+    mailService.enqueuePaymentFailed(user.email, {
+      username: user.username,
+      plan: opts.plan,
+      amountLabel,
+      invoiceUrl: opts.invoiceUrl,
+    });
+  }
+
   private async handleInvoicePayment(payload: LemonWebhookPayload, status: "paid" | "failed") {
     if (isInvoiceResource(payload.data)) {
       const inv = payload.data;
@@ -179,23 +221,6 @@ export class PaymentsService {
         lemonSubId,
       );
 
-      const orderKey = `subinv:${inv.id}`;
-      const existing = await paymentsRepository.findByLemonOrderId(orderKey);
-      if (!existing) {
-        const localSub = await subscriptionRepository.findByUserId(userId);
-        const plan = normalizePlan(localSub?.plan || "Basic");
-        await paymentsRepository.create({
-          userId,
-          amount: inv.attributes.total ?? PLAN_AMOUNT_CENTS[plan] ?? 0,
-          currency: (inv.attributes.currency || "eur").toLowerCase(),
-          status,
-          plan,
-          lemonOrderId: orderKey,
-          invoiceId: inv.id,
-          invoiceHostedURL: inv.attributes.urls?.invoice_url ?? null,
-        });
-      }
-
       try {
         const remote = await getSubscription(lemonSubId);
         await this.applySubscriptionState(userId, remote);
@@ -204,6 +229,31 @@ export class PaymentsService {
           "[payments] could not refresh subscription after invoice:",
           err instanceof Error ? err.message : err,
         );
+      }
+
+      const orderKey = `subinv:${inv.id}`;
+      const existing = await paymentsRepository.findByLemonOrderId(orderKey);
+      if (!existing) {
+        const localSub = await subscriptionRepository.findByUserId(userId);
+        const plan = normalizePlan(localSub?.plan || "Basic");
+        const amount = inv.attributes.total ?? PLAN_AMOUNT_CENTS[plan] ?? 0;
+        await paymentsRepository.create({
+          userId,
+          amount,
+          currency: (inv.attributes.currency || "eur").toLowerCase(),
+          status,
+          plan,
+          lemonOrderId: orderKey,
+          invoiceId: inv.id,
+          invoiceHostedURL: inv.attributes.urls?.invoice_url ?? null,
+        });
+        await this.notifyPayment(userId, {
+          status,
+          plan,
+          amountCents: amount,
+          currency: inv.attributes.currency,
+          invoiceUrl: inv.attributes.urls?.invoice_url,
+        });
       }
       return;
     }
@@ -271,15 +321,25 @@ export class PaymentsService {
       const orderKey = `order:${attrs.order_id}`;
       const existing = await paymentsRepository.findByLemonOrderId(orderKey);
       if (!existing) {
+        const amount = PLAN_AMOUNT_CENTS[plan] ?? 0;
+        const paymentStatus = (opts.paymentStatus === "failed" ? "failed" : "paid") as
+          | "paid"
+          | "failed";
         await paymentsRepository.create({
           userId,
-          amount: PLAN_AMOUNT_CENTS[plan] ?? 0,
+          amount,
           currency: "eur",
-          status: opts.paymentStatus || "paid",
+          status: paymentStatus,
           plan,
           lemonOrderId: orderKey,
           invoiceId: String(attrs.order_id),
           invoiceHostedURL: null,
+        });
+        await this.notifyPayment(userId, {
+          status: paymentStatus,
+          plan,
+          amountCents: amount,
+          currency: "eur",
         });
       }
     }
@@ -307,6 +367,15 @@ export class PaymentsService {
       lemonSubscriptionId: sub.id,
       lemonPortalUrl: sub.attributes.urls?.customer_portal || null,
     });
+
+    const user = await userRepository.findById(userId);
+    if (user?.email) {
+      mailService.enqueueSubscriptionCancelled(user.email, {
+        username: user.username,
+        plan,
+        endsAtLabel: expiresAt ? expiresAt.toISOString().slice(0, 10) : null,
+      });
+    }
   }
 
   private async downgradeFromWebhook(payload: LemonWebhookPayload) {

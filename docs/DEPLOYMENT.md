@@ -22,7 +22,8 @@ Migrations run on deploy: `prisma migrate deploy` (see `render.yaml` `startComma
 | `R2_ACCOUNT_ID` | Cloudflare account ID |
 | `R2_ACCESS_KEY_ID` | Token access key |
 | `R2_SECRET_ACCESS_KEY` | Token secret |
-| `R2_BUCKET` | Bucket name |
+| `R2_BUCKET` | Bucket name (e.g. `fiscorai-files`) |
+| `R2_JURISDICTION` | Set to `eu` only if the bucket was created under **Specify jurisdiction → European Union**. Leave unset for Automatic / default buckets. Using the wrong endpoint returns `NoSuchBucket`. |
 
 Local dev keeps `STORAGE_BACKEND=local` and `STORAGE_ROOT=../../storage`.
 
@@ -78,6 +79,8 @@ SMTP_PASS=<mailbox password from Email & Office Dashboard>
 ```
 
 If SMTP is unset, the API logs email bodies instead of sending (local/dev only).
+
+**Production tip:** Render’s cloud IPs often cannot reach GoDaddy SMTP (`Connection timeout`). Prefer [Resend](https://resend.com) — set `RESEND_API_KEY` on the API service and verify `support@fiscorai.com` (or your domain) in Resend. SMTP_* can stay as a local/dev fallback.
 
 Flows:
 

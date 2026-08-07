@@ -10,7 +10,7 @@ type Invoice = { date: string; amount: string; status: string; url?: string | nu
 
 export function useBilling() {
   const { t } = useTranslation("billing");
-  const { user } = useAuth();
+  const { user, refreshSubscription } = useAuth();
   const { toast, flash } = useToast();
   const queryClient = useQueryClient();
 
@@ -20,7 +20,8 @@ export function useBilling() {
       const s = await subscriptionsApi.current();
       return s.data.data;
     },
-    initialData: user?.userSubscription,
+    placeholderData: user?.userSubscription,
+    refetchOnMount: "always",
   });
 
   const paymentsQuery = useQuery({
@@ -40,8 +41,10 @@ export function useBilling() {
 
   async function invalidateBilling() {
     await Promise.all([
+      refreshSubscription(),
       queryClient.invalidateQueries({ queryKey: queryKeys.subscription() }),
       queryClient.invalidateQueries({ queryKey: queryKeys.payments() }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.analystQuota() }),
     ]);
   }
 
