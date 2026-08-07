@@ -30,7 +30,7 @@
     "Los datos de pago son gestionados por Lemon Squeezy (Merchant of Record). Almacenamos las referencias de cliente y pago de Lemon (no los números de tarjeta completos) para activar los planes y mostrar las facturas.",
     "La función del analista de IA puede enviar contexto relevante de resumen de VAT a Google Gemini para responder a sus preguntas. No introduzca información confidencial en los chats del analista.",
     "Las facturas y los registros de facturación podrán conservarse hasta un máximo de 7 años cuando así lo exijan la normativa fiscal y contable.",
-    "Puede solicitar la supresión de su cuenta y de sus datos personales. Póngase en contacto con support@fiscor.ai; nuestro objetivo es completar la eliminación en un plazo de 30 días, salvo en los casos en que la ley exija su conservación.",
+    "Puede solicitar la supresión de su cuenta y de sus datos personales. Póngase en contacto con support@fiscorai.com; nuestro objetivo es completar la eliminación en un plazo de 30 días, salvo en los casos en que la ley exija su conservación.",
     "No vendemos datos personales. Actualmente, nuestros encargados del tratamiento incluyen a Lemon Squeezy (pagos) y Google (Gemini) en virtud de sus respectivas condiciones."
   ],
   "termsPoints": [
@@ -46,7 +46,7 @@
     "Los planes de pago se activan a través de Lemon Squeezy Checkout como suscripciones mensuales.",
     "Puede cancelar en cualquier momento en Planes y facturación. La cancelación detiene la renovación; conservará las funciones de pago hasta que finalice el periodo y, a continuación, pasará al plan Free. Esto no reembolsa automáticamente el periodo actual.",
     "Si el proceso de pago falla o abandona Lemon Checkout, no se le realizará ningún cargo. Utilice Facturación para intentarlo de nuevo.",
-    "Si se le ha cobrado por error (pago duplicado, fallo técnico), póngase en contacto con support@fiscor.ai en un plazo de 14 días indicando el correo electrónico de su cuenta y los datos de la factura.",
+    "Si se le ha cobrado por error (pago duplicado, fallo técnico), póngase en contacto con support@fiscorai.com en un plazo de 14 días indicando el correo electrónico de su cuenta y los datos de la factura.",
     "Las devoluciones de cargos y disputas de tarjetas siguen el proceso de su proveedor de pagos. Es posible que suspendamos la cuenta mientras la disputa esté abierta.",
     "El uso del plan Free no conlleva pagos ni reembolsos."
   ],
@@ -100,7 +100,7 @@
     },
     {
       "q": "¿Cómo puedo cancelar o solicitar un reembolso?",
-      "a": "Cancele en cualquier momento en Planes y facturación para detener la renovación (conservará el acceso hasta que finalice el periodo, y luego pasará a Free). No se emiten reembolsos automáticos por los días no utilizados; consulte la política de reembolso y cancelación o escriba a support@fiscor.ai para errores de facturación."
+      "a": "Cancele en cualquier momento en Planes y facturación para detener la renovación (conservará el acceso hasta que finalice el periodo, y luego pasará a Free). No se emiten reembolsos automáticos por los días no utilizados; consulte la política de reembolso y cancelación o escriba a support@fiscorai.com para errores de facturación."
     },
     {
       "q": "¿Por qué no veo una advertencia de datos parciales o truncamiento?",

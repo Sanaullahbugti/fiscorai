@@ -1014,7 +1014,7 @@ export function LandingPage() {
         <span className={styles.footerLinks}>
           <a href="/blog/">{t("nav.blog")}</a>
           <Link to={ROUTES.signin}>{t("cta.signIn")}</Link>
-          <a href="mailto:support@fiscor.ai">support@fiscor.ai</a>
+          <a href="mailto:support@fiscorai.com">support@fiscorai.com</a>
           <Link to={ROUTES.faq}>{t("footer.faq")}</Link>
           <Link to={ROUTES.privacy}>{t("footer.privacy")}</Link>
           <Link to={ROUTES.terms}>{t("footer.terms")}</Link>

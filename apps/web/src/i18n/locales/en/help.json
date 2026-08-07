@@ -30,7 +30,7 @@
     "Payment data is handled by Lemon Squeezy (Merchant of Record). We store Lemon customer and payment references (not full card numbers) to activate plans and show invoices.",
     "The AI Analyst feature may send relevant VAT summary context to Google Gemini to answer your questions. Do not paste secrets into Analyst chats.",
     "Invoices and billing records may be retained for up to 7 years where required for tax and accountancy rules.",
-    "You may request deletion of your account and personal data. Contact support@fiscor.ai; we aim to complete erasure within 30 days except where law requires retention.",
+    "You may request deletion of your account and personal data. Contact support@fiscorai.com; we aim to complete erasure within 30 days except where law requires retention.",
     "We do not sell personal data. Processors today include Lemon Squeezy (payments) and Google (Gemini) under their respective terms."
   ],
   "termsPoints": [
@@ -46,7 +46,7 @@
     "Paid plans are activated via Lemon Squeezy Checkout as monthly subscriptions.",
     "You can cancel anytime in Plans & billing. Canceling stops renewal; you keep paid features until the period ends, then move to Free. It does not automatically refund the current period.",
     "If checkout fails or you abandon Lemon Checkout, you are not charged. Use Billing to try again.",
-    "If you were charged in error (duplicate payment, technical fault), contact support@fiscor.ai within 14 days with your account email and invoice details.",
+    "If you were charged in error (duplicate payment, technical fault), contact support@fiscorai.com within 14 days with your account email and invoice details.",
     "Chargebacks and card disputes follow your payment provider’s process. We may pause the account while a dispute is open.",
     "Free plan usage has no payment and no refunds."
   ],
@@ -100,7 +100,7 @@
     },
     {
       "q": "How do I cancel or get a refund?",
-      "a": "Cancel anytime in Plans & billing to stop renewal (you keep access until the period ends, then Free). Automatic refunds for unused days are not issued; see the Refund & cancellation policy or email support@fiscor.ai for billing errors."
+      "a": "Cancel anytime in Plans & billing to stop renewal (you keep access until the period ends, then Free). Automatic refunds for unused days are not issued; see the Refund & cancellation policy or email support@fiscorai.com for billing errors."
     },
     {
       "q": "Why don’t I see a partial-data / truncation warning?",

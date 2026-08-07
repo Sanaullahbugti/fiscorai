@@ -30,7 +30,7 @@
     "Zahlungsdaten werden von Lemon Squeezy (Merchant of Record) verarbeitet. Wir speichern Kunden- und Zahlungsreferenzen von Lemon (keine vollständigen Kartennummern), um Tarife zu aktivieren und Rechnungen anzuzeigen.",
     "Die KI-Analysten-Funktion kann relevante VAT-Zusammenfassungskontexte an Google Gemini senden, um Ihre Fragen zu beantworten. Geben Sie keine Geheimnisse in die Analysten-Chats ein.",
     "Rechnungen und Abrechnungsdaten können bis zu 7 Jahre aufbewahrt werden, sofern dies für steuer- und buchhalterische Vorschriften erforderlich ist.",
-    "Sie können die Löschung Ihres Kontos und Ihrer personenbezogenen Daten beantragen. Kontaktieren Sie support@fiscor.ai; wir bemühen uns, die Löschung innerhalb von 30 Tagen abzuschließen, es sei denn, das Gesetz schreibt eine Aufbewahrung vor.",
+    "Sie können die Löschung Ihres Kontos und Ihrer personenbezogenen Daten beantragen. Kontaktieren Sie support@fiscorai.com; wir bemühen uns, die Löschung innerhalb von 30 Tagen abzuschließen, es sei denn, das Gesetz schreibt eine Aufbewahrung vor.",
     "Wir verkaufen keine personenbezogenen Daten. Zu den derzeitigen Auftragsverarbeitern gehören Lemon Squeezy (Zahlungen) und Google (Gemini) gemäß deren jeweiligen Bedingungen."
   ],
   "termsPoints": [
@@ -46,7 +46,7 @@
     "Kostenpflichtige Tarife werden über die Lemon Squeezy Checkout-Seite als monatliche Abonnements aktiviert.",
     "Sie können jederzeit unter Tarife & Abrechnung kündigen. Die Kündigung stoppt die Verlängerung; Sie behalten die kostenpflichtigen Funktionen bis zum Ende des Zeitraums und wechseln dann zu Free. Für den aktuellen Zeitraum erfolgt keine automatische Rückerstattung.",
     "Wenn der Checkout fehlschlägt oder Sie den Lemon Checkout abbrechen, wird Ihnen nichts berechnet. Nutzen Sie die Rechnungsstellung, um es erneut zu versuchen.",
-    "Wenn Ihnen fälschlicherweise etwas berechnet wurde (doppelte Zahlung, technischer Fehler), kontaktieren Sie support@fiscor.ai innerhalb von 14 Tagen mit Ihrer Konto-E-Mail und den Rechnungsdetails.",
+    "Wenn Ihnen fälschlicherweise etwas berechnet wurde (doppelte Zahlung, technischer Fehler), kontaktieren Sie support@fiscorai.com innerhalb von 14 Tagen mit Ihrer Konto-E-Mail und den Rechnungsdetails.",
     "Rückbuchungen und Kartenstreitigkeiten folgen dem Prozess Ihres Zahlungsanbieters. Wir können das Konto während eines laufenden Streitfalls pausieren.",
     "Die Nutzung des Free-Tarifs erfordert keine Zahlung und beinhaltet keine Rückerstattungen."
   ],
@@ -100,7 +100,7 @@
     },
     {
       "q": "Wie kündige ich oder erhalte eine Rückerstattung?",
-      "a": "Kündigen Sie jederzeit unter Tarife & Abrechnung, um die Verlängerung zu stoppen (Sie behalten den Zugriff bis zum Ende des Zeitraums, danach Free). Automatische Rückerstattungen für ungenutzte Tage werden nicht ausgestellt; siehe die Richtlinie für Rückerstattung & Stornierung oder schreiben Sie eine E-Mail an support@fiscor.ai bei Abrechnungsfehlern."
+      "a": "Kündigen Sie jederzeit unter Tarife & Abrechnung, um die Verlängerung zu stoppen (Sie behalten den Zugriff bis zum Ende des Zeitraums, danach Free). Automatische Rückerstattungen für ungenutzte Tage werden nicht ausgestellt; siehe die Richtlinie für Rückerstattung & Stornierung oder schreiben Sie eine E-Mail an support@fiscorai.com bei Abrechnungsfehlern."
     },
     {
       "q": "Warum sehe ich keine Warnung zu Teildaten / Kürzungen?",

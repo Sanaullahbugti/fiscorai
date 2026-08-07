@@ -188,8 +188,8 @@ export function ContactPage() {
 
         <div className={styles.asideCard}>
           <div className={styles.asideLabel}>{t("otherWays")}</div>
-          <a className={styles.asideEmail} href="mailto:support@fiscor.ai">
-            support@fiscor.ai
+          <a className={styles.asideEmail} href="mailto:support@fiscorai.com">
+            support@fiscorai.com
           </a>
           <div className={styles.asideBody}>{t("asideBody")}</div>
           <div className={styles.responseTime}>

@@ -30,7 +30,7 @@
     "I dati di pagamento sono gestiti da Lemon Squeezy (Merchant of Record). Memorizziamo i riferimenti dei clienti e dei pagamenti di Lemon (non i numeri completi delle carte) per attivare i piani e mostrare le fatture.",
     "La funzionalità di IA Analyst potrebbe inviare il contesto rilevante del riepilogo IVA a Google Gemini per rispondere alle Sue domande. La invitiamo a non inserire dati riservati nelle chat di Analyst.",
     "Le fatture e i registri di fatturazione possono essere conservati fino a 7 anni ove richiesto dalle normative fiscali e contabili.",
-    "Può richiedere la cancellazione del Suo account e dei dati personali. Contatti support@fiscor.ai; ci impegniamo a completare la cancellazione entro 30 giorni, salvo nei casi in cui la legge imponga la conservazione.",
+    "Può richiedere la cancellazione del Suo account e dei dati personali. Contatti support@fiscorai.com; ci impegniamo a completare la cancellazione entro 30 giorni, salvo nei casi in cui la legge imponga la conservazione.",
     "Non vendiamo dati personali. Gli attuali responsabili del trattamento includono Lemon Squeezy (pagamenti) e Google (Gemini) in conformità con i rispettivi termini."
   ],
   "termsPoints": [
@@ -46,7 +46,7 @@
     "I piani a pagamento vengono attivati tramite Lemon Squeezy Checkout come abbonamenti mensili.",
     "Può annullare in qualsiasi momento in Piani e fatturazione. L'annullamento interrompe il rinnovo; manterrà le funzionalità a pagamento fino alla scadenza del periodo, dopodiché passerà al piano Free. Non viene effettuato automaticamente il rimborso del periodo corrente.",
     "Se il checkout non va a buon fine o abbandona Lemon Checkout, non Le verrà addebitato alcun importo. Utilizzi la sezione Fatturazione per riprovare.",
-    "Se le è stato addebitato un importo per errore (doppio pagamento, guasto tecnico), contatti support@fiscor.ai entro 14 giorni indicando l'email dell'account e i dettagli della fattura.",
+    "Se le è stato addebitato un importo per errore (doppio pagamento, guasto tecnico), contatti support@fiscorai.com entro 14 giorni indicando l'email dell'account e i dettagli della fattura.",
     "I chargeback e le dispute sui pagamenti seguono la procedura del Suo fornitore di servizi di pagamento. Potremmo sospendere l'account mentre è aperta una controversia.",
     "L'utilizzo del piano Free non prevede pagamenti né rimborsi."
   ],
@@ -100,7 +100,7 @@
     },
     {
       "q": "Come si effettua la disdetta o si richiede un rimborso?",
-      "a": "È possibile annullare in qualsiasi momento dalla sezione Piani e fatturazione per interrompere il rinnovo (l'accesso verrà mantenuto fino alla fine del periodo, dopodiché si passerà al piano Free). Non sono previsti rimborsi automatici per i giorni non utilizzati; si prega di consultare i termini di rimborso e cancellazione o di inviare un'email a support@fiscor.ai per problemi di fatturazione."
+      "a": "È possibile annullare in qualsiasi momento dalla sezione Piani e fatturazione per interrompere il rinnovo (l'accesso verrà mantenuto fino alla fine del periodo, dopodiché si passerà al piano Free). Non sono previsti rimborsi automatici per i giorni non utilizzati; si prega di consultare i termini di rimborso e cancellazione o di inviare un'email a support@fiscorai.com per problemi di fatturazione."
     },
     {
       "q": "Perché non viene visualizzato un avviso di dati parziali o troncamento?",

@@ -61,7 +61,7 @@ export function AmazonConnectionPage() {
         </Link>
         <span className={styles.notify}>
           {t("notify")}{" "}
-          <a href="mailto:support@fiscor.ai?subject=Notify%20me%20about%20Amazon%20connection">
+          <a href="mailto:support@fiscorai.com?subject=Notify%20me%20about%20Amazon%20connection">
             {t("notifyCta")}
           </a>
         </span>
