@@ -22,7 +22,8 @@ Migrations run on deploy: `prisma migrate deploy` (see `render.yaml` `startComma
 | `R2_ACCOUNT_ID` | Cloudflare account ID |
 | `R2_ACCESS_KEY_ID` | Token access key |
 | `R2_SECRET_ACCESS_KEY` | Token secret |
-| `R2_BUCKET` | Bucket name |
+| `R2_BUCKET` | Bucket name (e.g. `fiscorai-files`) |
+| `R2_JURISDICTION` | Set to `eu` only if the bucket was created under **Specify jurisdiction → European Union**. Leave unset for Automatic / default buckets. Using the wrong endpoint returns `NoSuchBucket`. |
 
 Local dev keeps `STORAGE_BACKEND=local` and `STORAGE_ROOT=../../storage`.
 

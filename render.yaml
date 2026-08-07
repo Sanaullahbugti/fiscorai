@@ -34,6 +34,8 @@ services:
         sync: false
       - key: R2_BUCKET
         sync: false
+      - key: R2_JURISDICTION
+        sync: false
       - key: CORS_ORIGIN
         value: https://fiscorai.com,https://www.fiscorai.com
       - key: PAYMENT_SUCCESS_URL
