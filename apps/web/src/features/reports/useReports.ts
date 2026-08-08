@@ -42,7 +42,7 @@ export function useReports() {
   const { t } = useTranslation("reports");
   const period = useShellPeriod();
   const { toast, flash } = useToast();
-  const { data: countries, hasData, loading: dataLoading, reload } = useProcessedData(period.payload);
+  const { data: countries, hasData, loading: dataLoading, reload, canonical } = useProcessedData(period.payload);
   const [category, setCategory] = useState("");
   const [view, setView] = useState<"summary" | "vat" | "tx">("summary");
 
@@ -149,7 +149,7 @@ export function useReports() {
   const currentPeriodFile = allFiles.find((row) => samePeriod(row.period, periodPayload)) ?? null;
   const hasCurrentFile = !!currentPeriodFile;
 
-  const agg = useMemo(() => aggregateCountries(countries), [countries]);
+  const agg = useMemo(() => aggregateCountries(countries, canonical), [countries, canonical]);
   const kpis = useMemo(
     () => ({
       sales: agg.sales,

@@ -126,9 +126,10 @@ export class PaymentsService {
       case "subscription_created":
       case "subscription_updated":
       case "subscription_resumed":
-        await this.syncSubscriptionFromWebhook(payload, {
-          recordPayment: event === "subscription_created",
-        });
+        // Activate/sync only. Do NOT record+email here — Lemon also sends
+        // subscription_payment_success for the same checkout, which would
+        // duplicate the "Payment confirmed" email (different order keys).
+        await this.syncSubscriptionFromWebhook(payload, { recordPayment: false });
         break;
       case "subscription_payment_success":
         await this.handleInvoicePayment(payload, "paid");

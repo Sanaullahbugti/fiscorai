@@ -58,12 +58,32 @@ export class LocalFsStorageRepository implements StorageRepository {
   async writeArtifacts(
     dir: string,
     baseName: string,
-    artifacts: { json: object; pdf: Buffer; xlsx: Buffer },
+    artifacts: {
+      json: object;
+      pdf: Buffer;
+      xlsx: Buffer;
+      canonical?: object;
+      manifest?: object;
+    },
   ) {
     const stem = baseName.replace(/\.csv$/i, "");
-    await writeFile(path.join(dir, `${stem}.csvprocesado.json`), JSON.stringify(artifacts.json, null, 2));
-    await writeFile(path.join(dir, `${stem}.csvprocesado.pdf`), artifacts.pdf);
-    await writeFile(path.join(dir, `${stem}.csvprocesado.xlsx`), artifacts.xlsx);
+    const writes: Array<[string, string | Buffer]> = [
+      [path.join(dir, `${stem}.csvprocesado.json`), JSON.stringify(artifacts.json, null, 2)],
+      [path.join(dir, `${stem}.csvprocesado.pdf`), artifacts.pdf],
+      [path.join(dir, `${stem}.csvprocesado.xlsx`), artifacts.xlsx],
+    ];
+    if (artifacts.canonical) {
+      writes.push([
+        path.join(dir, `${stem}.canonical.v2.json`),
+        JSON.stringify(artifacts.canonical, null, 2),
+      ]);
+    }
+    if (artifacts.manifest) {
+      writes.push([path.join(dir, "manifest.json"), JSON.stringify(artifacts.manifest, null, 2)]);
+    }
+    for (const [target, body] of writes) {
+      await writeFile(target, body);
+    }
   }
 
   async listExcelKeys(email: string) {
@@ -144,7 +164,11 @@ export class LocalFsStorageRepository implements StorageRepository {
     const dir = this.periodPath(email, input);
     try {
       const entries = await readdir(dir);
-      const match = entries.find((f) => f.toLowerCase().endsWith(ext.toLowerCase()));
+      const matches = entries.filter((f) => f.toLowerCase().endsWith(ext.toLowerCase()));
+      const match =
+        matches.find((f) => f.toLowerCase().includes(".csvprocesado.")) ||
+        matches.find((f) => f.toLowerCase() !== "manifest.json") ||
+        matches[0];
       if (!match) return null;
       const full = path.join(dir, match);
       const buf = await readFile(full);

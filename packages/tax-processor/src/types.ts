@@ -30,6 +30,13 @@ export type ProcessedReport = {
     truncated: boolean;
     planLimit: number | null;
     periodLabel: string;
+    reconciliationStatus?: string;
+    reportId?: string;
+    sourceActivityPeriod?: string | null;
+    sourceFileName?: string;
+    sourceFileHash?: string;
+    processorVersion?: string;
+    generatedAt?: string;
   };
 };
 
@@ -37,6 +44,9 @@ export type ProcessOptions = {
   planCode: PlanCode;
   fileType: "monthly" | "quarterly";
   periodLabel: string;
+  requestedYear?: number | string;
+  requestedMonth?: number | string;
+  requestedQuarter?: string;
 };
 
 export const PLAN_LIMITS: Record<

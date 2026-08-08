@@ -26,6 +26,7 @@ async function main() {
     planCode: plan,
     fileType,
     periodLabel: period,
+    sourceFileName: basename(csvPath),
     pdf: { filerName: get("--filer") },
   });
 

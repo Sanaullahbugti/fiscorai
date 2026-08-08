@@ -10,6 +10,7 @@ import paymentsRoutes from "./modules/payments/payments.routes.js";
 import webhookRoutes from "./modules/payments/webhook.routes.js";
 import contactRoutes from "./modules/contact/contact.routes.js";
 import analystRoutes from "./modules/analyst/analyst.routes.js";
+import testRoutes from "./modules/test/test.routes.js";
 
 export function createApp() {
   const app = express();
@@ -22,6 +23,10 @@ export function createApp() {
   app.use(express.urlencoded({ extended: true }));
 
   app.get("/health", (_req, res) => res.json({ ok: true }));
+
+  if (process.env.E2E_AUTO_VERIFY === "1") {
+    app.use("/api/v1/test", testRoutes);
+  }
 
   app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/users", usersRoutes);

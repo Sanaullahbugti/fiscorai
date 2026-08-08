@@ -1,5 +1,5 @@
-import { aggregateCountries, eur } from "@/lib/tax-agg";
-import type { Country } from "@/types/api";
+import { aggregateCountries, eur, formatMoney } from "@/lib/tax-agg";
+import type { CanonicalViewRef, Country } from "@/types/api";
 
 export type ReviewCheck = {
   sev: "info" | "warning" | "critical";
@@ -17,17 +17,21 @@ export type ReviewFiling = {
 
 export function buildReviewChecks(
   data: Country[],
-  opts: { planActive?: boolean },
+  opts: { planActive?: boolean; canonical?: CanonicalViewRef | null },
 ): { checks: ReviewCheck[]; filings: ReviewFiling[]; agg: ReturnType<typeof aggregateCountries> } {
-  const agg = aggregateCountries(data);
+  const agg = aggregateCountries(data, opts.canonical);
   const checks: ReviewCheck[] = [];
 
-  const nc = agg.byCountry.find((c) => c.country === "NO COUNTRY");
-  if (nc && Math.abs(nc.sales) > 0) {
+  const unresolved = agg.byCountry.filter(
+    (c) => c.country === "NO COUNTRY" || c.country === "—" || c.country === "(blank)",
+  );
+  for (const nc of unresolved) {
+    if (Math.abs(nc.sales) <= 0) continue;
+    const amount = nc.currency ? formatMoney(nc.currency, nc.sales) : eur(nc.sales);
     checks.push({
       sev: "critical",
-      title: "Unclassified rows in the report",
-      detail: `${eur(nc.sales)} of sales carry no jurisdiction. Usually a missing arrival country or a marketplace field Amazon left blank — these are not covered by any return until they are classified.`,
+      title: "Rows with unresolved destination context",
+      detail: `${amount} of activity lacks a resolved sales destination. Review source country fields with your adviser before relying on these figures.`,
     });
   }
 
@@ -35,10 +39,11 @@ export function buildReviewChecks(
     if (!c.sales) continue;
     const ratio = (Math.abs(c.refunds) / c.sales) * 100;
     if (ratio > 7) {
+      const amount = c.currency ? formatMoney(c.currency, c.refunds) : eur(c.refunds);
       checks.push({
         sev: "warning",
         title: `High refund rate in ${c.country}`,
-        detail: `${ratio.toFixed(1)}% of sales were refunded (${eur(c.refunds)}).  Check that credit notes land in the same period as the original sale.`,
+        detail: `${ratio.toFixed(1)}% of sales were refunded (${amount}). Check that credit notes land in the same period as the original sale.`,
       });
     }
   }
@@ -51,19 +56,34 @@ export function buildReviewChecks(
     });
   }
 
-  if (agg.byCat.VOEC) {
+  for (const [scheme, amount] of Object.entries(agg.byCat)) {
+    if (!/VOEC/i.test(scheme) || Math.abs(amount) < 0.005) continue;
+    const currencyMatch = scheme.match(/\(([A-Z]{3})\)$/);
+    const currency = currencyMatch?.[1];
     checks.push({
       sev: "info",
-      title: "Non-EU schemes present",
-      detail: `${eur(agg.byCat.VOEC)} under VOEC-type schemes (UK / CH / NO). These are filed separately from your EU returns.`,
+      title: "Non-EU scheme activity present",
+      detail: `${currency ? formatMoney(currency, amount) : eur(amount)} under ${scheme}. Confirm filing treatment with your adviser.`,
     });
   }
 
   const filings: ReviewFiling[] = [];
-  if (agg.byCat["UNION-OSS"]) {
+  if (opts.canonical?.view) {
+    for (const row of opts.canonical.view.schemeSummaries) {
+      if (row.sourceTaxReportingScheme !== "UNION-OSS") continue;
+      if (Math.abs(Number(row.vat)) < 0.005) continue;
+      filings.push({
+        scheme: `UNION-OSS (${row.currency})`,
+        what: "Source-reported UNION-OSS VAT amount.",
+        amount: formatMoney(row.currency, Number(row.vat)),
+        due: "Confirm with adviser",
+        note: "Illustrative OSS calendar only — your Member State deadlines may differ.",
+      });
+    }
+  } else if (agg.byCat["UNION-OSS"]) {
     filings.push({
-      scheme: "OSS return",
-      what: "One EU return covering OSS destinations.",
+      scheme: "UNION-OSS",
+      what: "Source-reported UNION-OSS VAT amount.",
       amount: eur(
         data.reduce(
           (s, c) =>
@@ -74,8 +94,8 @@ export function buildReviewChecks(
           0,
         ),
       ),
-      due: "End of month after quarter",
-      note: "EU OSS usual calendar — confirm with your adviser for your Member State.",
+      due: "Confirm with adviser",
+      note: "Illustrative OSS calendar only — your Member State deadlines may differ.",
     });
   }
 

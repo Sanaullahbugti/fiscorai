@@ -14,10 +14,11 @@ export function ReviewPage() {
   const { t } = useTranslation(["review", "empty", "dashboard"]);
   const period = useShellPeriod();
   const { user } = useAuth();
-  const { data, hasData, meta } = useProcessedData(period.payload);
+  const { data, hasData, meta, canonical } = useProcessedData(period.payload);
   const { insights } = usePeriodInsights(period.payload, hasData);
   const { checks, filings, agg } = buildReviewChecks(data, {
     planActive: !!user?.userSubscription?.active,
+    canonical,
   });
 
   // Prefer server insights alerts when available (includes MoM spike + truncation meta).

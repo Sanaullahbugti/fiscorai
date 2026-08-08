@@ -2,7 +2,7 @@
   "businessOverview": "Business overview",
   "periodsAnalyzed": "{{n}} periods analyzed",
   "totalNetSales": "Total net sales",
-  "totalVatDue": "Total VAT due",
+  "totalVatDue": "Seller VAT identified",
   "totalRefunds": "Total refunds",
   "avgRefundRate": "Avg. refund rate",
   "trendTitle": "Sales & VAT trend",

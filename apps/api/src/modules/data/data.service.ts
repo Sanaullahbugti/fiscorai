@@ -1,4 +1,5 @@
-import { processVatReport, type PlanCode } from "@fiscorai/tax-processor";
+import { processVatReport, type PlanCode, type ReportManifestV2 } from "@fiscorai/tax-processor";
+import type { DataQualityIssue } from "@fiscorai/tax-processor";
 import { AppError } from "../../shared/errors.js";
 import { planToCode } from "../../shared/plans.js";
 import { userRepository } from "../users/users.repository.js";
@@ -35,6 +36,27 @@ function mapCountries(rawCountries: Array<{ country: string; transactionCategori
   }));
 }
 
+function uploadRejectionMessage(
+  reconciliationStatus: string,
+  issues: DataQualityIssue[],
+): string {
+  const periodMismatch = issues.find((i) => i.code === "PERIOD_MISMATCH");
+  if (periodMismatch) {
+    const detected = periodMismatch.sourceValue || "unknown period(s)";
+    const selected = periodMismatch.derivedValue || "the selected period";
+    return `Period mismatch: the file contains ACTIVITY_PERIOD ${detected}, but you selected ${selected}. Change the period picker to match the file, then upload again.`;
+  }
+
+  const blocker = issues.find((i) => i.severity === "BLOCKER");
+  if (blocker?.message) return blocker.message;
+
+  if (reconciliationStatus === "INVALID") {
+    return "Could not parse this VAT source file. Check that it is a complete Amazon VAT Transactions Report export.";
+  }
+
+  return "Source file failed reconciliation checks. Review data-quality issues and try again.";
+}
+
 export class DataService {
   async uploadCsv(email: string, userId: string, input: PeriodInput, file: Express.Multer.File) {
     if (!file) throw new AppError("CSV file required", 400);
@@ -47,26 +69,78 @@ export class DataService {
 
     const planCode = planToCode(user.plan) as PlanCode;
     await storageRepository.writePlan(email, planCode);
-    await storageRepository.clearPeriod(email, input);
-    const saved = await storageRepository.saveCsv(email, input, file.originalname, file.buffer);
 
     const csvText = file.buffer.toString("utf8");
     const artifacts = await processVatReport(csvText, {
       planCode,
       fileType: input.fileType,
       periodLabel: periodLabel(input),
+      sourceFileName: file.originalname,
+      requestedYear: input.year,
+      requestedMonth: input.month,
+      requestedQuarter: input.quarter,
     });
+
+    if (artifacts.reconciliationStatus === "INVALID") {
+      throw new AppError(
+        uploadRejectionMessage("INVALID", artifacts.issues),
+        422,
+        {
+          issues: artifacts.issues,
+          reconciliationStatus: artifacts.reconciliationStatus,
+        },
+      );
+    }
+
+    if (artifacts.reconciliationStatus === "NOT_READY") {
+      throw new AppError(
+        uploadRejectionMessage("NOT_READY", artifacts.issues),
+        422,
+        { issues: artifacts.issues, reconciliationStatus: artifacts.reconciliationStatus },
+      );
+    }
+
+    await storageRepository.clearPeriod(email, input);
+    const saved = await storageRepository.saveCsv(email, input, file.originalname, file.buffer);
+
+    const stem = saved.filename.replace(/\.csv$/i, "");
+    const manifest: ReportManifestV2 = {
+      version: "2.0.0",
+      reportId: artifacts.report.meta.reportId || "",
+      sourceFileName: file.originalname,
+      sourceActivityPeriod: artifacts.report.meta.sourceActivityPeriod ?? null,
+      requestedPeriodLabel: periodLabel(input),
+      reconciliationStatus: artifacts.reconciliationStatus,
+      processorVersion: artifacts.report.meta.processorVersion || "2.0.0",
+      publishedAt: new Date().toISOString(),
+      artifacts: {
+        json: `${stem}.csvprocesado.json`,
+        pdf: `${stem}.csvprocesado.pdf`,
+        xlsx: `${stem}.csvprocesado.xlsx`,
+        canonical: `${stem}.canonical.v2.json`,
+      },
+    };
 
     await storageRepository.writeArtifacts(saved.dir, saved.filename, {
       json: artifacts.json,
       pdf: artifacts.pdf,
       xlsx: artifacts.xlsx,
+      canonical: artifacts.canonical ?? undefined,
+      manifest,
     });
+
+    const status =
+      artifacts.reconciliationStatus === "READY" || artifacts.reconciliationStatus === "READY_WITH_WARNINGS"
+        ? "ready"
+        : artifacts.reconciliationStatus.toLowerCase();
 
     return {
       filename: saved.filename,
-      status: "ready",
+      status,
       meta: artifacts.report.meta,
+      reconciliationStatus: artifacts.reconciliationStatus,
+      reportId: artifacts.report.meta.reportId,
+      issues: artifacts.issues.filter((i) => i.severity !== "INFO"),
     };
   }
 
@@ -86,7 +160,9 @@ export class DataService {
       raw.countries as Array<{ country: string; transactionCategories: Array<Record<string, unknown>> }>,
     );
     const meta = (raw.meta as ProcessMeta | undefined) ?? null;
-    return { countries, meta };
+    const canonical = raw.canonical ?? null;
+    const issues = Array.isArray(raw.issues) ? raw.issues : [];
+    return { countries, meta, canonical, issues };
   }
 
   /** Load processed JSON for every uploaded period (skips missing/corrupt). */
@@ -116,7 +192,7 @@ export class DataService {
   }
 
   async insights(email: string, userId: string, input: PeriodInput) {
-    const { countries, meta } = await this.getProcessedJson(email, input);
+    const { countries, meta, canonical, issues } = await this.getProcessedJson(email, input);
     const overview = await this.overview(email);
     const sub = await subscriptionRepository.findByUserId(userId);
     const now = new Date();
@@ -125,6 +201,8 @@ export class DataService {
       period: input,
       countries,
       meta,
+      canonicalView: (canonical as { view?: import("@fiscorai/tax-processor").ReportView } | null)?.view ?? null,
+      dataQualityIssues: issues as import("@fiscorai/tax-processor").DataQualityIssue[],
       overview,
       planActive,
     });

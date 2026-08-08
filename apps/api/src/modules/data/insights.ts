@@ -1,5 +1,11 @@
 import type { AllDataSummary, PeriodSummary } from "../analyst/analyst.summary.js";
 import { periodLabel } from "../analyst/analyst.summary.js";
+import {
+  aggregateFromReportView,
+  formatMoney,
+  type DataQualityIssue,
+  type ReportView,
+} from "@fiscorai/tax-processor";
 import type { PeriodInput } from "./storage.repository.js";
 
 type TxRow = {
@@ -114,6 +120,94 @@ function ossDueForPeriod(input: PeriodInput): { due: string; note: string } {
   return ossDueForPeriod({ ...input, fileType: "quarterly", quarter: q });
 }
 
+function aggregateFromCanonical(view: ReportView) {
+  const agg = aggregateFromReportView(view);
+  const primary = agg.single;
+  const totals = primary
+    ? {
+        sales: primary.sales,
+        refunds: primary.refunds,
+        vat: primary.vat,
+        net: primary.net,
+      }
+    : { sales: 0, refunds: 0, vat: 0, net: 0 };
+
+  const schemeMix = agg.byScheme.map((s) => {
+    const salesAbs = Math.max(
+      0,
+      agg.byScheme.filter((x) => x.currency === s.currency).reduce((a, x) => a + Math.max(0, x.sales), 0),
+    );
+    const sameSchemeSales = agg.byScheme
+      .filter((x) => x.scheme === s.scheme)
+      .reduce((a, x) => a + Math.max(0, x.sales), 0);
+    return {
+      scheme: s.scheme,
+      sales: round2(s.sales),
+      vat: round2(s.vat),
+      currency: s.currency,
+      salesSharePct: salesAbs > 0 ? round2((Math.max(0, s.sales) / salesAbs) * 100) : 0,
+      label: `${s.scheme} (${s.currency})`,
+      sameSchemeSales: round2(sameSchemeSales),
+    };
+  });
+
+  const byRate = view.vatRateBreakdown
+    .map((r) => ({
+      rate: r.displayRate || r.sourceRate || "—",
+      currency: r.currency,
+      total: round2(Number(r.activityIncl)),
+      base: round2(Number(r.activityExcl)),
+      vat: round2(Number(r.vat)),
+    }))
+    .sort((a, b) => Math.abs(b.vat) - Math.abs(a.vat));
+
+  const watchlist = view.schemeSummaries
+    .reduce<
+      Map<
+        string,
+        { country: string; currency: string; sales: number; refunds: number; vat: number; refundRatePct: number | null }
+      >
+    >((map, row) => {
+      const key = `${row.salesDestination}@@${row.currency}`;
+      const prev = map.get(key) || {
+        country: row.salesDestination,
+        currency: row.currency,
+        sales: 0,
+        refunds: 0,
+        vat: 0,
+        refundRatePct: null as number | null,
+      };
+      prev.sales += Number(row.activityIncl);
+      prev.vat += Number(row.vat);
+      map.set(key, prev);
+      return map;
+    }, new Map())
+    .values();
+
+  const watchlistArr = [...watchlist]
+    .map((c) => ({
+      country: c.country,
+      currency: c.currency,
+      sales: round2(c.sales),
+      refunds: round2(c.refunds),
+      vat: round2(c.vat),
+      refundRatePct: c.sales > 0 ? round2((Math.abs(c.refunds) / c.sales) * 100) : null,
+    }))
+    .filter((c) => Math.abs(c.vat) >= 0.005 || Math.abs(c.sales) >= 0.005)
+    .sort((a, b) => Math.abs(b.vat) - Math.abs(a.vat))
+    .slice(0, 8);
+
+  return {
+    totals,
+    byRate,
+    schemeMix,
+    watchlist: watchlistArr,
+    byCountry: watchlistArr,
+    byCurrency: agg.byCurrency,
+    multiCurrency: agg.multiCurrency,
+  };
+}
+
 function aggregatePeriod(countries: Country[]) {
   let sales = 0;
   let refunds = 0;
@@ -214,7 +308,7 @@ function buildVerdict(pulse: {
   const vat = pulse.vatDeltaPct;
   if (vat != null && Math.abs(vat) >= 1) {
     const dir = vat > 0 ? "up" : "down";
-    return `VAT due is ${dir} ${Math.abs(vat).toFixed(1)}% vs the prior period.`;
+    return `VAT reported by source is ${dir} ${Math.abs(vat).toFixed(1)}% vs the prior period.`;
   }
   if (pulse.salesDeltaPct != null && Math.abs(pulse.salesDeltaPct) >= 1) {
     const dir = pulse.salesDeltaPct > 0 ? "up" : "down";
@@ -227,10 +321,14 @@ export function buildInsights(opts: {
   period: PeriodInput;
   countries: Country[];
   meta: ProcessMeta | null;
+  canonicalView?: ReportView | null;
+  dataQualityIssues?: DataQualityIssue[];
   overview: AllDataSummary | null;
   planActive: boolean;
 }): InsightsPayload {
-  const agg = aggregatePeriod(opts.countries);
+  const agg = opts.canonicalView
+    ? aggregateFromCanonical(opts.canonicalView)
+    : aggregatePeriod(opts.countries);
   const label = periodLabel(opts.period);
 
   const sameType = (opts.overview?.byPeriod || []).filter(
@@ -257,24 +355,32 @@ export function buildInsights(opts: {
 
   const alerts: InsightAlert[] = [];
 
-  const nc = agg.byCountry.find((c) => c.country === "NO COUNTRY");
+  const nc = agg.byCountry.find((c) => c.country === "NO COUNTRY" || c.country === "—");
   if (nc && Math.abs(nc.sales) > 0) {
+    const amount =
+      "currency" in nc && nc.currency
+        ? formatMoney(String(nc.currency), nc.sales)
+        : `€${Math.abs(nc.sales).toFixed(2)}`;
     alerts.push({
       sev: "critical",
       code: "NO_COUNTRY",
-      title: "Unclassified rows in the report",
-      detail: `€${Math.abs(nc.sales).toFixed(2)} of sales carry no jurisdiction — not covered by any return until classified.`,
+      title: "Rows with unresolved destination context",
+      detail: `${amount} of activity lacks a resolved sales destination — review source country fields and adviser guidance before relying on these figures.`,
     });
   }
 
   for (const c of agg.byCountry) {
     if (!c.sales || c.refundRatePct == null) continue;
     if (c.refundRatePct > 7) {
+      const amount =
+        "currency" in c && c.currency
+          ? formatMoney(String(c.currency), c.refunds)
+          : `€${Math.abs(c.refunds).toFixed(2)}`;
       alerts.push({
         sev: "warning",
         code: `REFUND_${c.country}`,
         title: `High refund rate in ${c.country}`,
-        detail: `${c.refundRatePct}% of sales were refunded (€${Math.abs(c.refunds).toFixed(2)}).`,
+        detail: `${c.refundRatePct}% of sales were refunded (${amount}).`,
       });
     }
   }
@@ -297,34 +403,54 @@ export function buildInsights(opts: {
     });
   }
 
-  if (agg.schemeMix.some((s) => s.scheme === "VOEC" && Math.abs(s.sales) > 0)) {
-    const voec = agg.schemeMix.find((s) => s.scheme === "VOEC")!;
-    alerts.push({
-      sev: "info",
-      code: "VOEC",
-      title: "Non-EU schemes present",
-      detail: `€${Math.abs(voec.sales).toFixed(2)} under VOEC-type schemes — filed separately from EU returns.`,
-    });
+  const voecSchemes = agg.schemeMix.filter(
+    (s) => /VOEC/i.test(s.scheme) && Math.abs(s.sales) > 0,
+  );
+  if (voecSchemes.length) {
+    for (const voec of voecSchemes) {
+      const amount =
+        "currency" in voec && voec.currency
+          ? formatMoney(String(voec.currency), voec.sales)
+          : `€${Math.abs(voec.sales).toFixed(2)}`;
+      alerts.push({
+        sev: "info",
+        code: `VOEC_${voec.scheme}`,
+        title: "Non-EU scheme activity present",
+        detail: `${amount} under ${voec.scheme} — confirm filing treatment with your adviser.`,
+      });
+    }
+  }
+
+  for (const issue of opts.dataQualityIssues || []) {
+    if (issue.severity === "BLOCKER" || issue.severity === "ERROR") {
+      alerts.push({
+        sev: issue.severity === "BLOCKER" ? "critical" : "warning",
+        code: issue.code,
+        title: issue.code.replace(/_/g, " "),
+        detail: issue.message,
+      });
+    }
   }
 
   if (vatDeltaPct != null && vatDeltaPct >= 15) {
     alerts.push({
       sev: "warning",
       code: "VAT_SPIKE",
-      title: "VAT due spiked vs prior period",
-      detail: `VAT due is up ${vatDeltaPct.toFixed(1)}% compared with ${prior?.period.label}.`,
+      title: "VAT reported by source spiked vs prior period",
+      detail: `VAT reported by source is up ${vatDeltaPct.toFixed(1)}% compared with ${prior?.period.label}.`,
     });
   }
 
   const filingHints: InsightsPayload["filingHints"] = [];
-  const oss = agg.schemeMix.find((s) => s.scheme === "UNION-OSS");
-  if (oss && Math.abs(oss.vat) >= 0.005) {
+  const ossRows = agg.schemeMix.filter((s) => s.scheme === "UNION-OSS" && Math.abs(s.vat) >= 0.005);
+  for (const oss of ossRows) {
     const due = ossDueForPeriod(opts.period);
+    const currency = "currency" in oss && oss.currency ? String(oss.currency) : "EUR";
     filingHints.push({
-      scheme: "OSS return",
+      scheme: `UNION-OSS (${currency})`,
       amount: oss.vat,
       due: due.due,
-      note: due.note,
+      note: `${due.note} Confirm deadlines and amounts with your adviser.`,
     });
   }
 

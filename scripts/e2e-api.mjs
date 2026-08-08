@@ -28,6 +28,7 @@ const env = {
   STORAGE_BACKEND: "local",
   STORAGE_ROOT: storageRoot,
   CORS_ORIGIN: "http://localhost:5173",
+  E2E_AUTO_VERIFY: "1",
   PAYMENT_SUCCESS_URL: "http://localhost:5173/thankyou",
   PAYMENT_CANCEL_URL: "http://localhost:5173/payment-failed",
 };

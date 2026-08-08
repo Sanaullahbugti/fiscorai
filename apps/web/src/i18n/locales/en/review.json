@@ -6,7 +6,7 @@
   "chipNote": "Note",
   "fileWhen": "What to file, and when",
   "totalVat": "Total VAT {{amount}}",
-  "vatToDeclare": "VAT to declare",
+  "vatToDeclare": "VAT reported by source",
   "due": "Due",
   "noFilings": "Upload a period with OSS sales to see filing deadlines.",
   "disclaimer": "Deadlines are the usual local calendar for each country. Your own registration may set a different date — confirm with your adviser.",

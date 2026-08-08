@@ -17,12 +17,12 @@
   "message": "Message",
   "sendMessage": "Envoyer le message",
   "asideBody": "Des questions sur les régimes de TVA, les limites ou les factures ? Écrivez-nous en anglais, allemand, espagnol, français ou italien.",
-  "asideFooter": " · Espagne · Outils de reporting de TVA pour les vendeurs Amazon UE.",
+  "asideFooter": " · Allemagne · Outils de reporting de TVA pour les vendeurs Amazon UE.",
   "privacyTitle": "Politique de confidentialité",
   "termsTitle": "Conditions d'utilisation",
   "refundTitle": "Remboursements et annulation",
   "cookiesTitle": "Politique relative aux cookies",
-  "legalIntro": "FiscorAI est exploité par FiscorAI, une entreprise espagnole qui conçoit des outils de reporting de TVA pour les vendeurs Amazon UE.",
+  "legalIntro": "FiscorAI est exploité par FiscorAI, une entreprise allemande qui conçoit des outils de reporting de TVA pour les vendeurs Amazon UE.",
   "legalNote": "Ce texte est fourni dans le cadre du lancement progressif et n'a pas été examiné par un conseiller juridique. Avant la mise en production complète, veuillez le faire adapter par un avocat à votre juridiction et aux spécificités de votre entreprise.",
   "privacyPoints": [
     "Nous collectons les données de compte nécessaires au fonctionnement du service : e-mail, nom d'utilisateur, hachage du mot de passe, numéro de TVA optionnel et jeton Amazon MWS optionnel.",
@@ -39,8 +39,8 @@
     "Vous êtes responsable des identifiants de votre compte et de tous les jetons Amazon que vous connectez. Ne partagez pas vos informations de connexion.",
     "Vous pouvez résilier un forfait payant depuis la section Facturation ; la résiliation maintient votre accès jusqu'à la fin de la période payée, puis bascule votre compte sur Free. Le temps non utilisé n'est généralement pas remboursé automatiquement — veuillez consulter la politique de remboursement.",
     "Nous pouvons suspendre ou clôturer les comptes qui abusent du service, effectuent de la rétro-ingénierie ou violent la législation en vigueur.",
-    "Le service est fourni tel quel. Dans la limite permise par le droit espagnol et européen, notre responsabilité en cas d'erreurs de calcul ou d'indisponibilité est limitée.",
-    "Ces conditions sont régies par le droit espagnol. Les tribunaux de Madrid sont compétents, sans préjudice des protections obligatoires accordées aux consommateurs."
+    "Le service est fourni tel quel. Dans la limite permise par le droit allemand et européen, notre responsabilité en cas d'erreurs de calcul ou d'indisponibilité est limitée.",
+    "Ces conditions sont régies par le droit allemand. Les tribunaux de Berlin sont compétents, sans préjudice des protections obligatoires accordées aux consommateurs."
   ],
   "refundPoints": [
     "Les forfaits payants sont activés via le système de paiement Lemon Squeezy sous forme d'abonnements mensuels.",

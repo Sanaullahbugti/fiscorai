@@ -28,11 +28,55 @@ export type ProcessMeta = {
   truncated: boolean;
   planLimit: number | null;
   periodLabel: string;
+  reconciliationStatus?: string;
+  reportId?: string;
+  sourceActivityPeriod?: string | null;
+  sourceFileName?: string;
+  sourceFileHash?: string;
+  processorVersion?: string;
+  generatedAt?: string;
 };
 
 export type ProcessedPayload = {
   countries: Country[];
   meta: ProcessMeta | null;
+  canonical?: CanonicalViewRef | null;
+  issues?: DataQualityIssue[];
+};
+
+export type DataQualityIssue = {
+  code: string;
+  severity: "INFO" | "WARNING" | "ERROR" | "BLOCKER";
+  message: string;
+  sourceRow?: number;
+};
+
+export type CanonicalViewRef = {
+  view: {
+    totalsByCurrency: Array<{ currency: string; vat: string; activityIncl: string }>;
+    transactionTypeSummaries: Array<{
+      transactionType: string;
+      currency: string | null;
+      activityIncl: string;
+    }>;
+    schemeSummaries: Array<{
+      sourceTaxReportingScheme: string;
+      salesDestination: string;
+      currency: string;
+      activityIncl: string;
+      vat: string;
+    }>;
+    refundSummaries: Array<{
+      salesDestination: string | null;
+      currency: string;
+      activityIncl: string;
+    }>;
+    executiveSummary: {
+      reconciliationStatus?: string;
+      currencies?: string[];
+    };
+  };
+  reconciliationStatus?: string;
 };
 
 export type InsightAlert = {

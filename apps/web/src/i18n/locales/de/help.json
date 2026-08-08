@@ -17,12 +17,12 @@
   "message": "Nachricht",
   "sendMessage": "Nachricht senden",
   "asideBody": "Fragen zu VAT-Regelungen, Freigrenzen oder Rechnungen — schreiben Sie uns auf Englisch, Deutsch, Spanisch, Französisch oder Italienisch.",
-  "asideFooter": " · Spanien · VAT-Berichterstattungstools für Amazon EU-Verkäufer.",
+  "asideFooter": " · Deutschland · VAT-Berichterstattungstools für Amazon EU-Verkäufer.",
   "privacyTitle": "Datenschutzerklärung",
   "termsTitle": "Nutzungsbedingungen",
   "refundTitle": "Rückerstattung & Stornierung",
   "cookiesTitle": "Cookie-Richtlinie",
-  "legalIntro": "FiscorAI wird von FiscorAI betrieben, einem spanischen Unternehmen, das VAT-Berichterstattungstools für Amazon EU-Verkäufer entwickelt.",
+  "legalIntro": "FiscorAI wird von FiscorAI betrieben, einem deutschen Unternehmen, das VAT-Berichterstattungstools für Amazon EU-Verkäufer entwickelt.",
   "legalNote": "Dieser Text dient dem Soft Launch und wurde nicht von einem Rechtsanwalt geprüft. Lassen Sie ihn vor dem vollständigen Live-Betrieb von einem Anwalt für Ihre Jurisdiktion und Unternehmensdetails aktualisieren.",
   "privacyPoints": [
     "Wir erheben Kontodaten, die für die Bereitstellung des Dienstes erforderlich sind: E-Mail, Benutzername, Passwort-Hash, optionale VAT-Nummer und optionales Amazon MWS-Token.",
@@ -39,8 +39,8 @@
     "Sie sind für Ihre Kontodaten und alle von Ihnen verbundenen Amazon-Token verantwortlich. Geben Sie keine Anmeldedaten weiter.",
     "Sie können einen kostenpflichtigen Tarif in der Rechnungsstellung kündigen; durch die Kündigung bleibt der Zugriff bis zum Ende des Abrechnungszeitraums erhalten, danach werden Sie auf Free herabgestuft. Ungenutzte Zeit wird in der Regel nicht automatisch erstattet – siehe die Rückerstattungsrichtlinie.",
     "Wir können Konten sperren oder kündigen, die den Dienst missbrauchen, ihn zurückentwickeln (Reverse Engineering) oder geltendes Recht verletzen.",
-    "Der Dienst wird im vorliegenden Zustand bereitgestellt. Soweit nach spanischem und EU-Recht zulässig, ist die Haftung für Berechnungsfehler oder Ausfallzeiten begrenzt.",
-    "Diese Bedingungen unterliegen spanischem Recht. Die Gerichte von Madrid sind unbeschadet zwingender Verbraucherschutzvorschriften zuständig."
+    "Der Dienst wird im vorliegenden Zustand bereitgestellt. Soweit nach deutschem und EU-Recht zulässig, ist die Haftung für Berechnungsfehler oder Ausfallzeiten begrenzt.",
+    "Diese Bedingungen unterliegen deutschem Recht. Die Gerichte von Berlin sind unbeschadet zwingender Verbraucherschutzvorschriften zuständig."
   ],
   "refundPoints": [
     "Kostenpflichtige Tarife werden über die Lemon Squeezy Checkout-Seite als monatliche Abonnements aktiviert.",

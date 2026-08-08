@@ -31,11 +31,26 @@ export interface StorageRepository {
   writeArtifacts(
     dir: string,
     baseName: string,
-    artifacts: { json: object; pdf: Buffer; xlsx: Buffer },
+    artifacts: {
+      json: object;
+      pdf: Buffer;
+      xlsx: Buffer;
+      canonical?: object;
+      manifest?: object;
+    },
   ): Promise<void>;
   listExcelKeys(email: string): Promise<{ monthly: string[]; quarterly: string[] }>;
   listProcessedPeriods(email: string): Promise<PeriodInput[]>;
   listPeriodFormats(email: string, input: PeriodInput): Promise<string[]>;
   findInPeriod(email: string, input: PeriodInput, ext: string): Promise<PeriodFile | null>;
-  readJson(email: string, input: PeriodInput): Promise<{ countries?: unknown[]; meta?: unknown } | null>;
+  readJson(
+    email: string,
+    input: PeriodInput,
+  ): Promise<{
+    countries?: unknown[];
+    meta?: unknown;
+    canonical?: { view?: unknown; reconciliationStatus?: string };
+    issues?: unknown[];
+    version?: string;
+  } | null>;
 }

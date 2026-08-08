@@ -17,12 +17,12 @@
   "message": "Messaggio",
   "sendMessage": "Invia messaggio",
   "asideBody": "Domande su regimi IVA, limiti o fatture? Ci scriva in inglese, tedesco, spagnolo, francese o italiano.",
-  "asideFooter": " · Spagna · Strumenti di reporting IVA per venditori Amazon EU.",
+  "asideFooter": " · Germania · Strumenti di reporting IVA per venditori Amazon EU.",
   "privacyTitle": "Informativa sulla privacy",
   "termsTitle": "Termini di servizio",
   "refundTitle": "Rimborso e cancellazione",
   "cookiesTitle": "Informativa sui cookie",
-  "legalIntro": "FiscorAI è gestito da FiscorAI, un'azienda spagnola che sviluppa strumenti di reporting IVA per i venditori Amazon EU.",
+  "legalIntro": "FiscorAI è gestito da FiscorAI, un'azienda tedesca che sviluppa strumenti di reporting IVA per i venditori Amazon EU.",
   "legalNote": "Questo testo è destinato a un lancio preliminare e non è stato revisionato da un legale. Prima della produzione su vasta scala, si consiglia di farlo aggiornare da un avvocato in base alla propria giurisdizione e ai dati aziendali.",
   "privacyPoints": [
     "Raccogliamo i dati dell'account necessari per il funzionamento del servizio: email, nome utente, hash della password, numero di VAT opzionale e token Amazon MWS opzionale.",
@@ -39,8 +39,8 @@
     "Lei è responsabile delle credenziali del Suo account e di qualsiasi token Amazon collegato. Non condivida i dati di accesso.",
     "Può disdire un piano a pagamento dalla sezione Fatturazione; l'annullamento consente di mantenere l'accesso fino alla fine del periodo pagato, dopodiché il piano verrà convertito in Free. Il tempo non utilizzato generalmente non viene rimborsato automaticamente — consulti la politica di rimborso.",
     "Ci riserviamo il diritto di sospendere o chiudere gli account che abusano del servizio, tentano di decodificarlo o violano la legge applicabile.",
-    "Il servizio viene fornito così com'è. Nella misura consentita dalla legge spagnola e dell'UE, la responsabilità per errori di calcolo o interruzioni del servizio è limitata.",
-    "I presenti termini sono regolati dalle leggi della Spagna. I tribunali di Madrid hanno giurisdizione, fatte salve le norme imperative di tutela dei consumatori."
+    "Il servizio viene fornito così com'è. Nella misura consentita dalla legge tedesca e dell'UE, la responsabilità per errori di calcolo o interruzioni del servizio è limitata.",
+    "I presenti termini sono regolati dalle leggi della Germania. I tribunali di Berlino hanno giurisdizione, fatte salve le norme imperative di tutela dei consumatori."
   ],
   "refundPoints": [
     "I piani a pagamento vengono attivati tramite Lemon Squeezy Checkout come abbonamenti mensili.",

@@ -38,13 +38,13 @@ export function DashboardPage() {
   const { t } = useTranslation(["dashboard", "common", "empty"]);
   const period = useShellPeriod();
   const isNarrow = useIsMobile();
-  const { data, loading, hasData, meta } = useProcessedData(period.payload);
+  const { data, loading, hasData, meta, canonical } = useProcessedData(period.payload);
   const { overview } = useDashboardOverview();
   const { insights } = usePeriodInsights(period.payload, hasData);
   const chartH = isNarrow ? 210 : 280;
   const pieH = isNarrow ? 180 : 200;
 
-  const agg = aggregateCountries(data);
+  const agg = aggregateCountries(data, canonical);
   const vatByCountry = [...agg.byCountry]
     .sort((a, b) => b.vat - a.vat)
     .slice(0, 8);

@@ -17,12 +17,12 @@
   "message": "Message",
   "sendMessage": "Send message",
   "asideBody": "Questions about VAT schemes, limits or invoices — write to us in English, German, Spanish, French or Italian.",
-  "asideFooter": " · Spain · VAT reporting tooling for Amazon EU sellers.",
+  "asideFooter": " · Germany · VAT reporting tooling for Amazon EU sellers.",
   "privacyTitle": "Privacy Policy",
   "termsTitle": "Terms of Service",
   "refundTitle": "Refund & cancellation",
   "cookiesTitle": "Cookie Policy",
-  "legalIntro": "FiscorAI is operated by FiscorAI, a Spanish company building VAT reporting tooling for Amazon EU sellers.",
+  "legalIntro": "FiscorAI is operated by FiscorAI, a German company building VAT reporting tooling for Amazon EU sellers.",
   "legalNote": "This text is for soft launch and has not been reviewed by counsel. Before full production, have a lawyer update it for your jurisdiction and company details.",
   "privacyPoints": [
     "We collect account data needed to run the service: email, username, password hash, optional VAT number, and optional Amazon MWS token.",
@@ -39,8 +39,8 @@
     "You are responsible for your account credentials and any Amazon tokens you connect. Do not share login details.",
     "You may cancel a paid plan from Billing; canceling keeps access until the end of the paid period, then moves you to Free. Unused time is generally not refunded automatically — see the Refund policy.",
     "We may suspend or terminate accounts that abuse the service, reverse-engineer it, or violate applicable law.",
-    "The service is provided as-is. To the extent permitted by Spanish and EU law, liability for calculation errors or downtime is limited.",
-    "These terms are governed by the laws of Spain. Courts of Madrid have jurisdiction, without prejudice to mandatory consumer protections."
+    "The service is provided as-is. To the extent permitted by German and EU law, liability for calculation errors or downtime is limited.",
+    "These terms are governed by the laws of Germany. Courts of Berlin have jurisdiction, without prejudice to mandatory consumer protections."
   ],
   "refundPoints": [
     "Paid plans are activated via Lemon Squeezy Checkout as monthly subscriptions.",

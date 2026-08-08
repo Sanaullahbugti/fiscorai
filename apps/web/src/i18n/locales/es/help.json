@@ -17,12 +17,12 @@
   "message": "Mensaje",
   "sendMessage": "Enviar mensaje",
   "asideBody": "Si tienes preguntas sobre regímenes de VAT, límites o facturas, escríbenos en inglés, alemán, español, francés o italiano.",
-  "asideFooter": " · España · Herramientas de informes de VAT para vendedores de Amazon en la UE.",
+  "asideFooter": " · Alemania · Herramientas de informes de VAT para vendedores de Amazon en la UE.",
   "privacyTitle": "Política de Privacidad",
   "termsTitle": "Términos de Servicio",
   "refundTitle": "Reembolsos y cancelaciones",
   "cookiesTitle": "Política de Cookies",
-  "legalIntro": "FiscorAI está operado por FiscorAI, una empresa española que desarrolla herramientas de informes de VAT para vendedores de Amazon en la UE.",
+  "legalIntro": "FiscorAI está operado por FiscorAI, una empresa alemana que desarrolla herramientas de informes de VAT para vendedores de Amazon en la UE.",
   "legalNote": "Este texto es para el lanzamiento preliminar y no ha sido revisado por un asesor legal. Antes del lanzamiento en producción, un abogado debe adaptarlo a tu jurisdicción y a los datos de tu empresa.",
   "privacyPoints": [
     "Recopilamos los datos de la cuenta necesarios para el funcionamiento del servicio: correo electrónico, nombre de usuario, hash de contraseña, número de VAT opcional y token de Amazon MWS opcional.",
@@ -39,8 +39,8 @@
     "Usted es responsable de las credenciales de su cuenta y de cualquier token de Amazon que conecte. No comparta los datos de acceso.",
     "Puede cancelar un plan de pago desde Facturación; al cancelarlo, mantendrá el acceso hasta el final del periodo pagado y, a continuación, pasará al plan Free. Por lo general, el tiempo no utilizado no se reembolsa automáticamente; consulte la política de reembolsos.",
     "Podemos suspender o cancelar cuentas que hagan un uso indebido del servicio, realicen ingeniería inversa o infrinjan la legislación aplicable.",
-    "El servicio se presta «tal cual». En la medida en que lo permita la legislación española y de la UE, la responsabilidad por errores de cálculo o interrupciones del servicio es limitada.",
-    "Estas condiciones se rigen por las leyes de España. Los tribunales de Madrid serán los competentes, sin perjuicio de las protecciones imperativas de los consumidores."
+    "El servicio se presta «tal cual». En la medida en que lo permita la legislación alemana y de la UE, la responsabilidad por errores de cálculo o interrupciones del servicio es limitada.",
+    "Estas condiciones se rigen por las leyes de Alemania. Los tribunales de Berlín serán los competentes, sin perjuicio de las protecciones imperativas de los consumidores."
   ],
   "refundPoints": [
     "Los planes de pago se activan a través de Lemon Squeezy Checkout como suscripciones mensuales.",

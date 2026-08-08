@@ -129,7 +129,13 @@ export class R2StorageRepository implements StorageRepository {
   async writeArtifacts(
     dir: string,
     baseName: string,
-    artifacts: { json: object; pdf: Buffer; xlsx: Buffer },
+    artifacts: {
+      json: object;
+      pdf: Buffer;
+      xlsx: Buffer;
+      canonical?: object;
+      manifest?: object;
+    },
   ) {
     const stem = baseName.replace(/\.csv$/i, "");
     const writes = [
@@ -149,6 +155,20 @@ export class R2StorageRepository implements StorageRepository {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       },
     ];
+    if (artifacts.canonical) {
+      writes.push({
+        key: this.key(dir, `${stem}.canonical.v2.json`),
+        body: JSON.stringify(artifacts.canonical, null, 2),
+        type: "application/json",
+      });
+    }
+    if (artifacts.manifest) {
+      writes.push({
+        key: this.key(dir, "manifest.json"),
+        body: JSON.stringify(artifacts.manifest, null, 2),
+        type: "application/json",
+      });
+    }
     await Promise.all(
       writes.map((w) =>
         this.client.send(
@@ -234,21 +254,23 @@ export class R2StorageRepository implements StorageRepository {
   async findInPeriod(email: string, input: PeriodInput, ext: string): Promise<PeriodFile | null> {
     const prefix = `${this.periodKey(email, input)}/`;
     let token: string | undefined;
-    let matchKey: string | undefined;
+    const matches: string[] = [];
     do {
       const listed = await this.client.send(
         new ListObjectsV2Command({ Bucket: this.bucket, Prefix: prefix, ContinuationToken: token }),
       );
       for (const obj of listed.Contents || []) {
         if (obj.Key!.toLowerCase().endsWith(ext.toLowerCase())) {
-          matchKey = obj.Key;
-          break;
+          matches.push(obj.Key!);
         }
       }
-      if (matchKey) break;
       token = listed.IsTruncated ? listed.NextContinuationToken : undefined;
     } while (token);
 
+    const matchKey =
+      matches.find((k) => k.toLowerCase().includes(".csvprocesado.")) ||
+      matches.find((k) => !k.toLowerCase().endsWith("/manifest.json") && !k.toLowerCase().endsWith("manifest.json")) ||
+      matches[0];
     if (!matchKey) return null;
     const res = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: matchKey }));
     const buffer = await streamToBuffer(res.Body as AsyncIterable<Uint8Array>);

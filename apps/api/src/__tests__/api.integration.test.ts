@@ -8,6 +8,9 @@ import { createApp } from "../app.js";
 const fixtureCsv = readFileSync(
   join(dirname(fileURLToPath(import.meta.url)), "fixtures/minimal.csv"),
 );
+const goldenCsv = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "fixtures/63260020335.csv"),
+);
 
 describe("API integration", () => {
   const app = createApp();
@@ -96,8 +99,23 @@ describe("API integration", () => {
       .send({ fileType: "monthly", year: "2026", month: "1" });
 
     expect(json.status).toBe(200);
-    expect(Array.isArray(json.body.data)).toBe(true);
-    expect(json.body.data.length).toBeGreaterThan(0);
-    expect(json.body.data[0]).toHaveProperty("country");
+    expect(json.body.data).toHaveProperty("countries");
+    expect(Array.isArray(json.body.data.countries)).toBe(true);
+    expect(json.body.data.countries.length).toBeGreaterThan(0);
+    expect(json.body.data.countries[0]).toHaveProperty("country");
+    expect(json.body.data).toHaveProperty("canonical");
+  });
+
+  it("rejects golden CSV when requested period mismatches ACTIVITY_PERIOD", async () => {
+    const upload = await request(app)
+      .post("/api/v1/data/upload-csv")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .field("fileType", "monthly")
+      .field("year", "2026")
+      .field("month", "1")
+      .attach("file", goldenCsv, "63260020335.csv");
+
+    expect(upload.status).toBe(422);
+    expect(upload.body.error || upload.body.message).toBeTruthy();
   });
 });

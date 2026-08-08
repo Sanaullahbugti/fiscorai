@@ -46,6 +46,9 @@ export class AuthService {
 
     const verifyUrl = webUrl(`/verify-email?token=${token}`);
     mailService.enqueueVerificationEmail(user.email, user.username, verifyUrl);
+    if (process.env.E2E_AUTO_VERIFY === "1") {
+      await users.update(user.id, { emailVerifiedAt: new Date() });
+    }
     if (process.env.NODE_ENV !== "production") {
       console.log(`[dev] email verification token for ${user.email}: ${token}`);
     }

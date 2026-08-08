@@ -24,7 +24,7 @@
   "periodTotals": "Period totals",
   "kpiSales": "Net sales",
   "kpiRefunds": "Refunds",
-  "kpiVat": "VAT due",
+  "kpiVat": "VAT reported by source",
   "topCountries": "Top countries by VAT",
   "topCountriesHint": "Highest VAT exposure in this period.",
   "categoriesLabel": "Tax schemes",
