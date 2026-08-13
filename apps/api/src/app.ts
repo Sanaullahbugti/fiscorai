@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { env } from "./config/env.js";
 import { errorMiddleware } from "./middlewares/error.js";
+import { requestContextMiddleware } from "./middlewares/request-context.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import usersRoutes from "./modules/users/users.routes.js";
 import dataRoutes from "./modules/data/data.routes.js";
@@ -14,7 +15,12 @@ import testRoutes from "./modules/test/test.routes.js";
 
 export function createApp() {
   const app = express();
-  app.use(cors({ origin: env.CORS_ORIGIN.split(","), credentials: true }));
+  app.use(requestContextMiddleware);
+  app.use(cors({
+    origin: env.CORS_ORIGIN.split(","),
+    credentials: true,
+    exposedHeaders: ["X-Request-Id"],
+  }));
 
   // Lemon Squeezy webhooks require the raw body for HMAC signature verification.
   app.use("/api/v1/webhook", express.raw({ type: "application/json" }), webhookRoutes);

@@ -3,6 +3,7 @@ import type { AuthRequest } from "../../middlewares/auth.js";
 import { ok } from "../../shared/response.js";
 import { dataService } from "./data.service.js";
 import type { PeriodInput } from "./storage.repository.js";
+import { logCsvUpload } from "./upload-diagnostics.js";
 
 function periodFrom(body: Record<string, unknown>): PeriodInput {
   return {
@@ -22,6 +23,7 @@ export class DataController {
         periodFrom(req.body),
         req.file as Express.Multer.File,
       );
+      logCsvUpload(req, "success", 200, data);
       res.json(ok(data));
     } catch (e) {
       next(e);
