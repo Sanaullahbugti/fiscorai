@@ -64,8 +64,23 @@ function servePublicBlog(): Plugin {
   };
 }
 
+const buildId =
+  process.env.RENDER_GIT_COMMIT || process.env.VITE_BUILD_ID || `dev-${Date.now()}`;
+
 export default defineConfig({
+  define: {
+    "import.meta.env.VITE_BUILD_ID": JSON.stringify(buildId),
+  },
   plugins: [react(), servePublicBlog()],
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: "assets/[name]-[hash].js",
+        chunkFileNames: "assets/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]",
+      },
+    },
+  },
   resolve: {
     alias: { "@": path.resolve(rootDir, "src") },
   },

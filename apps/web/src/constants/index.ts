@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
   lang: "fiscor.lang",
   lastActive: "fiscor.lastActive",
   analystMode: "fiscor.analystMode",
+  buildId: "fiscor.buildId",
 } as const;
 
 export const ROUTES = {
