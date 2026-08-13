@@ -20,8 +20,8 @@ function asResultData(value: unknown): UploadResultData {
   return value && typeof value === "object" ? value as UploadResultData : {};
 }
 
-function fileExtension(filename: string | undefined): string | undefined {
-  if (!filename) return undefined;
+function fileExtension(filename: string | undefined): string {
+  if (!filename) return "unknown";
   const dot = filename.lastIndexOf(".");
   return dot >= 0 ? filename.slice(dot).toLowerCase() : "none";
 }
@@ -80,4 +80,5 @@ export function logCsvUpload(
   };
 
   console.info(JSON.stringify(record));
+  return record;
 }

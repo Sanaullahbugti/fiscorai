@@ -3,6 +3,7 @@ import multer from "multer";
 import { AppError } from "../shared/errors.js";
 import { fail } from "../shared/response.js";
 import { isCsvUploadRequest, logCsvUpload } from "../modules/data/upload-diagnostics.js";
+import { mailService } from "../modules/mail/mail.service.js";
 import { requestId } from "./request-context.js";
 
 function dataWithRequestId(data: unknown, id: string): Record<string, unknown> {
@@ -31,12 +32,20 @@ export function errorMiddleware(err: unknown, req: Request, res: Response, _next
 
   if (normalized instanceof AppError) {
     if (uploadRequest) {
-      logCsvUpload(
+      const outcome = normalized.statusCode >= 500 ? "failed" : "rejected";
+      const diagnostic = logCsvUpload(
         req,
-        normalized.statusCode >= 500 ? "failed" : "rejected",
+        outcome,
         normalized.statusCode,
         normalized.data,
       );
+      if (diagnostic.userId) {
+        mailService.enqueueUploadFailureAlert({
+          ...diagnostic,
+          outcome,
+          userId: diagnostic.userId,
+        });
+      }
     }
     return res
       .status(normalized.statusCode)
@@ -48,7 +57,16 @@ export function errorMiddleware(err: unknown, req: Request, res: Response, _next
   }
 
   if (uploadRequest) {
-    logCsvUpload(req, "failed", 500, { code: "UNHANDLED_UPLOAD_ERROR" });
+    const diagnostic = logCsvUpload(req, "failed", 500, {
+      code: "UNHANDLED_UPLOAD_ERROR",
+    });
+    if (diagnostic.userId) {
+      mailService.enqueueUploadFailureAlert({
+        ...diagnostic,
+        outcome: "failed",
+        userId: diagnostic.userId,
+      });
+    }
   } else {
     console.error(normalized);
   }

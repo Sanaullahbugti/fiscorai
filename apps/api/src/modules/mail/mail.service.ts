@@ -20,12 +20,15 @@ import {
   paymentSuccessEmailText,
   subscriptionCancelledEmailHtml,
   subscriptionCancelledEmailText,
+  uploadFailureAlertEmailHtml,
+  uploadFailureAlertEmailText,
   verificationEmailHtml,
   verificationEmailText,
   welcomeEmailHtml,
   welcomeEmailText,
   type BetaInviteEmailInput,
   type PaymentEmailInput,
+  type UploadFailureAlertInput,
 } from "./templates/index.js";
 
 export type SendMailInput = {
@@ -220,6 +223,20 @@ export class MailService {
       await this.sendContactNotification(input);
       await this.sendContactReceipt(input.email, input.name);
     });
+  }
+
+  async sendUploadFailureAlert(input: UploadFailureAlertInput) {
+    if (!env.EMAIL_NOTIFY_TO) return;
+    await this.send({
+      to: env.EMAIL_NOTIFY_TO,
+      subject: `CSV upload failed: HTTP ${input.statusCode} · ${input.requestId.slice(0, 8)}`,
+      text: uploadFailureAlertEmailText(input),
+      html: uploadFailureAlertEmailHtml(input),
+    });
+  }
+
+  enqueueUploadFailureAlert(input: UploadFailureAlertInput) {
+    this.enqueue(`upload-failure→${input.requestId}`, () => this.sendUploadFailureAlert(input));
   }
 
   /**

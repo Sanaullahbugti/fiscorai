@@ -1,9 +1,10 @@
 import express, { type RequestHandler } from "express";
 import multer from "multer";
 import request from "supertest";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppError } from "../shared/errors.js";
 import { logCsvUpload } from "../modules/data/upload-diagnostics.js";
+import { mailService } from "../modules/mail/mail.service.js";
 import { errorMiddleware } from "./error.js";
 import { requestContextMiddleware } from "./request-context.js";
 
@@ -35,6 +36,10 @@ function uploadApp(handler: RequestHandler, includeFile = true) {
   app.use(errorMiddleware);
   return app;
 }
+
+beforeEach(() => {
+  vi.spyOn(mailService, "enqueueUploadFailureAlert").mockImplementation(() => undefined);
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -77,6 +82,7 @@ describe("CSV upload diagnostics", () => {
     expect(logged).not.toContain("private-client-report.csv");
     expect(logged).not.toContain("private-value");
     expect(logged).not.toContain("secret-financial-row");
+    expect(mailService.enqueueUploadFailureAlert).not.toHaveBeenCalled();
   });
 
   it("returns and logs a correlated 422 without sensitive issue details", async () => {
@@ -109,6 +115,16 @@ describe("CSV upload diagnostics", () => {
     expect(logged).not.toContain("private-source-period");
     expect(logged).not.toContain("private processor details");
     expect(logged).not.toContain("Sensitive period mismatch message");
+    expect(mailService.enqueueUploadFailureAlert).toHaveBeenCalledOnce();
+    const alertPayload = vi.mocked(mailService.enqueueUploadFailureAlert).mock.calls[0]![0];
+    expect(alertPayload).toMatchObject({
+      requestId,
+      userId: "user-123",
+      statusCode: 422,
+      issueCodes: ["PERIOD_MISMATCH"],
+    });
+    expect(JSON.stringify(alertPayload)).not.toContain("private-source-period");
+    expect(JSON.stringify(alertPayload)).not.toContain("private processor details");
   });
 
   it("normalizes oversized multipart uploads to a correlated 413", async () => {
@@ -126,6 +142,7 @@ describe("CSV upload diagnostics", () => {
       maxBytes: 100 * 1024 * 1024,
       requestId: response.headers["x-request-id"],
     });
+    expect(mailService.enqueueUploadFailureAlert).toHaveBeenCalledOnce();
   });
 
   it("normalizes malformed multipart uploads to a correlated 400", async () => {
@@ -144,5 +161,6 @@ describe("CSV upload diagnostics", () => {
         requestId: response.headers["x-request-id"],
       },
     });
+    expect(mailService.enqueueUploadFailureAlert).toHaveBeenCalledOnce();
   });
 });
