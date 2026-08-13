@@ -141,6 +141,87 @@ export function welcomeEmailText(username: string): string {
   ].join("\n");
 }
 
+export type UploadFailureAlertInput = {
+  requestId: string;
+  outcome: "rejected" | "failed";
+  statusCode: number;
+  durationMs: number;
+  userId: string;
+  selectedPeriod: {
+    fileType?: string;
+    year?: string | number;
+    month?: string | number;
+    quarter?: string;
+  };
+  file?: {
+    sizeBytes: number;
+    extension: string;
+  };
+  reconciliationStatus?: string;
+  errorCode?: string;
+  issueCodes: string[];
+};
+
+function uploadFailureRows(input: UploadFailureAlertInput): Array<[string, string]> {
+  const period = [
+    input.selectedPeriod.fileType,
+    input.selectedPeriod.year,
+    input.selectedPeriod.month
+      ? `month ${input.selectedPeriod.month}`
+      : input.selectedPeriod.quarter,
+  ].filter(Boolean).join(" · ") || "Unavailable";
+  const file = input.file
+    ? `${input.file.extension} · ${input.file.sizeBytes.toLocaleString("en-US")} bytes`
+    : "Unavailable";
+
+  return [
+    ["Request ID", input.requestId],
+    ["User ID", input.userId],
+    ["Outcome", `${input.outcome} · HTTP ${input.statusCode}`],
+    ["Selected period", period],
+    ["File metadata", file],
+    ["Duration", `${input.durationMs} ms`],
+    ["Reconciliation", input.reconciliationStatus || "Unavailable"],
+    ["Error code", input.errorCode || "Unavailable"],
+    ["Issue codes", input.issueCodes.join(", ") || "None"],
+  ];
+}
+
+export function uploadFailureAlertEmailHtml(input: UploadFailureAlertInput): string {
+  const rows = uploadFailureRows(input)
+    .map(([label, value]) => `
+      <tr>
+        <td style="padding:8px 12px;border-bottom:1px solid ${brand.border};font-weight:700;color:${brand.muted};">${escapeHtml(label)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid ${brand.border};color:${brand.ink};word-break:break-word;">${escapeHtml(value)}</td>
+      </tr>`)
+    .join("");
+
+  return wrapEmail({
+    preheader: `CSV upload ${input.outcome} with HTTP ${input.statusCode}.`,
+    eyebrow: "Upload diagnostic",
+    title: "CSV upload failed",
+    bodyHtml: `
+      <p style="margin:0 0 14px;">A signed-in user could not complete a CSV upload.</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;border:1px solid ${brand.border};border-radius:12px;overflow:hidden;">
+        ${rows}
+      </table>
+      <p style="margin:0;color:${brand.muted};font-size:13px;">
+        This alert contains diagnostic metadata only. CSV contents, filenames, tokens, and financial values are excluded.
+      </p>
+    `,
+  });
+}
+
+export function uploadFailureAlertEmailText(input: UploadFailureAlertInput): string {
+  return [
+    "A signed-in user could not complete a CSV upload.",
+    "",
+    ...uploadFailureRows(input).map(([label, value]) => `${label}: ${value}`),
+    "",
+    "This alert contains diagnostic metadata only. CSV contents, filenames, tokens, and financial values are excluded.",
+  ].join("\n");
+}
+
 export function contactNotifyEmailHtml(input: {
   name: string;
   email: string;
