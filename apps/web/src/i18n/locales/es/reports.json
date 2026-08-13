@@ -62,5 +62,9 @@
   "libraryViewing": "Viendo",
   "noUploadsHint": "Sube un CSV para un periodo y aparecerá aquí para descargarlo más tarde.",
   "uploadCsv": "Subir CSV",
-  "uploadDropSub": "Suelta o haz clic"
+  "uploadDropSub": "Suelta o haz clic",
+  "uploadCancel": "Cancelar",
+  "uploadMismatch": "Este archivo corresponde a {{detected}}, pero ha seleccionado {{selected}}. ¿Subirlo en {{detected}} o cancelar y elegir otro archivo?",
+  "uploadIntoPeriod": "Subir en {{period}}",
+  "uploadChangeAndUpload": "Cambiar periodo a {{period}} y subir"
 }

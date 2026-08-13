@@ -24,6 +24,7 @@ import {
   verificationEmailText,
   welcomeEmailHtml,
   welcomeEmailText,
+  type BetaInviteEmailInput,
   type PaymentEmailInput,
 } from "./templates/index.js";
 
@@ -79,7 +80,7 @@ export class MailService {
     return this.transporter;
   }
 
-  private async sendViaResend(input: SendMailInput): Promise<void> {
+  private async sendViaResend(input: SendMailInput): Promise<string | undefined> {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -99,28 +100,30 @@ export class MailService {
       const body = await res.text().catch(() => "");
       throw new Error(`Resend ${res.status}: ${body.slice(0, 200)}`);
     }
+    const json = (await res.json().catch(() => null)) as { id?: string } | null;
+    return json?.id;
   }
 
-  async send(input: SendMailInput): Promise<void> {
+  async send(input: SendMailInput): Promise<string | undefined> {
     if (!this.enabled) {
       console.log(
         `[mail:dev] to=${input.to} subject=${JSON.stringify(input.subject)}\n${input.text}`,
       );
-      return;
+      return undefined;
     }
 
     if (this.resendEnabled) {
-      await this.sendViaResend(input);
-      return;
+      return this.sendViaResend(input);
     }
 
-    await this.getTransport().sendMail({
+    const info = await this.getTransport().sendMail({
       from: env.EMAIL_FROM,
       to: input.to,
       subject: input.subject,
       text: input.text,
       html: input.html,
     });
+    return typeof info.messageId === "string" ? info.messageId : undefined;
   }
 
   /**
@@ -219,12 +222,33 @@ export class MailService {
     });
   }
 
-  async sendBetaInvite(to: string, name: string, signupUrl?: string) {
-    await this.send({
+  /**
+   * Beta invite (legacy CLI shape). Prefer `sendBetaInvitePersonalized` for campaigns.
+   */
+  async sendBetaInvite(
+    to: string,
+    name: string,
+    signupUrl?: string,
+  ): Promise<string | undefined> {
+    return this.sendBetaInvitePersonalized(to, {
+      subject: "Could I process one Amazon VAT report for you free?",
+      greetingName: name.trim().split(/\s+/)[0] || "there",
+      opening:
+        "I'm testing FiscorAI with a small group of ecommerce sellers and I'd like to invite you to try it with one real Amazon VAT Transactions Report.",
+      signupUrl,
+      ctaLabel: "Try FiscorAI free",
+    });
+  }
+
+  async sendBetaInvitePersonalized(
+    to: string,
+    input: BetaInviteEmailInput & { subject: string },
+  ): Promise<string | undefined> {
+    return this.send({
       to,
-      subject: "You’re invited to the FiscorAI private beta",
-      text: betaInviteEmailText({ name, signupUrl }),
-      html: betaInviteEmailHtml({ name, signupUrl }),
+      subject: input.subject,
+      text: betaInviteEmailText(input),
+      html: betaInviteEmailHtml(input),
     });
   }
 

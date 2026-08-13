@@ -55,6 +55,12 @@ vi.mock("@/api", () => ({
 
 import { AnalystPage } from "./AnalystPage";
 import { useUiStore } from "@/stores/uiStore";
+import { usePeriodStore } from "@/stores/periodStore";
+
+function vatFile(periods: string[], name = "vat.csv") {
+  const body = ["ACTIVITY_PERIOD,TRANSACTION_TYPE", ...periods.map((p) => `${p},SALE`)].join("\n");
+  return new File([body], name, { type: "text/csv" });
+}
 
 function renderPage() {
   const client = new QueryClient({
@@ -75,6 +81,7 @@ describe("AnalystPage", () => {
     // The ui store is module-scoped, so a mode chosen by one test would
     // otherwise leak into the next and mask the data-driven default.
     useUiStore.setState({ analystMode: null });
+    usePeriodStore.setState({ fileType: "monthly", month: "3", quarter: "Q1", year: 2026 });
     chatState.messages = [];
     chatState.status = "ready";
     sendMessage.mockReset();
@@ -526,17 +533,16 @@ describe("AnalystPage", () => {
       expect((attach as HTMLButtonElement).disabled).toBe(false);
     });
 
-    it("shows the attachment chip with period controls once a file is picked", async () => {
+    it("shows the detected period instead of period dropdowns once a file is picked", async () => {
       const user = userEvent.setup();
       userFiles.mockResolvedValue({ data: { monthly: [], quarterly: [] } });
       renderPage();
 
-      const file = new File(["a,b\n1,2"], "vat.csv", { type: "text/csv" });
-      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, file);
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, vatFile(["2025-APR"]));
 
       expect(await screen.findByText("vat.csv")).toBeTruthy();
-      // Monthly vs quarterly must be selectable before the upload fires.
-      expect(screen.getByDisplayValue("Monthly")).toBeTruthy();
+      expect(await screen.findByText(/This report is for April 2025/i)).toBeTruthy();
+      expect(screen.queryByDisplayValue("Monthly")).toBeNull();
       expect(screen.getByRole("button", { name: /Upload and process/i })).toBeTruthy();
     });
 
@@ -545,31 +551,102 @@ describe("AnalystPage", () => {
       userFiles.mockResolvedValue({ data: { monthly: [], quarterly: [] } });
       renderPage();
 
-      const file = new File(["a,b\n1,2"], "vat.csv", { type: "text/csv" });
-      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, file);
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, vatFile(["2025-APR"]));
       await user.click(await screen.findByRole("button", { name: /Remove file/i }));
 
       await waitFor(() => expect(screen.queryByText("vat.csv")).toBeNull());
     });
 
-    it("sends the chosen period in the multipart payload", async () => {
+    it("uploads using the ACTIVITY_PERIOD detected from the file", async () => {
       const user = userEvent.setup();
       userFiles.mockResolvedValue({ data: { monthly: [], quarterly: [] } });
       uploadCsv.mockResolvedValue({ data: { data: {} } });
       renderPage();
 
-      const file = new File(["a,b\n1,2"], "vat.csv", { type: "text/csv" });
-      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, file);
-      await user.selectOptions(await screen.findByLabelText(/Report type/i), "quarterly");
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, vatFile(["2025-APR"]));
       await user.click(await screen.findByRole("button", { name: /Upload and process/i }));
 
       await waitFor(() => expect(uploadCsv).toHaveBeenCalled());
       const form = uploadCsv.mock.calls[0][0] as FormData;
-      expect(form.get("fileType")).toBe("quarterly");
-      expect(form.get("quarter")).toBeTruthy();
-      expect(form.get("month")).toBeNull();
+      expect(form.get("fileType")).toBe("monthly");
+      expect(form.get("month")).toBe("4");
+      expect(form.get("year")).toBe("2025");
+      expect(form.get("quarter")).toBeNull();
       expect(form.get("file")).toBeTruthy();
-      expect(form.get("year")).toBeTruthy();
+    });
+
+    it("asks to confirm when the file period disagrees with an existing selection", async () => {
+      const user = userEvent.setup();
+      userFiles.mockResolvedValue({ data: { monthly: ["3-2026/x.csvprocesado.xlsx"], quarterly: [] } });
+      renderPage();
+
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, vatFile(["2025-APR"]));
+
+      expect(
+        await screen.findByText(/This file is for April 2025, but your selected period is March 2026/i),
+      ).toBeTruthy();
+      const change = screen.getByRole("button", { name: /Change period to April 2025/i });
+      expect(change).toBeTruthy();
+      expect(uploadCsv).not.toHaveBeenCalled();
+
+      await user.click(change);
+
+      expect(usePeriodStore.getState().month).toBe("4");
+      expect(usePeriodStore.getState().year).toBe(2025);
+      expect(await screen.findByText(/This report is for April 2025/i)).toBeTruthy();
+      expect(screen.getByRole("button", { name: /Upload and process/i })).toBeTruthy();
+    });
+
+    it("keeps a mismatch confirm after the server rejects the selected period", async () => {
+      const user = userEvent.setup();
+      userFiles.mockResolvedValue({ data: { monthly: [], quarterly: [] } });
+      uploadCsv.mockRejectedValue({
+        response: {
+          data: {
+            message: "Period mismatch: the file contains ACTIVITY_PERIOD 2025-APR",
+            data: {
+              issues: [
+                {
+                  code: "PERIOD_MISMATCH",
+                  severity: "BLOCKER",
+                  sourceValue: "2025-APR",
+                  derivedValue: "2026-MAR",
+                },
+              ],
+            },
+          },
+        },
+      });
+      renderPage();
+
+      const file = new File(["a,b\n1,2"], "vat.csv", { type: "text/csv" });
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, file);
+      await user.click(await screen.findByRole("button", { name: /Upload and process/i }));
+
+      expect(
+        await screen.findByText(/This file is for April 2025, but your selected period is March 2026/i),
+      ).toBeTruthy();
+      expect(screen.getByRole("button", { name: /Change period to April 2025/i })).toBeTruthy();
+    });
+
+    it("shows a processing status in the transcript while the upload is in flight", async () => {
+      const user = userEvent.setup();
+      userFiles.mockResolvedValue({ data: { monthly: [], quarterly: [] } });
+      let finish: (value: unknown) => void = () => undefined;
+      uploadCsv.mockReturnValue(
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+      );
+      renderPage();
+
+      await user.upload(await screen.findByTestId("analyst-file-input") as HTMLInputElement, vatFile(["2025-APR"]));
+      await user.click(await screen.findByRole("button", { name: /Upload and process/i }));
+
+      expect(await screen.findByText(/FiscorAI is processing your report/i)).toBeTruthy();
+      expect(screen.getByText(/Reading transactions and preparing your VAT report/i)).toBeTruthy();
+      finish({ data: { data: {} } });
+      await waitFor(() => expect(screen.queryByText(/FiscorAI is processing your report/i)).toBeNull());
     });
   });
 });

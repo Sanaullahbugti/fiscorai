@@ -5,15 +5,11 @@ import { dataApi } from "@/api";
 import { queryKeys } from "@/api/queryKeys";
 import { MAX_CSV_BYTES } from "@/constants";
 import { useToast } from "@/hooks/useToast";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { getApiErrorMessage, parsePeriodMismatch } from "@/lib/api-error";
+import type { CsvPeriodTarget } from "@/lib/detect-csv-period";
 import type { PeriodPayload } from "@/types/api";
 
-export type UploadTarget = {
-  fileType: "monthly" | "quarterly";
-  year: number;
-  month: string;
-  quarter: string;
-};
+export type UploadTarget = CsvPeriodTarget;
 
 export type UploadResult = {
   filename?: string;
@@ -21,19 +17,36 @@ export type UploadResult = {
   meta?: unknown;
 };
 
+export type PeriodMismatchState = {
+  detectedLabel: string;
+  selectedLabel: string;
+  detectedTarget: UploadTarget | null;
+};
+
+const ERROR_TOAST_MS = 8000;
+
 /**
  * Single owner of the CSV upload contract. Reports and Analyst both drive this so
  * the multipart field names, size guard and post-upload invalidation live in one
  * place — a second copy would silently drift from the API.
  */
-export function useCsvUpload(options?: { onUploaded?: (result: UploadResult, target: UploadTarget) => void }) {
+export function useCsvUpload(options?: {
+  onUploaded?: (result: UploadResult, target: UploadTarget) => void;
+  skipSuccessToast?: boolean;
+}) {
   const { t } = useTranslation("reports");
   const { flash } = useToast();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFileState] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploadPct, setUploadPct] = useState(0);
+  const [mismatch, setMismatch] = useState<PeriodMismatchState | null>(null);
+
+  function setFile(next: File | null) {
+    setMismatch(null);
+    setFileState(next);
+  }
 
   const uploadMutation = useMutation({
     mutationFn: async ({ selected, target }: { selected: File; target: UploadTarget }) => {
@@ -48,8 +61,9 @@ export function useCsvUpload(options?: { onUploaded?: (result: UploadResult, tar
     },
     onSuccess: async (result, { target }) => {
       setUploadPct(100);
-      flash(t("uploadOk"));
-      setFile(null);
+      setMismatch(null);
+      if (!options?.skipSuccessToast) flash(t("uploadOk"));
+      setFileState(null);
       const payload: PeriodPayload = {
         fileType: target.fileType,
         year: target.year,
@@ -63,7 +77,16 @@ export function useCsvUpload(options?: { onUploaded?: (result: UploadResult, tar
       options?.onUploaded?.(result as UploadResult, target);
     },
     onError: (e: unknown) => {
-      flash(getApiErrorMessage(e, t("uploadFailed")));
+      const parsed = parsePeriodMismatch(e);
+      if (parsed) {
+        setMismatch({
+          detectedLabel: parsed.detectedLabel,
+          selectedLabel: parsed.selectedLabel,
+          detectedTarget: parsed.detectedTarget,
+        });
+        return;
+      }
+      flash(getApiErrorMessage(e, t("uploadFailed")), ERROR_TOAST_MS);
     },
     onSettled: () => {
       setTimeout(() => setUploadPct(0), 1000);
@@ -74,17 +97,24 @@ export function useCsvUpload(options?: { onUploaded?: (result: UploadResult, tar
   async function upload(target: UploadTarget, selected: File | null = file): Promise<boolean> {
     if (!selected) return false;
     if (selected.size > MAX_CSV_BYTES) {
-      flash(t("fileTooLarge"));
+      flash(t("fileTooLarge"), ERROR_TOAST_MS);
       return false;
     }
+    setMismatch(null);
     setUploadPct(0);
     try {
       await uploadMutation.mutateAsync({ selected, target });
       return true;
     } catch {
-      // Surfaced by onError as a toast; callers just need the boolean.
+      // Period mismatch is kept as confirm state; other errors toast in onError.
       return false;
     }
+  }
+
+  async function uploadIntoDetected(): Promise<boolean> {
+    if (!file || !mismatch?.detectedTarget) return false;
+    const target = mismatch.detectedTarget;
+    return upload(target, file);
   }
 
   return {
@@ -97,5 +127,8 @@ export function useCsvUpload(options?: { onUploaded?: (result: UploadResult, tar
     uploadPct,
     upload,
     error: uploadMutation.error,
+    mismatch,
+    clearMismatch: () => setMismatch(null),
+    uploadIntoDetected,
   };
 }

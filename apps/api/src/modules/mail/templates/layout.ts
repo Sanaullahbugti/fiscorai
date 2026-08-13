@@ -30,6 +30,8 @@ export type LayoutInput = {
   bodyHtml: string;
   /** Optional footnote under the card (expiry, ignore notice). */
   noteHtml?: string;
+  /** Override the small print under the card. */
+  footerNote?: string;
 };
 
 /**
@@ -110,7 +112,10 @@ export function wrapEmail(input: LayoutInput): string {
           </tr>
         </table>
         <p style="margin:18px 8px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.5;color:${brand.muted};max-width:560px;">
-          You’re receiving this because of an account action on FiscorAI. We never ask for your password by email.
+          ${escapeHtml(
+            input.footerNote ||
+              "You’re receiving this because of an account action on FiscorAI. We never ask for your password by email.",
+          )}
         </p>
       </td>
     </tr>

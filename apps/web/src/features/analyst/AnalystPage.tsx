@@ -61,6 +61,26 @@ function tCopied(label: string) {
   return `${label} ✓`;
 }
 
+function ProcessingStatus({ label, hint }: { label: string; hint: string }) {
+  return (
+    <div className={styles.uploadProcessing} role="status" aria-live="polite">
+      <span className={styles.uploadProcessingMark} aria-hidden>
+        <span className={styles.uploadProcessingRing} />
+        <SparkIcon className={styles.uploadProcessingIcon} />
+      </span>
+      <span className={styles.uploadProcessingContent}>
+        <span className={styles.uploadProcessingLabel}>{label}</span>
+        <span className={styles.uploadProcessingHint}>{hint}</span>
+      </span>
+      <span className={styles.thinkingDots} aria-hidden>
+        <span className={styles.thinkingDot} />
+        <span className={styles.thinkingDot} />
+        <span className={styles.thinkingDot} />
+      </span>
+    </div>
+  );
+}
+
 export function AnalystPage() {
   const { t } = useTranslation(["analyst", "common", "empty"]);
   const navigate = useNavigate();
@@ -103,6 +123,11 @@ export function AnalystPage() {
   const isPremium = user?.userSubscription?.active || quota?.premium;
   const isEmpty = messages.length === 0;
   const showMeter = !!quota && !quota.premium;
+  const processingUpload = csv.uploading;
+  const processingLabel =
+    csv.uploadPct > 0 && csv.uploadPct < 99
+      ? t("uploadSending", { pct: csv.uploadPct })
+      : t("uploadThinking");
 
   // Holds the branded indicator up for the whole wait — through "submitted" AND
   // the early part of "streaming" before the first token lands. Keying it off
@@ -123,6 +148,12 @@ export function AnalystPage() {
 
   function pickFile() {
     csv.fileInputRef.current?.click();
+  }
+
+  function changeUploadPeriod(target: Parameters<typeof uploadNow>[0]) {
+    period.setFileType(target.fileType);
+    period.setYear(target.year);
+    period.setPeriodValue(target.fileType === "monthly" ? target.month : target.quarter);
   }
 
   /** Accepts a CSV dropped anywhere on the conversation, not just on the composer. */
@@ -218,6 +249,10 @@ export function AnalystPage() {
               <div className={styles.loading}>
                 <span className={styles.spinner} aria-hidden />
                 <span>{t("thinking")}</span>
+              </div>
+            ) : processingUpload && isEmpty ? (
+              <div className={styles.processingBox}>
+                <ProcessingStatus label={processingLabel} hint={t("uploadProcessingHint")} />
               </div>
             ) : isEmpty ? (
               <div className={styles.welcome}>
@@ -318,7 +353,13 @@ export function AnalystPage() {
               })
             )}
 
-            {awaitingAnswer && (
+            {processingUpload && !isEmpty && (
+              <div className={`${styles.row} ${styles.rowBot}`}>
+                <ProcessingStatus label={processingLabel} hint={t("uploadProcessingHint")} />
+              </div>
+            )}
+
+            {awaitingAnswer && !processingUpload && (
               <div className={`${styles.row} ${styles.rowBot}`}>
                 <div className={styles.thinking} role="status">
                   <span className={styles.thinkingMark} aria-hidden>
@@ -391,8 +432,9 @@ export function AnalystPage() {
             <ComposerAttachment
               csv={csv}
               onUpload={uploadNow}
-              years={period.years}
-              defaults={{
+              onPeriodChange={changeUploadPeriod}
+              hasData={hasData}
+              selected={{
                 fileType: period.fileType,
                 year: period.year,
                 month: period.month,

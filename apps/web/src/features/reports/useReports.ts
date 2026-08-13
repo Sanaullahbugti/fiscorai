@@ -78,6 +78,8 @@ export function useReports() {
   });
 
   async function upload(selected?: File | null) {
+    const chosen = selected === undefined ? csv.file : selected;
+    if (chosen) csv.setFile(chosen);
     return csv.upload(
       {
         fileType: period.fileType,
@@ -85,8 +87,22 @@ export function useReports() {
         month: period.month,
         quarter: period.quarter,
       },
-      selected === undefined ? undefined : selected,
+      chosen,
     );
+  }
+
+  async function uploadIntoDetected() {
+    const target = csv.mismatch?.detectedTarget;
+    if (!target) return false;
+    period.setFileType(target.fileType);
+    period.setYear(target.year);
+    period.setPeriodValue(target.fileType === "monthly" ? target.month : target.quarter);
+    return csv.uploadIntoDetected();
+  }
+
+  function clearMismatch() {
+    csv.clearMismatch();
+    csv.setFile(null);
   }
 
   const rows = useMemo(() => {
@@ -211,6 +227,9 @@ export function useReports() {
     filesLoading: filesQuery.isPending,
     dataLoading,
     upload,
+    uploadIntoDetected,
+    clearMismatch,
+    mismatch: csv.mismatch,
     download: (ext: "pdf" | "xlsx", target?: PeriodPayload) =>
       void downloadMutation.mutate({ ext, target: target ?? periodPayload }),
     downloading: downloadMutation.isPending,

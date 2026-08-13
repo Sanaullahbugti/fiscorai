@@ -62,5 +62,9 @@
   "libraryViewing": "Visualizzazione",
   "noUploadsHint": "Carichi un CSV per un periodo e lo troverà qui disponibile per il download in seguito.",
   "uploadCsv": "Carica CSV",
-  "uploadDropSub": "Trascina o clicca"
+  "uploadDropSub": "Trascina o clicca",
+  "uploadCancel": "Annulla",
+  "uploadMismatch": "Questo file riguarda {{detected}}, ma hai selezionato {{selected}}. Caricarlo in {{detected}} oppure annullare e scegliere un altro file?",
+  "uploadIntoPeriod": "Carica in {{period}}",
+  "uploadChangeAndUpload": "Cambia periodo in {{period}} e carica"
 }

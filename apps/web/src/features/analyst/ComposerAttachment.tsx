@@ -1,36 +1,94 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { useCsvUpload } from "@/hooks/useCsvUpload";
+import {
+  detectCsvPeriod,
+  formatSourcePeriodValue,
+  sameCsvPeriod,
+  type CsvPeriodTarget,
+  type DetectCsvPeriodResult,
+} from "@/lib/detect-csv-period";
+import { formatPeriodLabel } from "@/lib/period-label";
 import { FileIcon, CloseIcon } from "./icons";
 import styles from "./ComposerAttachment.module.css";
 
-export type UploadTargetInput = {
-  fileType: "monthly" | "quarterly";
-  year: number;
-  month: string;
-  quarter: string;
-};
+export type UploadTargetInput = CsvPeriodTarget;
 
 type Props = {
   csv: ReturnType<typeof useCsvUpload>;
   onUpload: (target: UploadTargetInput) => void;
-  years: number[];
-  defaults: UploadTargetInput;
+  onPeriodChange: (target: UploadTargetInput) => void;
+  selected: UploadTargetInput;
+  hasData: boolean;
 };
 
 /**
- * The attached-file row inside the composer. A VAT CSV cannot upload on pick the
- * way an image would — the processor needs a period first — so the chip carries
- * compact period selects rather than firing immediately.
+ * Attached VAT CSV row. Period comes from ACTIVITY_PERIOD in the file — the
+ * chip confirms a mismatch instead of asking the user to pick month/year.
  */
-export function ComposerAttachment({ csv, onUpload, years, defaults }: Props) {
-  const { t, i18n } = useTranslation("analyst");
-  const [fileType, setFileType] = useState(defaults.fileType);
-  const [year, setYear] = useState(defaults.year);
-  const [month, setMonth] = useState(defaults.month);
-  const [quarter, setQuarter] = useState(defaults.quarter);
+export function ComposerAttachment({ csv, onUpload, onPeriodChange, selected, hasData }: Props) {
+  const { t } = useTranslation("analyst");
+  const [detected, setDetected] = useState<DetectCsvPeriodResult | null>(null);
+
+  useEffect(() => {
+    if (!csv.file) {
+      setDetected(null);
+      return;
+    }
+    let cancelled = false;
+    void detectCsvPeriod(csv.file)
+      .then((result) => {
+        if (!cancelled) setDetected(result);
+      })
+      .catch(() => {
+        if (!cancelled) setDetected({ ok: false, code: "MISSING_ACTIVITY_PERIOD", sourcePeriods: [] });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [csv.file]);
 
   if (!csv.file) return null;
+
+  const serverMismatch = csv.mismatch;
+  const clientMismatch =
+    !serverMismatch &&
+    hasData &&
+    detected?.ok === true &&
+    !sameCsvPeriod(detected.target, selected);
+  const showMismatch = serverMismatch || clientMismatch;
+  const mismatchDetectedLabel = serverMismatch
+    ? serverMismatch.detectedLabel
+    : detected?.ok
+      ? formatPeriodLabel(detected.target)
+      : "";
+  const mismatchSelectedLabel = serverMismatch
+    ? serverMismatch.selectedLabel
+    : formatPeriodLabel(selected);
+  const mismatchTarget = serverMismatch
+    ? serverMismatch.detectedTarget
+    : detected?.ok
+      ? detected.target
+      : null;
+
+  function cancel() {
+    csv.clearMismatch();
+    csv.setFile(null);
+  }
+
+  function changePeriod() {
+    if (!mismatchTarget) return;
+    onPeriodChange(mismatchTarget);
+    csv.clearMismatch();
+  }
+
+  function submitDetected() {
+    if (detected?.ok) {
+      onUpload(detected.target);
+      return;
+    }
+    onUpload(selected);
+  }
 
   return (
     <div className={styles.wrap}>
@@ -50,80 +108,61 @@ export function ComposerAttachment({ csv, onUpload, years, defaults }: Props) {
         </button>
       </div>
 
-      <div className={styles.controls}>
-        <select
-          className={styles.select}
-          aria-label={t("uploadType")}
-          value={fileType}
-          disabled={csv.uploading}
-          onChange={(e) => setFileType(e.target.value as "monthly" | "quarterly")}
-        >
-          <option value="monthly">{t("uploadMonthly")}</option>
-          <option value="quarterly">{t("uploadQuarterly")}</option>
-        </select>
+      {!csv.uploading && showMismatch && (
+        <div className={styles.mismatch} role="alertdialog" aria-live="polite">
+          <p className={styles.mismatchText}>
+            {t("uploadMismatch", {
+              detected: mismatchDetectedLabel,
+              selected: mismatchSelectedLabel,
+            })}
+          </p>
+          <div className={styles.actions}>
+            {mismatchTarget ? (
+              <button type="button" className={styles.submit} onClick={changePeriod}>
+                {t("uploadChangePeriod", { period: mismatchDetectedLabel })}
+              </button>
+            ) : null}
+            <button type="button" className={styles.cancel} onClick={cancel}>
+              {t("uploadChooseDifferent")}
+            </button>
+          </div>
+        </div>
+      )}
 
-        {fileType === "monthly" ? (
-          <select
-            className={styles.select}
-            aria-label={t("uploadPeriod")}
-            value={month}
-            disabled={csv.uploading}
-            onChange={(e) => setMonth(e.target.value)}
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i + 1} value={String(i + 1)}>
-                {new Date(2000, i, 1).toLocaleString(i18n.language, { month: "long" })}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <select
-            className={styles.select}
-            aria-label={t("uploadPeriod")}
-            value={quarter}
-            disabled={csv.uploading}
-            onChange={(e) => setQuarter(e.target.value)}
-          >
-            {["Q1", "Q2", "Q3", "Q4"].map((q) => (
-              <option key={q} value={q}>
-                {q}
-              </option>
-            ))}
-          </select>
-        )}
+      {!csv.uploading && !showMismatch && detected?.ok === false && detected.code === "MULTIPLE_SOURCE_PERIODS" && (
+        <p className={styles.note} role="status">
+          {t("uploadMultiplePeriods", {
+            periods: detected.sourcePeriods.map(formatSourcePeriodValue).join(", "),
+          })}
+        </p>
+      )}
 
-        <select
-          className={styles.select}
-          aria-label={t("uploadYear")}
-          value={year}
-          disabled={csv.uploading}
-          onChange={(e) => setYear(Number(e.target.value))}
-        >
-          {years.map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
-          ))}
-        </select>
+      {!csv.uploading && !showMismatch && detected?.ok === false && detected.code === "MISSING_ACTIVITY_PERIOD" && (
+        <div className={styles.controls}>
+          <p className={styles.note}>{t("uploadPeriodUnknown")}</p>
+          <button type="button" className={styles.submit} onClick={submitDetected}>
+            {t("uploadSubmit")}
+          </button>
+        </div>
+      )}
 
-        <button
-          type="button"
-          className={styles.submit}
-          disabled={csv.uploading}
-          onClick={() => onUpload({ fileType, year, month, quarter })}
-        >
-          {csv.uploading ? t("uploadBusy") : t("uploadSubmit")}
-        </button>
-      </div>
+      {!csv.uploading && !showMismatch && detected?.ok === true && (
+        <div className={styles.controls}>
+          <p className={styles.note}>{t("uploadDetected", { period: formatPeriodLabel(detected.target) })}</p>
+          <button type="button" className={styles.submit} onClick={submitDetected}>
+            {t("uploadSubmit")}
+          </button>
+        </div>
+      )}
 
       {csv.uploading && (
-        <div className={styles.progress} role="progressbar" aria-valuenow={csv.uploadPct}>
-          <div className={styles.progressBar} style={{ width: `${csv.uploadPct}%` }} />
-          <span className={styles.progressLabel}>
-            {csv.uploadPct >= 99
-              ? t("uploadProcessing")
-              : t("uploadSending", { pct: csv.uploadPct })}
-          </span>
+        <div
+          className={`${styles.progress} ${csv.uploadPct >= 99 ? styles.progressProcessing : ""}`}
+          role="progressbar"
+          aria-valuenow={csv.uploadPct}
+          aria-label={t("uploadThinking")}
+        >
+          <div className={styles.progressBar} style={{ width: `${Math.max(csv.uploadPct, 8)}%` }} />
         </div>
       )}
     </div>

@@ -3,13 +3,38 @@
   top: 20px;
   right: 20px;
   z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   background: var(--surface-brand);
   color: var(--text-on-brand);
-  padding: 12px 18px;
+  padding: 12px 14px 12px 18px;
   border-radius: var(--radius-md, 10px);
   font-size: var(--text-body-sm, 14px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   max-width: min(360px, calc(100vw - 32px));
+}
+
+.toastText {
+  flex: 1;
+  min-width: 0;
+}
+
+.dismiss {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 2px;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.dismiss:hover {
+  opacity: 1;
 }
 
 @media (max-width: 860px) {

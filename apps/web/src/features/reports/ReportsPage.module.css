@@ -16,6 +16,62 @@
   gap: 20px;
 }
 
+.mismatchBanner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface-critical-tint);
+  border: 1px solid var(--status-critical);
+  border-radius: 16px;
+}
+
+.mismatchText {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.mismatchActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mismatchConfirm {
+  appearance: none;
+  border: none;
+  background: var(--surface-brand);
+  color: var(--text-on-brand);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mismatchConfirm:disabled,
+.mismatchCancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mismatchCancel {
+  appearance: none;
+  border: 1px solid var(--border-default);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .statusStrip {
   display: flex;
   align-items: center;

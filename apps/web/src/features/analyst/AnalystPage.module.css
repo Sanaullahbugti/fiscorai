@@ -587,7 +587,97 @@
   height: 13px;
 }
 
+.processingBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 28px 16px;
+}
+
+.processingBox .uploadProcessing {
+  width: min(480px, 100%);
+}
+
 /* ---------- Thinking / error ---------- */
+
+.uploadProcessing {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  max-width: min(520px, 100%);
+  padding: 14px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  background:
+    linear-gradient(110deg, transparent 20%, color-mix(in srgb, var(--brand-primary) 7%, transparent) 45%, transparent 70%),
+    var(--surface-card);
+  background-size: 220% 100%;
+  box-shadow: var(--shadow-card);
+  animation: processingGlow 2.2s linear infinite;
+}
+
+.uploadProcessingMark {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--surface-brand-tint);
+  color: var(--brand-primary);
+}
+
+.uploadProcessingRing {
+  position: absolute;
+  inset: -3px;
+  border: 2px solid transparent;
+  border-top-color: var(--brand-primary);
+  border-right-color: var(--brand-accent);
+  border-radius: 16px;
+  animation: processingSpin 1.15s linear infinite;
+}
+
+.uploadProcessingIcon {
+  width: 19px;
+  height: 19px;
+  animation: processingPulse 1.35s ease-in-out infinite;
+}
+
+.uploadProcessingContent {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uploadProcessingLabel {
+  color: var(--text-primary);
+  font-size: var(--text-body-sm);
+  font-weight: 750;
+}
+
+.uploadProcessingHint {
+  color: var(--text-secondary);
+  font-size: var(--text-label);
+  line-height: 1.35;
+}
+
+@keyframes processingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes processingPulse {
+  0%, 100% { opacity: 0.65; transform: scale(0.94); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes processingGlow {
+  to { background-position: -220% 0, 0 0; }
+}
 
 .thinking {
   display: flex;
@@ -988,6 +1078,9 @@
   .caret,
   .thinkingDot,
   .thinkingMark,
+  .uploadProcessing,
+  .uploadProcessingRing,
+  .uploadProcessingIcon,
   .promptArrow,
   .sendBtn,
   .stopBtn,

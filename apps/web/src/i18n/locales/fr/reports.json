@@ -62,5 +62,9 @@
   "libraryViewing": "Affichage de",
   "noUploadsHint": "Importez un CSV pour une période afin de le retrouver ici pour téléchargement ultérieur.",
   "uploadCsv": "Importer un CSV",
-  "uploadDropSub": "Glisser ou cliquer"
+  "uploadDropSub": "Glisser ou cliquer",
+  "uploadCancel": "Annuler",
+  "uploadMismatch": "Ce fichier concerne {{detected}}, mais vous avez sélectionné {{selected}}. L’importer dans {{detected}}, ou annuler et choisir un autre fichier ?",
+  "uploadIntoPeriod": "Importer dans {{period}}",
+  "uploadChangeAndUpload": "Passer la période à {{period}} et importer"
 }

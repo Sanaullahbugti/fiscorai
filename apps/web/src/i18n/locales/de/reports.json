@@ -62,5 +62,9 @@
   "libraryViewing": "Ansicht",
   "noUploadsHint": "Laden Sie eine CSV für einen Zeitraum hoch, damit sie später hier zum Download bereitsteht.",
   "uploadCsv": "CSV hochladen",
-  "uploadDropSub": "Ablegen oder klicken"
+  "uploadDropSub": "Ablegen oder klicken",
+  "uploadCancel": "Abbrechen",
+  "uploadMismatch": "Diese Datei gilt für {{detected}}, Sie haben aber {{selected}} ausgewählt. In {{detected}} hochladen oder abbrechen und eine andere Datei wählen?",
+  "uploadIntoPeriod": "In {{period}} hochladen",
+  "uploadChangeAndUpload": "Zeitraum auf {{period}} ändern und hochladen"
 }

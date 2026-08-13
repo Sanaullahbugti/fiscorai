@@ -150,6 +150,7 @@ export function useAnalystChat() {
   const needsUpload = !isStrategy && !hasData;
 
   const csv = useCsvUpload({
+    skipSuccessToast: true,
     onUploaded: (_result, target) => {
       // Point the chat at what was just uploaded, then say so in the transcript.
       setScopeAll(true);
@@ -182,7 +183,7 @@ export function useAnalystChat() {
       el.scrollTop = el.scrollHeight;
     }, 0);
     return () => clearTimeout(timer);
-  }, [messages, status]);
+  }, [messages, status, csv.uploading, csv.uploadPct]);
 
   const answerQuestion = useCallback(
     (q: string) => {
