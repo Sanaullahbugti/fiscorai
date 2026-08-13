@@ -44,8 +44,8 @@ const schema = z.object({
   WEB_APP_URL: z.string().url().default("http://localhost:5173"),
   /** From header, e.g. `FiscorAI <support@fiscorai.com>`. */
   EMAIL_FROM: z.string().default("FiscorAI <support@fiscorai.com>"),
-  /** Inbox for contact-form copies (optional). */
-  EMAIL_NOTIFY_TO: optionalNonEmpty,
+  /** Inbox for operational alerts and contact-form copies. */
+  EMAIL_NOTIFY_TO: optionalNonEmpty.default("support@fiscorai.com"),
   /**
    * Prefer Resend HTTP API in production (Render datacenters often cannot
    * reach GoDaddy SMTP). Falls back to SMTP_* when unset.
