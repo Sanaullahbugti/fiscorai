@@ -158,9 +158,11 @@ export function LandingPage() {
   const setLang = useUiStore((s) => s.setLang);
   const d = useLandingDemo();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeStep, setActiveStep] = useState(0);
   const stepRefs = useRef<(HTMLElement | null)[]>([]);
+  const videoTriggerRef = useRef<HTMLButtonElement>(null);
   const parallaxSlow = useParallaxStyle(18);
   const parallaxFast = useParallaxStyle(42);
 
@@ -235,6 +237,21 @@ export function LandingPage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!videoOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setVideoOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey);
+      window.requestAnimationFrame(() => videoTriggerRef.current?.focus());
+    };
+  }, [videoOpen]);
 
   useEffect(() => {
     const nodes = stepRefs.current.filter(Boolean) as HTMLElement[];
@@ -346,9 +363,14 @@ export function LandingPage() {
               <Link to={ROUTES.signup} className={`${styles.btnPrimary} ${styles.heroPulse}`}>
                 {t("cta.chatFreeLong")}
               </Link>
-              <a href="#how" className={styles.btnSecondary}>
+              <button
+                ref={videoTriggerRef}
+                type="button"
+                className={`${styles.btnSecondary} ${styles.videoTrigger}`}
+                onClick={() => setVideoOpen(true)}
+              >
                 {t("cta.seeHow")}
-              </a>
+              </button>
             </div>
             <div className={styles.trust}>
               <span>{t("hero.noCard")}</span>
@@ -371,6 +393,44 @@ export function LandingPage() {
           <span className={styles.scrollCueLine} />
         </a>
       </section>
+
+      {videoOpen && (
+        <div
+          className={styles.videoBackdrop}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setVideoOpen(false);
+          }}
+        >
+          <div
+            className={styles.videoModal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="landing-video-title"
+          >
+            <div className={styles.videoModalHead}>
+              <h2 id="landing-video-title">{t("cta.seeHow")}</h2>
+              <button
+                type="button"
+                className={styles.videoClose}
+                aria-label="Close video"
+                onClick={() => setVideoOpen(false)}
+                autoFocus
+              >
+                <span aria-hidden>×</span>
+              </button>
+            </div>
+            <div className={styles.videoFrame}>
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/_LQXvk86a9M?start=8&autoplay=1&rel=0"
+                title={t("cta.seeHow")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <section id="how" className={styles.stepsSection}>
         <Reveal>
