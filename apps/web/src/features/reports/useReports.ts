@@ -42,11 +42,17 @@ export function useReports() {
   const { t } = useTranslation("reports");
   const period = useShellPeriod();
   const { toast, flash } = useToast();
-  const { data: countries, hasData, loading: dataLoading, reload, canonical } = useProcessedData(period.payload);
+  const { data: countries, hasData, loading: dataLoading, canonical } = useProcessedData(period.payload);
   const [category, setCategory] = useState("");
   const [view, setView] = useState<"summary" | "vat" | "tx">("summary");
 
-  const csv = useCsvUpload({ onUploaded: () => void reload() });
+  const csv = useCsvUpload({
+    onUploaded: (_result, target) => {
+      period.setFileType(target.fileType);
+      period.setYear(target.year);
+      period.setPeriodValue(target.fileType === "monthly" ? target.month : target.quarter);
+    },
+  });
 
   const filesQuery = useQuery({
     queryKey: queryKeys.userFiles(),
@@ -89,20 +95,6 @@ export function useReports() {
       },
       chosen,
     );
-  }
-
-  async function uploadIntoDetected() {
-    const target = csv.mismatch?.detectedTarget;
-    if (!target) return false;
-    period.setFileType(target.fileType);
-    period.setYear(target.year);
-    period.setPeriodValue(target.fileType === "monthly" ? target.month : target.quarter);
-    return csv.uploadIntoDetected();
-  }
-
-  function clearMismatch() {
-    csv.clearMismatch();
-    csv.setFile(null);
   }
 
   const rows = useMemo(() => {
@@ -227,9 +219,6 @@ export function useReports() {
     filesLoading: filesQuery.isPending,
     dataLoading,
     upload,
-    uploadIntoDetected,
-    clearMismatch,
-    mismatch: csv.mismatch,
     download: (ext: "pdf" | "xlsx", target?: PeriodPayload) =>
       void downloadMutation.mutate({ ext, target: target ?? periodPayload }),
     downloading: downloadMutation.isPending,

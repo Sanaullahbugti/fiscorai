@@ -150,12 +150,6 @@ export function AnalystPage() {
     csv.fileInputRef.current?.click();
   }
 
-  function changeUploadPeriod(target: Parameters<typeof uploadNow>[0]) {
-    period.setFileType(target.fileType);
-    period.setYear(target.year);
-    period.setPeriodValue(target.fileType === "monthly" ? target.month : target.quarter);
-  }
-
   /** Accepts a CSV dropped anywhere on the conversation, not just on the composer. */
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -432,14 +426,6 @@ export function AnalystPage() {
             <ComposerAttachment
               csv={csv}
               onUpload={uploadNow}
-              onPeriodChange={changeUploadPeriod}
-              hasData={hasData}
-              selected={{
-                fileType: period.fileType,
-                year: period.year,
-                month: period.month,
-                quarter: period.quarter,
-              }}
             />
 
             <textarea

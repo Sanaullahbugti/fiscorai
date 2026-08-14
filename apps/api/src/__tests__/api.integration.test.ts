@@ -86,6 +86,11 @@ describe("API integration", () => {
     expect(upload.status).toBe(200);
     expect(upload.body.data.status).toBe("ready");
     expect(upload.body.data.meta.processedRows).toBeGreaterThan(0);
+    expect(upload.body.data.target).toMatchObject({
+      fileType: "monthly",
+      year: 2026,
+      month: "1",
+    });
 
     const files = await request(app)
       .get("/api/v1/data/user-files")
@@ -106,7 +111,7 @@ describe("API integration", () => {
     expect(json.body.data).toHaveProperty("canonical");
   });
 
-  it("rejects golden CSV when requested period mismatches ACTIVITY_PERIOD", async () => {
+  it("ignores the selected period and processes the document period", async () => {
     const upload = await request(app)
       .post("/api/v1/data/upload-csv")
       .set("Authorization", `Bearer ${jwtToken}`)
@@ -115,7 +120,79 @@ describe("API integration", () => {
       .field("month", "1")
       .attach("file", goldenCsv, "63260020335.csv");
 
-    expect(upload.status).toBe(422);
-    expect(upload.body.error || upload.body.message).toBeTruthy();
+    expect(upload.status).toBe(200);
+    expect(upload.body.data.status).toBe("ready");
+    expect(upload.body.data.reconciliationStatus).toBe("READY");
+    expect(upload.body.data.issues).toEqual([]);
+    expect(upload.body.data.target).toMatchObject({
+      fileType: "monthly",
+      year: 2025,
+      month: "3",
+    });
+
+    const pdf = await request(app)
+      .post("/api/v1/data/download-file")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send({ fileType: "monthly", year: 2025, month: "3", fileExtension: "pdf" });
+    expect(pdf.status).toBe(200);
+    expect(pdf.headers["content-type"]).toContain("application/pdf");
+  });
+
+  it("splits irregular multi-period documents into downloadable monthly outputs", async () => {
+    let periodIndex = 0;
+    const splitCsv = Buffer.from(
+      goldenCsv
+        .toString("utf8")
+        .replace(/2025-MAR/g, () => (periodIndex++ % 2 === 0 ? "2025-JUL" : "2025-SEP")),
+    );
+    const upload = await request(app)
+      .post("/api/v1/data/upload-csv")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .attach("file", splitCsv, "multi-period.csv");
+
+    expect(upload.status).toBe(200);
+    expect(upload.body.data.targets).toEqual([
+      { fileType: "monthly", year: 2025, month: "7", quarter: "Q3" },
+      { fileType: "monthly", year: 2025, month: "9", quarter: "Q3" },
+    ]);
+    expect(upload.body.data.uploads).toHaveLength(2);
+
+    for (const month of ["7", "9"]) {
+      const pdf = await request(app)
+        .post("/api/v1/data/download-file")
+        .set("Authorization", `Bearer ${jwtToken}`)
+        .send({ fileType: "monthly", year: 2025, month, fileExtension: "pdf" });
+      expect(pdf.status).toBe(200);
+      expect(pdf.headers["content-type"]).toContain("application/pdf");
+    }
+  });
+
+  it("stores an exact calendar quarter as one quarterly output", async () => {
+    const periods = ["2025-JUL", "2025-AUG", "2025-SEP"];
+    let periodIndex = 0;
+    const quarterCsv = Buffer.from(
+      goldenCsv
+        .toString("utf8")
+        .replace(/2025-MAR/g, () => periods[periodIndex++ % periods.length]!),
+    );
+    const upload = await request(app)
+      .post("/api/v1/data/upload-csv")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .attach("file", quarterCsv, "quarter.csv");
+
+    expect(upload.status).toBe(200);
+    expect(upload.body.data.targets).toEqual([
+      { fileType: "quarterly", year: 2025, month: "7", quarter: "Q3" },
+    ]);
+    expect(upload.body.data.uploads).toHaveLength(1);
+
+    const xlsx = await request(app)
+      .post("/api/v1/data/download-file")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send({ fileType: "quarterly", year: 2025, quarter: "Q3", fileExtension: "xlsx" });
+    expect(xlsx.status).toBe(200);
+    expect(xlsx.headers["content-type"]).toContain(
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
   });
 });

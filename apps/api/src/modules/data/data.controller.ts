@@ -14,13 +14,20 @@ function periodFrom(body: Record<string, unknown>): PeriodInput {
   };
 }
 
+function optionalUploadPeriod(body: Record<string, unknown>): PeriodInput | undefined {
+  if (!body.fileType || body.year == null) return undefined;
+  if (body.fileType === "monthly" && body.month == null) return undefined;
+  if (body.fileType === "quarterly" && body.quarter == null) return undefined;
+  return periodFrom(body);
+}
+
 export class DataController {
   uploadCsv = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const data = await dataService.uploadCsv(
         req.user!.email,
         req.user!.id,
-        periodFrom(req.body),
+        optionalUploadPeriod(req.body),
         req.file as Express.Multer.File,
       );
       logCsvUpload(req, "success", 200, data);
@@ -72,6 +79,14 @@ export class DataController {
         ...periodFrom(req.body),
         fileExtension: req.body.fileExtension,
       });
+      const ext = String(req.body.fileExtension || "xlsx").toLowerCase();
+      const contentTypes: Record<string, string> = {
+        pdf: "application/pdf",
+        xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        json: "application/json",
+        csv: "text/csv",
+      };
+      res.type(contentTypes[ext] || "application/octet-stream");
       res.setHeader("Content-Disposition", `attachment; filename="${file.filename}"`);
       res.send(file.buffer);
     } catch (e) {

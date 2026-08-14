@@ -62,37 +62,6 @@ export function ReportsPage() {
         </div>
       </section>
 
-      {r.mismatch && (
-        <div className={styles.mismatchBanner} role="alertdialog" aria-live="polite">
-          <p className={styles.mismatchText}>
-            {t("uploadMismatch", {
-              detected: r.mismatch.detectedLabel,
-              selected: r.mismatch.selectedLabel,
-            })}
-          </p>
-          <div className={styles.mismatchActions}>
-            {r.mismatch.detectedTarget ? (
-              <button
-                type="button"
-                className={styles.mismatchConfirm}
-                disabled={r.uploading}
-                onClick={() => void r.uploadIntoDetected()}
-              >
-                {t("uploadChangeAndUpload", { period: r.mismatch.detectedLabel })}
-              </button>
-            ) : null}
-            <button
-              type="button"
-              className={styles.mismatchCancel}
-              disabled={r.uploading}
-              onClick={r.clearMismatch}
-            >
-              {t("uploadCancel")}
-            </button>
-          </div>
-        </div>
-      )}
-
       {r.dataLoading && (
         <section className={styles.card} aria-busy="true" aria-label={t("loadingSummary")}>
           <div className={styles.kpiGrid}>

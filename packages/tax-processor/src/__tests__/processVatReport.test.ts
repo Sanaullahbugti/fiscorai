@@ -131,4 +131,20 @@ describe("processVatReport", () => {
 
     expect(artifacts.canonical?.view.provenance.sourceFileName).toBe("63260020335.csv");
   });
+
+  it("permissive uploads complete despite period, currency, and duplicate findings", async () => {
+    const artifacts = await processVatReport(goldenCsv, {
+      planCode: "3",
+      fileType: "monthly",
+      periodLabel: "2026-JUL",
+      permissive: true,
+      sourceFileName: "customer.csv",
+    });
+
+    expect(artifacts.reconciliationStatus).toBe("READY");
+    expect(artifacts.issues).toEqual([]);
+    expect(artifacts.report.countries.length).toBeGreaterThan(0);
+    expect(artifacts.pdf.byteLength).toBeGreaterThan(100);
+    expect(artifacts.xlsx.byteLength).toBeGreaterThan(100);
+  });
 });

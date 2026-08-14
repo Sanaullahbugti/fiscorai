@@ -3,7 +3,7 @@ import multer from "multer";
 import { authMiddleware } from "../../middlewares/auth.js";
 import { uploadLimiter } from "../../middlewares/rate-limit.js";
 import { validateBody } from "../../middlewares/validate.js";
-import { periodSchema } from "./data.dto.js";
+import { periodSchema, uploadCsvSchema } from "./data.dto.js";
 import { dataController } from "./data.controller.js";
 
 const upload = multer({
@@ -21,7 +21,7 @@ router.post(
   authMiddleware,
   uploadLimiter,
   upload.single("file"),
-  validateBody(periodSchema),
+  validateBody(uploadCsvSchema),
   dataController.uploadCsv,
 );
 router.get("/user-files", authMiddleware, dataController.userFiles);
