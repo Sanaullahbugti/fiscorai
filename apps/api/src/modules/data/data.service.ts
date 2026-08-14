@@ -1,5 +1,10 @@
-import { processVatReport, type PlanCode, type ReportManifestV2 } from "@fiscorai/tax-processor";
-import type { DataQualityIssue } from "@fiscorai/tax-processor";
+import {
+  batchCsvByActivityPeriod,
+  processVatReport,
+  type DetectedPeriodTarget,
+  type PlanCode,
+  type ReportManifestV2,
+} from "@fiscorai/tax-processor";
 import { AppError } from "../../shared/errors.js";
 import { planToCode } from "../../shared/plans.js";
 import { userRepository } from "../users/users.repository.js";
@@ -36,29 +41,43 @@ function mapCountries(rawCountries: Array<{ country: string; transactionCategori
   }));
 }
 
-function uploadRejectionMessage(
-  reconciliationStatus: string,
-  issues: DataQualityIssue[],
-): string {
-  const periodMismatch = issues.find((i) => i.code === "PERIOD_MISMATCH");
-  if (periodMismatch) {
-    const detected = periodMismatch.sourceValue || "unknown period(s)";
-    const selected = periodMismatch.derivedValue || "the selected period";
-    return `Period mismatch: the file contains ACTIVITY_PERIOD ${detected}, but you selected ${selected}. Change the period picker to match the file, then upload again.`;
+function fallbackTarget(input?: PeriodInput): DetectedPeriodTarget {
+  const now = new Date();
+  const year = Number(input?.year);
+  if (input?.fileType === "monthly") {
+    const month = Number(input.month);
+    if (Number.isInteger(year) && Number.isInteger(month) && month >= 1 && month <= 12) {
+      return {
+        fileType: "monthly",
+        year,
+        month: String(month),
+        quarter: `Q${Math.floor((month - 1) / 3) + 1}`,
+      };
+    }
   }
-
-  const blocker = issues.find((i) => i.severity === "BLOCKER");
-  if (blocker?.message) return blocker.message;
-
-  if (reconciliationStatus === "INVALID") {
-    return "Could not parse this VAT source file. Check that it is a complete Amazon VAT Transactions Report export.";
+  if (input?.fileType === "quarterly") {
+    const quarter = String(input.quarter || "").toUpperCase();
+    if (Number.isInteger(year) && /^Q[1-4]$/.test(quarter)) {
+      const quarterNumber = Number(quarter.slice(1));
+      return {
+        fileType: "quarterly",
+        year,
+        month: String((quarterNumber - 1) * 3 + 1),
+        quarter,
+      };
+    }
   }
-
-  return "Source file failed reconciliation checks. Review data-quality issues and try again.";
+  const month = now.getUTCMonth() + 1;
+  return {
+    fileType: "monthly",
+    year: now.getUTCFullYear(),
+    month: String(month),
+    quarter: `Q${Math.floor((month - 1) / 3) + 1}`,
+  };
 }
 
 export class DataService {
-  async uploadCsv(email: string, userId: string, input: PeriodInput, file: Express.Multer.File) {
+  async uploadCsv(email: string, userId: string, input: PeriodInput | undefined, file: Express.Multer.File) {
     if (!file) throw new AppError("CSV file required", 400);
     if (!file.originalname.toLowerCase().endsWith(".csv")) {
       throw new AppError("Only .csv files are allowed", 400);
@@ -71,76 +90,78 @@ export class DataService {
     await storageRepository.writePlan(email, planCode);
 
     const csvText = file.buffer.toString("utf8");
-    const artifacts = await processVatReport(csvText, {
-      planCode,
-      fileType: input.fileType,
-      periodLabel: periodLabel(input),
-      sourceFileName: file.originalname,
-      requestedYear: input.year,
-      requestedMonth: input.month,
-      requestedQuarter: input.quarter,
-    });
+    const batches = batchCsvByActivityPeriod(csvText, fallbackTarget(input));
+    const uploads = [];
 
-    if (artifacts.reconciliationStatus === "INVALID") {
-      throw new AppError(
-        uploadRejectionMessage("INVALID", artifacts.issues),
-        422,
-        {
-          issues: artifacts.issues,
-          reconciliationStatus: artifacts.reconciliationStatus,
+    for (const batch of batches) {
+      const target: PeriodInput = batch.target;
+      const artifacts = await processVatReport(batch.csvText, {
+        planCode,
+        fileType: target.fileType,
+        periodLabel: periodLabel(target),
+        permissive: true,
+        sourceFileName: file.originalname,
+        requestedYear: target.year,
+        requestedMonth: target.month,
+        requestedQuarter: target.quarter,
+      });
+
+      const batchBuffer = Buffer.from(batch.csvText, "utf8");
+      await storageRepository.clearPeriod(email, target);
+      const saved = await storageRepository.saveCsv(
+        email,
+        target,
+        file.originalname,
+        batchBuffer,
+      );
+      const stem = saved.filename.replace(/\.csv$/i, "");
+      const manifest: ReportManifestV2 = {
+        version: "2.0.0",
+        reportId: artifacts.report.meta.reportId || "",
+        sourceFileName: file.originalname,
+        sourceActivityPeriod: artifacts.report.meta.sourceActivityPeriod ?? null,
+        requestedPeriodLabel: periodLabel(target),
+        reconciliationStatus: "READY",
+        processorVersion: artifacts.report.meta.processorVersion || "2.0.0",
+        publishedAt: new Date().toISOString(),
+        artifacts: {
+          json: `${stem}.csvprocesado.json`,
+          pdf: `${stem}.csvprocesado.pdf`,
+          xlsx: `${stem}.csvprocesado.xlsx`,
+          canonical: `${stem}.canonical.v2.json`,
         },
-      );
+      };
+      const canonical = artifacts.canonical ?? {
+        version: "2.0.0",
+        view: null,
+        reconciliationStatus: "READY",
+      };
+
+      await storageRepository.writeArtifacts(saved.dir, saved.filename, {
+        json: artifacts.json,
+        pdf: artifacts.pdf,
+        xlsx: artifacts.xlsx,
+        canonical,
+        manifest,
+      });
+
+      uploads.push({
+        filename: saved.filename,
+        status: "ready",
+        meta: artifacts.report.meta,
+        reconciliationStatus: "READY",
+        reportId: artifacts.report.meta.reportId,
+        issues: [],
+        target: batch.target,
+        sourcePeriods: batch.sourcePeriods,
+      });
     }
 
-    if (artifacts.reconciliationStatus === "NOT_READY") {
-      throw new AppError(
-        uploadRejectionMessage("NOT_READY", artifacts.issues),
-        422,
-        { issues: artifacts.issues, reconciliationStatus: artifacts.reconciliationStatus },
-      );
-    }
-
-    await storageRepository.clearPeriod(email, input);
-    const saved = await storageRepository.saveCsv(email, input, file.originalname, file.buffer);
-
-    const stem = saved.filename.replace(/\.csv$/i, "");
-    const manifest: ReportManifestV2 = {
-      version: "2.0.0",
-      reportId: artifacts.report.meta.reportId || "",
-      sourceFileName: file.originalname,
-      sourceActivityPeriod: artifacts.report.meta.sourceActivityPeriod ?? null,
-      requestedPeriodLabel: periodLabel(input),
-      reconciliationStatus: artifacts.reconciliationStatus,
-      processorVersion: artifacts.report.meta.processorVersion || "2.0.0",
-      publishedAt: new Date().toISOString(),
-      artifacts: {
-        json: `${stem}.csvprocesado.json`,
-        pdf: `${stem}.csvprocesado.pdf`,
-        xlsx: `${stem}.csvprocesado.xlsx`,
-        canonical: `${stem}.canonical.v2.json`,
-      },
-    };
-
-    await storageRepository.writeArtifacts(saved.dir, saved.filename, {
-      json: artifacts.json,
-      pdf: artifacts.pdf,
-      xlsx: artifacts.xlsx,
-      canonical: artifacts.canonical ?? undefined,
-      manifest,
-    });
-
-    const status =
-      artifacts.reconciliationStatus === "READY" || artifacts.reconciliationStatus === "READY_WITH_WARNINGS"
-        ? "ready"
-        : artifacts.reconciliationStatus.toLowerCase();
-
+    const primary = uploads[uploads.length - 1]!;
     return {
-      filename: saved.filename,
-      status,
-      meta: artifacts.report.meta,
-      reconciliationStatus: artifacts.reconciliationStatus,
-      reportId: artifacts.report.meta.reportId,
-      issues: artifacts.issues.filter((i) => i.severity !== "INFO"),
+      ...primary,
+      targets: uploads.map((upload) => upload.target),
+      uploads,
     };
   }
 

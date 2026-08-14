@@ -7,7 +7,7 @@ import { analystApi, dataApi } from "@/api";
 import { queryKeys } from "@/api/queryKeys";
 import { API_BASE_URL, STORAGE_KEYS } from "@/constants";
 import { useShellPeriod } from "@/hooks/PeriodProvider";
-import { useCsvUpload, type UploadTarget } from "@/hooks/useCsvUpload";
+import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { useUiStore } from "@/stores/uiStore";
 import { formatPeriodLabel } from "@/lib/period-label";
 import { useConversations } from "./useConversations";
@@ -226,8 +226,13 @@ export function useAnalystChat() {
   );
 
   const uploadNow = useCallback(
-    (target: UploadTarget) => csv.upload(target),
-    [csv],
+    () => csv.upload({
+      fileType: period.fileType,
+      year: period.year,
+      month: period.month,
+      quarter: period.quarter,
+    }),
+    [csv, period.fileType, period.year, period.month, period.quarter],
   );
 
   return {

@@ -44,6 +44,8 @@ export type ProcessOptions = {
   planCode: PlanCode;
   fileType: "monthly" | "quarterly";
   periodLabel: string;
+  /** Customer upload mode: transform available rows without audit gates. */
+  permissive?: boolean;
   requestedYear?: number | string;
   requestedMonth?: number | string;
   requestedQuarter?: string;

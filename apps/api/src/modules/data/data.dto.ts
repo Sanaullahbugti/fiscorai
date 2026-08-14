@@ -8,4 +8,11 @@ export const periodSchema = z.object({
   fileExtension: z.string().optional(),
 });
 
+export const uploadCsvSchema = z.object({
+  fileType: z.enum(["monthly", "quarterly"]).optional(),
+  year: z.union([z.string(), z.number()]).optional(),
+  month: z.union([z.string(), z.number()]).optional(),
+  quarter: z.string().optional(),
+});
+
 export type PeriodBody = z.infer<typeof periodSchema>;

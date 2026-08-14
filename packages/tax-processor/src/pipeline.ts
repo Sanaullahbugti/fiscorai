@@ -33,18 +33,20 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
   const sourcePeriods = extractActivityPeriods(rows);
   const generatedAt = new Date().toISOString();
 
-  let issues = [
-    ...parsed.schemaIssues,
-    ...detectDuplicates(rows),
-    ...detectSignIssues(rows),
-    ...validateRequestedPeriod(
-      input.fileType,
-      sourcePeriods,
-      input.requestedYear,
-      input.requestedMonth,
-      input.requestedQuarter,
-    ),
-  ];
+  let issues = input.permissive
+    ? []
+    : [
+        ...parsed.schemaIssues,
+        ...detectDuplicates(rows),
+        ...detectSignIssues(rows),
+        ...validateRequestedPeriod(
+          input.fileType,
+          sourcePeriods,
+          input.requestedYear,
+          input.requestedMonth,
+          input.requestedQuarter,
+        ),
+      ];
 
   let records: Record<string, string>[] = [];
   try {
@@ -69,11 +71,12 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
     generatedAt,
   );
 
-  const audit = runAudit(rows, view, issues);
-  issues = audit.issues;
-  reconciliationStatus = audit.reconciliationStatus;
-
-  if (periodBlockers.length) reconciliationStatus = "NOT_READY";
+  if (!input.permissive) {
+    const audit = runAudit(rows, view, issues);
+    issues = audit.issues;
+    reconciliationStatus = audit.reconciliationStatus;
+    if (periodBlockers.length) reconciliationStatus = "NOT_READY";
+  }
 
   const finalView = {
     ...view,

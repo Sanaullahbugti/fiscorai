@@ -298,6 +298,131 @@ export function quarterMonths(quarter: string, year: number | string): string[] 
   return map[q] || [];
 }
 
+export type DetectedPeriodTarget = {
+  fileType: "monthly" | "quarterly";
+  year: number;
+  month: string;
+  quarter: string;
+};
+
+export type CsvPeriodBatch = {
+  target: DetectedPeriodTarget;
+  sourcePeriods: string[];
+  csvText: string;
+};
+
+function targetForSourcePeriod(period: string): DetectedPeriodTarget | null {
+  const parsed = activityPeriodToLabel(period);
+  if (!parsed) return null;
+  const match = parsed.match(/^(\d{4})-([A-Z]{3})$/);
+  if (!match) return null;
+  const monthIndex = MONTHS.indexOf(match[2]!);
+  if (monthIndex < 0) return null;
+  return {
+    fileType: "monthly",
+    year: Number(match[1]),
+    month: String(monthIndex + 1),
+    quarter: `Q${Math.floor(monthIndex / 3) + 1}`,
+  };
+}
+
+function csvRow(values: string[]): string {
+  return values
+    .map((value) => {
+      const text = String(value ?? "");
+      return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, "\"\"")}"` : text;
+    })
+    .join(",");
+}
+
+/**
+ * Resolve storage periods from the complete CSV, never from a UI picker.
+ * Exact calendar quarters remain one report; all other multi-period exports
+ * become independent monthly reports so every row lands in the right folder.
+ */
+export function batchCsvByActivityPeriod(
+  csvText: string,
+  fallback: DetectedPeriodTarget,
+): CsvPeriodBatch[] {
+  let records: string[][];
+  try {
+    records = parse(csvText, {
+      bom: true,
+      relax_column_count: true,
+      skip_empty_lines: true,
+    }) as string[][];
+  } catch {
+    return [{ target: fallback, sourcePeriods: [], csvText }];
+  }
+
+  const header = records[0];
+  if (!header) return [{ target: fallback, sourcePeriods: [], csvText }];
+  const periodIndex = header.findIndex(
+    (value) => String(value).replace(/^\uFEFF/, "").trim().toUpperCase() === "ACTIVITY_PERIOD",
+  );
+  if (periodIndex < 0) return [{ target: fallback, sourcePeriods: [], csvText }];
+
+  const groups = new Map<string, string[][]>();
+  const unassigned: string[][] = [];
+  for (const row of records.slice(1)) {
+    const raw = String(row[periodIndex] || "").trim().toUpperCase();
+    const target = targetForSourcePeriod(raw);
+    if (!target) {
+      unassigned.push(row);
+      continue;
+    }
+    const rows = groups.get(raw) || [];
+    rows.push(row);
+    groups.set(raw, rows);
+  }
+
+  const periods = [...groups.keys()].sort((a, b) => {
+    const left = targetForSourcePeriod(a)!;
+    const right = targetForSourcePeriod(b)!;
+    return left.year * 12 + Number(left.month) - (right.year * 12 + Number(right.month));
+  });
+  if (!periods.length) return [{ target: fallback, sourcePeriods: [], csvText }];
+  if (periods.length === 1) {
+    return [{ target: targetForSourcePeriod(periods[0]!)!, sourcePeriods: periods, csvText }];
+  }
+
+  const targets = periods.map(targetForSourcePeriod);
+  const first = targets[0];
+  const sameQuarter =
+    periods.length === 3 &&
+    first != null &&
+    targets.every(
+      (target) =>
+        target != null &&
+        target.year === first.year &&
+        target.quarter === first.quarter,
+    ) &&
+    periods.every((period) => quarterMonths(first.quarter, first.year).includes(period));
+
+  if (sameQuarter && first) {
+    return [{
+      target: {
+        fileType: "quarterly",
+        year: first.year,
+        month: String((Number(first.quarter.slice(1)) - 1) * 3 + 1),
+        quarter: first.quarter,
+      },
+      sourcePeriods: periods,
+      csvText,
+    }];
+  }
+
+  return periods.map((period, index) => {
+    const rows = groups.get(period) || [];
+    if (index === 0) rows.push(...unassigned);
+    return {
+      target: targetForSourcePeriod(period)!,
+      sourcePeriods: [period],
+      csvText: [header, ...rows].map(csvRow).join("\n"),
+    };
+  });
+}
+
 export function validateRequestedPeriod(
   fileType: "monthly" | "quarterly",
   sourcePeriods: string[],

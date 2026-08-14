@@ -201,6 +201,7 @@ export type CanonicalReportV2 = {
 export type ProcessInput = {
   planCode: PlanCode;
   fileType: "monthly" | "quarterly";
+  permissive?: boolean;
   requestedPeriodLabel: string;
   sourceFileName: string;
   sourceFileHash: string;

@@ -2,7 +2,11 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { parseAmazonCsv, validateRequestedPeriod } from "../parse.js";
+import {
+  batchCsvByActivityPeriod,
+  parseAmazonCsv,
+  validateRequestedPeriod,
+} from "../parse.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const goldenCsv = readFileSync(join(__dirname, "fixtures/63260020335.csv"), "utf8");
@@ -63,5 +67,55 @@ describe("parseAmazonCsv", () => {
     ];
     const issues = validateRequestedPeriod("monthly", periods, 2026, 1);
     expect(issues.some((i) => i.code === "PERIOD_MISMATCH" && i.severity === "BLOCKER")).toBe(true);
+  });
+});
+
+describe("batchCsvByActivityPeriod", () => {
+  const fallback = {
+    fileType: "monthly" as const,
+    year: 2026,
+    month: "1",
+    quarter: "Q1",
+  };
+
+  it("detects a single monthly report", () => {
+    const batches = batchCsvByActivityPeriod(
+      "ACTIVITY_PERIOD,VALUE\n2026-JUL,one\n2026-JUL,two\n",
+      fallback,
+    );
+    expect(batches).toHaveLength(1);
+    expect(batches[0]?.target).toMatchObject({
+      fileType: "monthly",
+      year: 2026,
+      month: "7",
+      quarter: "Q3",
+    });
+  });
+
+  it("keeps an exact calendar quarter as one report", () => {
+    const batches = batchCsvByActivityPeriod(
+      "ACTIVITY_PERIOD,VALUE\n2026-JUL,one\n2026-AUG,two\n2026-SEP,three\n",
+      fallback,
+    );
+    expect(batches).toHaveLength(1);
+    expect(batches[0]?.target).toMatchObject({
+      fileType: "quarterly",
+      year: 2026,
+      quarter: "Q3",
+    });
+    expect(batches[0]?.sourcePeriods).toEqual(["2026-JUL", "2026-AUG", "2026-SEP"]);
+  });
+
+  it("splits irregular multi-period files into monthly CSVs", () => {
+    const batches = batchCsvByActivityPeriod(
+      "ACTIVITY_PERIOD,VALUE\n2026-JUL,\"one, quoted\"\n2026-SEP,two\n2026-JUL,three\n",
+      fallback,
+    );
+    expect(batches).toHaveLength(2);
+    expect(batches.map((batch) => batch.target.month)).toEqual(["7", "9"]);
+    expect(batches[0]?.csvText).toContain("\"one, quoted\"");
+    expect(batches[0]?.csvText).toContain("2026-JUL,three");
+    expect(batches[0]?.csvText).not.toContain("2026-SEP");
+    expect(batches[1]?.csvText).toContain("2026-SEP,two");
   });
 });

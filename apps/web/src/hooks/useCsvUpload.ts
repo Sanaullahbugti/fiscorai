@@ -5,7 +5,7 @@ import { dataApi } from "@/api";
 import { queryKeys } from "@/api/queryKeys";
 import { MAX_CSV_BYTES } from "@/constants";
 import { useToast } from "@/hooks/useToast";
-import { getApiErrorMessage, parsePeriodMismatch } from "@/lib/api-error";
+import { getApiErrorMessage } from "@/lib/api-error";
 import type { CsvPeriodTarget } from "@/lib/detect-csv-period";
 import type { PeriodPayload } from "@/types/api";
 
@@ -15,12 +15,9 @@ export type UploadResult = {
   filename?: string;
   status?: string;
   meta?: unknown;
-};
-
-export type PeriodMismatchState = {
-  detectedLabel: string;
-  selectedLabel: string;
-  detectedTarget: UploadTarget | null;
+  target?: UploadTarget;
+  targets?: UploadTarget[];
+  uploads?: Array<{ target: UploadTarget; filename?: string; status?: string }>;
 };
 
 const ERROR_TOAST_MS = 8000;
@@ -41,51 +38,44 @@ export function useCsvUpload(options?: {
   const [file, setFileState] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploadPct, setUploadPct] = useState(0);
-  const [mismatch, setMismatch] = useState<PeriodMismatchState | null>(null);
 
   function setFile(next: File | null) {
-    setMismatch(null);
     setFileState(next);
   }
 
   const uploadMutation = useMutation({
-    mutationFn: async ({ selected, target }: { selected: File; target: UploadTarget }) => {
+    mutationFn: async ({ selected }: { selected: File; fallback: UploadTarget }) => {
       const form = new FormData();
       form.append("file", selected);
-      form.append("fileType", target.fileType);
-      form.append("year", String(target.year));
-      if (target.fileType === "monthly") form.append("month", target.month);
-      else form.append("quarter", target.quarter);
       const res = await dataApi.uploadCsv(form, (pct) => setUploadPct(pct));
       return res.data?.data ?? {};
     },
-    onSuccess: async (result, { target }) => {
+    onSuccess: async (rawResult, { fallback }) => {
+      const result = rawResult as UploadResult;
+      const targets = result.targets?.length
+        ? result.targets
+        : result.target
+          ? [result.target]
+          : [fallback];
+      const target = result.target ?? targets[targets.length - 1] ?? fallback;
       setUploadPct(100);
-      setMismatch(null);
       if (!options?.skipSuccessToast) flash(t("uploadOk"));
       setFileState(null);
-      const payload: PeriodPayload = {
-        fileType: target.fileType,
-        year: target.year,
-        month: target.fileType === "monthly" ? target.month : undefined,
-        quarter: target.fileType === "quarterly" ? target.quarter : undefined,
-      };
       await queryClient.invalidateQueries({ queryKey: queryKeys.userFiles() });
-      await queryClient.invalidateQueries({ queryKey: queryKeys.processed(payload) });
+      for (const resolved of targets) {
+        const payload: PeriodPayload = {
+          fileType: resolved.fileType,
+          year: resolved.year,
+          month: resolved.fileType === "monthly" ? resolved.month : undefined,
+          quarter: resolved.fileType === "quarterly" ? resolved.quarter : undefined,
+        };
+        await queryClient.invalidateQueries({ queryKey: queryKeys.processed(payload) });
+      }
       await queryClient.invalidateQueries({ queryKey: queryKeys.overview() });
       await queryClient.invalidateQueries({ queryKey: ["insights"] });
-      options?.onUploaded?.(result as UploadResult, target);
+      options?.onUploaded?.(result, target);
     },
     onError: (e: unknown) => {
-      const parsed = parsePeriodMismatch(e);
-      if (parsed) {
-        setMismatch({
-          detectedLabel: parsed.detectedLabel,
-          selectedLabel: parsed.selectedLabel,
-          detectedTarget: parsed.detectedTarget,
-        });
-        return;
-      }
       flash(getApiErrorMessage(e, t("uploadFailed")), ERROR_TOAST_MS);
     },
     onSettled: () => {
@@ -100,21 +90,14 @@ export function useCsvUpload(options?: {
       flash(t("fileTooLarge"), ERROR_TOAST_MS);
       return false;
     }
-    setMismatch(null);
     setUploadPct(0);
     try {
-      await uploadMutation.mutateAsync({ selected, target });
+      await uploadMutation.mutateAsync({ selected, fallback: target });
       return true;
     } catch {
       // Period mismatch is kept as confirm state; other errors toast in onError.
       return false;
     }
-  }
-
-  async function uploadIntoDetected(): Promise<boolean> {
-    if (!file || !mismatch?.detectedTarget) return false;
-    const target = mismatch.detectedTarget;
-    return upload(target, file);
   }
 
   return {
@@ -127,8 +110,5 @@ export function useCsvUpload(options?: {
     uploadPct,
     upload,
     error: uploadMutation.error,
-    mismatch,
-    clearMismatch: () => setMismatch(null),
-    uploadIntoDetected,
   };
 }

@@ -18,6 +18,11 @@ export { buildPdfFromCanonical } from "./pdf-canonical.js";
 export { buildXlsxFromCanonical } from "./xlsx-canonical.js";
 export { sumActivityIncl, sumVat } from "./report-model.js";
 export {
+  batchCsvByActivityPeriod,
+  type CsvPeriodBatch,
+  type DetectedPeriodTarget,
+} from "./parse.js";
+export {
   aggregateFromReportView,
   formatMoney,
   schemeVatByCurrency,
@@ -65,6 +70,7 @@ export async function processVatReport(
   const input: ProcessInput = {
     planCode: options.planCode,
     fileType: options.fileType,
+    permissive: options.permissive,
     requestedPeriodLabel: options.periodLabel,
     sourceFileName: options.sourceFileName || "upload.csv",
     sourceFileHash: sourceHash(csvText),
@@ -96,15 +102,21 @@ export async function processVatReport(
     const fallback = processCsv(csvText, options);
     const emptyPdf = await buildPdf(fallback, options.pdf);
     const emptyXlsx = await buildXlsx(fallback);
+    const fallbackStatus = options.permissive ? "READY" : "INVALID";
+    const fallbackIssues = options.permissive ? [] : result.issues;
     return {
       report: fallback,
       canonical: null,
-      json: { countries: fallback.countries, meta: { ...fallback.meta, reconciliationStatus: "INVALID" }, issues: result.issues },
+      json: {
+        countries: fallback.countries,
+        meta: { ...fallback.meta, reconciliationStatus: fallbackStatus },
+        issues: fallbackIssues,
+      },
       pdf: emptyPdf,
       xlsx: emptyXlsx,
       apiCountries: toApiCountries(fallback),
-      reconciliationStatus: "INVALID",
-      issues: result.issues,
+      reconciliationStatus: fallbackStatus,
+      issues: fallbackIssues,
     };
   }
 
