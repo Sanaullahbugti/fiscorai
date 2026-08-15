@@ -286,7 +286,7 @@ export async function buildPdf(
 
     masthead(doc, sheet, theme, report, options);
     if (report.meta.truncated && report.meta.planLimit != null) {
-      notice(doc, sheet, theme, report.meta.planLimit, options.noticeLanguages);
+      notice(doc, sheet, theme, report.meta.planLimit, options.noticeLanguages, report.meta.totalRows);
     }
     glance(doc, sheet, theme, report, data);
 
@@ -349,17 +349,17 @@ function masthead(
   s.gap(16);
 }
 
-const NOTICE_TEXT: Record<string, (n: string) => string> = {
-  en: (n) =>
-    `This report covers the first ${n} transactions in the file. Move to a higher plan to process the full period.`,
-  es: (n) =>
-    `Este informe cubre las primeras ${n} transacciones del archivo. Contrate un plan superior para procesar el periodo completo.`,
-  de: (n) =>
-    `Dieser Bericht umfasst die ersten ${n} Transaktionen der Datei. Für den vollständigen Zeitraum schließen Sie bitte einen höheren Tarif ab.`,
-  fr: (n) =>
-    `Ce rapport couvre les ${n} premières transactions du fichier. Souscrivez un plan supérieur pour traiter la période complète.`,
-  it: (n) =>
-    `Questo report copre le prime ${n} transazioni del file. Attiva un piano superiore per elaborare l'intero periodo.`,
+const NOTICE_TEXT: Record<string, (n: string, total: string) => string> = {
+  en: (n, total) =>
+    `This report covers ${n} / ${total} transactions in the file. Move to a higher plan to process the full period.`,
+  es: (n, total) =>
+    `Este informe cubre ${n} / ${total} transacciones del archivo. Contrate un plan superior para procesar el periodo completo.`,
+  de: (n, total) =>
+    `Dieser Bericht umfasst ${n} / ${total} Transaktionen der Datei. Für den vollständigen Zeitraum schließen Sie bitte einen höheren Tarif ab.`,
+  fr: (n, total) =>
+    `Ce rapport couvre ${n} / ${total} transactions du fichier. Souscrivez un plan supérieur pour traiter la période complète.`,
+  it: (n, total) =>
+    `Questo report copre ${n} / ${total} transazioni del file. Attiva un piano superiore per elaborare l'intero periodo.`,
 };
 
 function notice(
@@ -368,10 +368,12 @@ function notice(
   t: PdfTheme,
   limit: number,
   langs: PdfOptions["noticeLanguages"] = ["en", "es", "de", "fr", "it"],
+  totalRows?: number,
 ) {
   const n = int(limit);
-  const head = NOTICE_TEXT.en(n);
-  const rest = langs.filter((l) => l !== "en").map((l) => NOTICE_TEXT[l](n));
+  const total = int(totalRows ?? limit);
+  const head = NOTICE_TEXT.en(n, total);
+  const rest = langs.filter((l) => l !== "en").map((l) => NOTICE_TEXT[l](n, total));
 
   const padX = 16;
   const innerW = s.width - padX - 18;
