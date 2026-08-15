@@ -172,6 +172,7 @@ describe("processVatReport", () => {
     expect(artifacts.report.meta.planLimit).toBe(50);
     expect(artifacts.canonical?.view.provenance.truncated).toBe(true);
     expect(artifacts.canonical?.view.provenance.planLimit).toBe(50);
+    expect(artifacts.canonical?.view.provenance.sourceTotalRows).toBe(80);
     expect(artifacts.canonical?.rows).toHaveLength(50);
     expect(artifacts.pdf.byteLength).toBeGreaterThan(100);
 
@@ -184,7 +185,7 @@ describe("processVatReport", () => {
         if (typeof cell.value === "string") values.push(cell.value);
       });
     });
-    expect(values.some((value) => value.includes("Plan limit reached"))).toBe(true);
+    expect(values.some((value) => value.includes("50 / 80"))).toBe(true);
   });
 
   it("does not truncate Pro plan uploads", async () => {

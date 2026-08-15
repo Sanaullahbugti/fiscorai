@@ -318,9 +318,13 @@ export function reportHeader(doc: Doc, s: CanonicalSheet, t: ReportTheme, view: 
   s.y = bandH + 18;
 }
 
-export function planLimitBanner(doc: Doc, s: CanonicalSheet, t: ReportTheme, limit: number) {
-  const title = "Plan limit reached";
-  const body = `This report covers the first ${limit.toLocaleString("en-GB")} transactions in the file. Move to a higher plan to process the full period.`;
+export function planLimitBanner(doc: Doc, s: CanonicalSheet, t: ReportTheme, limit: number, totalRows?: number) {
+  const processed = limit.toLocaleString("en-GB");
+  const total = totalRows != null ? totalRows.toLocaleString("en-GB") : null;
+  const title = total ? `Plan limit reached · ${processed} / ${total}` : "Plan limit reached";
+  const body = total
+    ? `This report covers ${processed} / ${total} transactions in the file. Move to a higher plan to process the full period.`
+    : `This report covers the first ${processed} transactions in the file. Move to a higher plan to process the full period.`;
   const pad = 16;
   const innerW = s.width - pad * 2 - 4;
 

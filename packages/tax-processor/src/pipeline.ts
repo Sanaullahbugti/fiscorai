@@ -84,7 +84,7 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
 
   const finalView = {
     ...view,
-    provenance: { ...view.provenance, reconciliationStatus, truncated, planLimit },
+    provenance: { ...view.provenance, reconciliationStatus, truncated, planLimit, sourceTotalRows: totalRows },
     executiveSummary: { ...view.executiveSummary, reconciliationStatus },
     issues,
   };

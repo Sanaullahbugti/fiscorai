@@ -64,7 +64,7 @@ export async function buildPdfFromCanonical(
     /* ── Page 1: Executive report ─────────────────────────────────── */
     reportHeader(doc, s, theme, view);
     if (p.truncated && p.planLimit != null) {
-      planLimitBanner(doc, s, theme, p.planLimit);
+      planLimitBanner(doc, s, theme, p.planLimit, p.sourceTotalRows);
     }
     statusBadge(doc, s, theme, canonical.reconciliationStatus, view);
 

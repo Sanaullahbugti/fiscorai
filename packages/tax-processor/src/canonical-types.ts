@@ -166,6 +166,7 @@ export type ReportProvenance = {
   sourceSchemaFingerprint: string;
   truncated?: boolean;
   planLimit?: number | null;
+  sourceTotalRows?: number;
 };
 
 export type ReportView = {

@@ -217,7 +217,7 @@ function buildSummarySheet(wb: ExcelJS.Workbook, report: ProcessedReport) {
   if (report.meta.truncated && report.meta.planLimit != null) {
     ws.mergeCells(`A${row}:F${row}`);
     const cell = ws.getCell(`A${row}`);
-    cell.value = `⚠ Plan limit reached — this report is limited to the first ${intFmt(report.meta.planLimit)} transactions. Upgrade your plan to process the full period.`;
+    cell.value = `⚠ Plan limit reached — ${intFmt(report.meta.planLimit)} / ${intFmt(report.meta.totalRows)} transactions. Upgrade your plan to process the full period.`;
     cell.font = { name: FONT, size: 10, bold: true, color: { argb: argb(T.alert) } };
     cell.fill = fill(T.alertWash);
     cell.alignment = { vertical: "middle", wrapText: true };
