@@ -17,6 +17,7 @@ import {
   marketplaceDisplayRows,
   marketplaceSection,
   metricStrip,
+  planLimitBanner,
   refundTotalForCurrency,
   reportFooter,
   reportHeader,
@@ -62,6 +63,9 @@ export async function buildPdfFromCanonical(
 
     /* ── Page 1: Executive report ─────────────────────────────────── */
     reportHeader(doc, s, theme, view);
+    if (p.truncated && p.planLimit != null) {
+      planLimitBanner(doc, s, theme, p.planLimit);
+    }
     statusBadge(doc, s, theme, canonical.reconciliationStatus, view);
 
     const tx = view.executiveSummary.transactionTypes;

@@ -291,6 +291,17 @@ function buildSummary(wb: ExcelJS.Workbook, canonical: CanonicalReportV2) {
 
   let r = 6;
 
+  if (p.truncated && p.planLimit != null) {
+    ws.mergeCells(r, 1, r, COLS);
+    paintBand(ws, r, COLS, WARNING_FILL);
+    ws.getCell(r, 1).value =
+      `Plan limit reached — this report is limited to the first ${p.planLimit.toLocaleString("en-GB")} transactions. Upgrade your plan to process the full period.`;
+    ws.getCell(r, 1).font = font({ bold: true, size: 10, color: { argb: `FF${WARNING_TEXT}` } });
+    ws.getCell(r, 1).alignment = { vertical: "middle", wrapText: true };
+    ws.getRow(r).height = 28;
+    r += 2;
+  }
+
   // Status
   const warnings = view.executiveSummary.issueCounts.WARNING || 0;
   const removed = rowsRemoved(view);
