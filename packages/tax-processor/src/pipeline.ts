@@ -12,6 +12,7 @@ import {
 } from "./parse.js";
 import { buildCanonicalReport, buildReportView } from "./report-model.js";
 import { validateSchema } from "./schema.js";
+import { PLAN_LIMITS } from "./types.js";
 import { parse } from "csv-parse/sync";
 
 export function processCanonicalReport(csvText: string, input: ProcessInput): ProcessResult {
@@ -26,7 +27,10 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
     };
   }
 
-  let rows = parsed.rows;
+  const totalRows = parsed.rows.length;
+  const planLimit = PLAN_LIMITS[input.planCode][input.fileType];
+  const truncated = planLimit != null && totalRows > planLimit;
+  let rows = truncated ? parsed.rows.slice(0, planLimit) : parsed.rows;
   rows = deriveAllContext(rows);
   rows = linkRefunds(rows);
 
@@ -80,7 +84,7 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
 
   const finalView = {
     ...view,
-    provenance: { ...view.provenance, reconciliationStatus },
+    provenance: { ...view.provenance, reconciliationStatus, truncated, planLimit },
     executiveSummary: { ...view.executiveSummary, reconciliationStatus },
     issues,
   };
@@ -89,7 +93,8 @@ export function processCanonicalReport(csvText: string, input: ProcessInput): Pr
   const legacy = toLegacyProcessedReport(
     canonical,
     sourcePeriods.length === 1 ? sourcePeriods[0]! : input.requestedPeriodLabel,
-    rows.length,
+    totalRows,
+    { truncated, planLimit },
   );
 
   return {

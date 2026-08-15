@@ -164,6 +164,8 @@ export type ReportProvenance = {
   generatedAt: string;
   reconciliationStatus: ReconciliationStatus;
   sourceSchemaFingerprint: string;
+  truncated?: boolean;
+  planLimit?: number | null;
 };
 
 export type ReportView = {

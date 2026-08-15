@@ -318,6 +318,36 @@ export function reportHeader(doc: Doc, s: CanonicalSheet, t: ReportTheme, view: 
   s.y = bandH + 18;
 }
 
+export function planLimitBanner(doc: Doc, s: CanonicalSheet, t: ReportTheme, limit: number) {
+  const title = "Plan limit reached";
+  const body = `This report covers the first ${limit.toLocaleString("en-GB")} transactions in the file. Move to a higher plan to process the full period.`;
+  const pad = 16;
+  const innerW = s.width - pad * 2 - 4;
+
+  doc.font("Helvetica-Bold").fontSize(11);
+  const titleH = doc.heightOfString(title, { width: innerW });
+  doc.font("Helvetica").fontSize(8.5);
+  const bodyH = doc.heightOfString(body, { width: innerW });
+  const boxH = 12 + 12 + titleH + 5 + bodyH + 12;
+
+  s.surfaceStroke(s.left, s.y, s.width, boxH, t.warningWash, t.ruleSoft);
+  doc.save().rect(s.left, s.y, 3, boxH).fill(t.warning).restore();
+
+  s.eyebrow("Plan limit", s.left + pad, s.y + 12, t.warning);
+  doc
+    .font("Helvetica-Bold")
+    .fontSize(11)
+    .fillColor(t.ink)
+    .text(title, s.left + pad, s.y + 24, { width: innerW });
+  doc
+    .font("Helvetica")
+    .fontSize(8.5)
+    .fillColor(t.body)
+    .text(body, s.left + pad, s.y + 24 + titleH + 5, { width: innerW });
+
+  s.y += boxH + 14;
+}
+
 export function sectionHeader(
   doc: Doc,
   s: CanonicalSheet,

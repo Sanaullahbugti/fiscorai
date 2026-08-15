@@ -147,4 +147,77 @@ describe("processVatReport", () => {
     expect(artifacts.pdf.byteLength).toBeGreaterThan(100);
     expect(artifacts.xlsx.byteLength).toBeGreaterThan(100);
   });
+
+  function repeatCsv(source: string, count: number): string {
+    const lines = source.split(/\r?\n/).filter((line) => line.length > 0);
+    const header = lines[0]!;
+    const row = lines[1]!;
+    return [header, ...Array.from({ length: count }, () => row)].join("\n");
+  }
+
+  it("truncates Free plan uploads to 50 rows and still returns artifacts", async () => {
+    const csv = repeatCsv(minimalCsv, 80);
+    const artifacts = await processVatReport(csv, {
+      planCode: "0",
+      fileType: "monthly",
+      periodLabel: "2026-JAN",
+      permissive: true,
+      sourceFileName: "free-over-limit.csv",
+    });
+
+    expect(artifacts.reconciliationStatus).toBe("READY");
+    expect(artifacts.report.meta.totalRows).toBe(80);
+    expect(artifacts.report.meta.processedRows).toBe(50);
+    expect(artifacts.report.meta.truncated).toBe(true);
+    expect(artifacts.report.meta.planLimit).toBe(50);
+    expect(artifacts.canonical?.view.provenance.truncated).toBe(true);
+    expect(artifacts.canonical?.view.provenance.planLimit).toBe(50);
+    expect(artifacts.canonical?.rows).toHaveLength(50);
+    expect(artifacts.pdf.byteLength).toBeGreaterThan(100);
+
+    const wb = new ExcelJS.Workbook();
+    await wb.xlsx.load(artifacts.xlsx as unknown as ExcelJS.Buffer);
+    const summary = wb.getWorksheet("SUMMARY")!;
+    const values: string[] = [];
+    summary.eachRow((row) => {
+      row.eachCell((cell) => {
+        if (typeof cell.value === "string") values.push(cell.value);
+      });
+    });
+    expect(values.some((value) => value.includes("Plan limit reached"))).toBe(true);
+  });
+
+  it("does not truncate Pro plan uploads", async () => {
+    const csv = repeatCsv(minimalCsv, 80);
+    const artifacts = await processVatReport(csv, {
+      planCode: "3",
+      fileType: "monthly",
+      periodLabel: "2026-JAN",
+      permissive: true,
+      sourceFileName: "pro-unlimited.csv",
+    });
+
+    expect(artifacts.report.meta.totalRows).toBe(80);
+    expect(artifacts.report.meta.processedRows).toBe(80);
+    expect(artifacts.report.meta.truncated).toBe(false);
+    expect(artifacts.report.meta.planLimit).toBeNull();
+    expect(artifacts.canonical?.rows).toHaveLength(80);
+    expect(artifacts.pdf.byteLength).toBeGreaterThan(100);
+  });
+
+  it("applies the Basic monthly cap of 1,500 rows", async () => {
+    const csv = repeatCsv(minimalCsv, 1501);
+    const artifacts = await processVatReport(csv, {
+      planCode: "1",
+      fileType: "monthly",
+      periodLabel: "2026-JAN",
+      permissive: true,
+      sourceFileName: "basic-over-limit.csv",
+    });
+
+    expect(artifacts.report.meta.totalRows).toBe(1501);
+    expect(artifacts.report.meta.processedRows).toBe(1500);
+    expect(artifacts.report.meta.truncated).toBe(true);
+    expect(artifacts.report.meta.planLimit).toBe(1500);
+  });
 });

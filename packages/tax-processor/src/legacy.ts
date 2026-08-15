@@ -12,6 +12,7 @@ export function toLegacyProcessedReport(
   canonical: CanonicalReportV2,
   periodLabel: string,
   totalRows: number,
+  plan?: { truncated: boolean; planLimit: number | null },
 ): ProcessedReport {
   const byCountry = new Map<string, Map<string, CategoryBucket>>();
 
@@ -96,8 +97,8 @@ export function toLegacyProcessedReport(
     meta: {
       totalRows,
       processedRows: canonical.rows.length,
-      truncated: false,
-      planLimit: null,
+      truncated: plan?.truncated ?? false,
+      planLimit: plan?.planLimit ?? null,
       periodLabel,
       reconciliationStatus: canonical.reconciliationStatus,
       reportId: canonical.view.provenance.reportId,
